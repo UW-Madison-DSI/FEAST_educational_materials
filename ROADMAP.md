@@ -16,12 +16,14 @@ Last updated: 2026-05-07
 - Annotated reference bibliography with pedagogical and domain sources (`references/`)
 - GitHub issue and PR templates (`.github/`)
 - Project management scaffold: CLAUDE.md, ROADMAP.md, DECISIONS.md, post-commit hook
+- Week 1 slide deck updated per DEC-004 (tool landscape, CLAUDE.md, project mgmt artifacts, setup scaffold)
+- README with instructor setup instructions
+- GitHub Pages deployment via GitHub Actions
 
 **In progress:**
-- Slide decks for weeks 2-6 (Week 1 slides also need updating per DEC-004)
+- Slide decks for weeks 2-6
 
 **Not started:**
-- README for this repo
 - Consistency review across all written materials
 - Packaging guidance for reuse in other domains
 
@@ -59,7 +61,7 @@ Last updated: 2026-05-07
 **Goal:** Slide decks ready for all weekly group sessions.
 
 - [x] Week 1: Orientation, domain concepts, architecture, LLM tools intro (`slides/week-1/`)
-- [ ] Week 1 update: Expand LLM tools slides (tool landscape, CLAUDE.md, Claude Code demo), add project mgmt artifacts slide, add Claude Code to setup slides
+- [x] Week 1 update: Expand LLM tools slides (tool landscape, CLAUDE.md, Claude Code demo), add project mgmt artifacts slide, add Claude Code to setup slides
 - [ ] Week 2: Review pipelines, CI setup, ADR introduction, edge case brainstorming, PR workflow
 - [ ] Week 3: Adversarial review (manual + LLM rotation), specs before code, ADR practice
 - [ ] Week 4: Manual vs. auto-generated artifacts, roadmap maintenance, ADR generation from diffs
@@ -77,7 +79,7 @@ Last updated: 2026-05-07
 ### M4: Pilot Readiness [Not Started]
 **Goal:** Everything an instructor needs to run the first cohort, end to end.
 
-- [ ] README.md with instructor setup instructions
+- [x] README.md with instructor setup instructions
 - [ ] Pre-session checklist (what to prepare before each week)
 - [ ] Verify FEAST backend/frontend repos are in expected state for student onboarding
 - [ ] All materials reviewed by at least one other instructor or peer
