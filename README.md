@@ -16,6 +16,7 @@ This repo contains everything an instructor needs to run a cohort of student dev
 The FEAST application lives in two separate repos:
 - **Backend:** [ICICLE-ai/Food-Access-Model](https://github.com/ICICLE-ai/Food-Access-Model) (FastAPI + Mesa ABM + PostgreSQL)
 - **Frontend:** fass-frontend (React + Leaflet + Vite)
+- **Reference deployment:** [feast-test.services.dsi.wisc.edu](https://feast-test.services.dsi.wisc.edu/)
 
 ## How the program works
 
