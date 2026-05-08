@@ -11,6 +11,59 @@ For the ADR template used in the FEAST application repos, see `templates/adr-tem
 
 ---
 
+## DEC-005: Deployment Configuration, Claude Code Planning Workflows, and Agentic Engineering Framing
+
+**Date:** 2026-05-08
+**Status:** Accepted
+
+**Context:** Three gaps were identified in the post-DEC-004 curriculum:
+
+1. **Deployment topology.** The curriculum covers the three-layer architecture (frontend, backend, database) but never explicitly teaches that these layers are independently deployable and independently configurable. Students encounter configuration confusion piecemeal (CORS errors, `client.js` hardcoding, `.env` DB credentials, staging vs. local) without a unifying mental model. The existing setup scaffold walks students through configuration steps but doesn't explain *why* those steps matter or what happens when layers point at different environments.
+
+2. **Claude Code planning workflows.** The curriculum teaches Claude Code as an explainer (Week 1) and code collaborator (Week 2+), but never covers its structured planning capabilities (`/plan`, `/ultraplan`, `/ultrareview`). These map naturally to existing curriculum themes: "specs before code" (Week 3) and "manual vs. auto-generated artifacts" (Week 4). Without them, the tool progression has a gap between "ask questions about code" and "write code interactively."
+
+3. **Agentic engineering framing.** The curriculum has the right principles ("explain every line," "write code for future you") but lacks the vocabulary to name the distinction between disciplined AI-assisted development and undisciplined prompting. The terms "agentic engineering" (using AI tools as collaborators in a disciplined workflow where the developer maintains understanding and ownership) vs. "vibe coding" (prompting, accepting, running) give students a shared language for the approach the curriculum teaches.
+
+**Decision:** Integrate both topics into existing weeks rather than adding new weeks or sessions.
+
+**Deployment configuration:**
+- Week 1: Add a deployment topology diagram and configuration matrix after the three-layer architecture section (~5 min). Introduce the three configuration levers (client.js, .env, CORS). Add setup scaffold callouts and an extra Common Problem entry.
+- Week 5: Add a deployment configuration audit exercise (~10 min) and a security checklist item. Revisits the Week 1 mental model with hands-on experience.
+- New reference guide: `docs/guides/10-deployment-configuration.md`.
+
+**Planning workflows:**
+- Week 2: Brief preview of `/plan` during the iterative code pattern demo (2-3 sentences, no new subsection).
+- Week 3: Expand "specs before code" to include a `/plan` demo alongside hand-written specs (~5 min added). Add `/plan` usage notes to the #47 and #74 scaffolds.
+- Week 4: New subsection "Planning at different scales" covering `/plan` vs. `/ultraplan` vs. `/ultrareview` (~10 min). Add planning note to the reporting feature scaffold.
+- Week 5: Add `/ultrareview` to the review pipeline retrospective.
+- New reference guide: `docs/guides/11-planning-with-claude-code.md`.
+
+**Agentic engineering framing:**
+- Week 1: New "Agentic engineering vs. vibe coding" subsection (~3 min) before the existing tool rules. Defines both terms, frames the entire curriculum approach. The existing "explain every line" rule becomes the practical test for agentic engineering.
+- Week 2: Brief callback connecting the iterative code pattern to agentic engineering terminology.
+- Week 6: Added retrospective questions about when students caught themselves vibe coding and what pulled them back. Handoff document asks for concrete examples.
+- "What Success Looks Like" section updated to include agentic engineering as a student outcome.
+
+Also fixed the environment setup guide (01) for consistency with the curriculum (run_local.py instead of api_server.py, port 8000, client.js instead of VITE_API_URL).
+
+**Alternatives considered:**
+- *Dedicated "deployment" week.* Rejected because deployment is better understood as context for existing work, not a standalone topic. A separate week would feel disconnected from the daily development experience.
+- *Cover `/plan` from Week 1.* Rejected because the progressive LLM usage model (DEC-002) requires students to build reading and spec-writing skills before getting planning tools. `/plan` before Week 3 would shortcut the spec-writing practice.
+- *Skip `/ultraplan` and `/ultrareview` entirely.* These are newer features and could be left as "students discover them." Rejected because they connect directly to Week 4's theme of project-level artifacts and Week 3's adversarial review rotation. Explicit coverage makes the connection clear.
+- *Introduce "agentic engineering" terminology later (Week 3+).* Rejected because the framing is most useful at the start, when students are forming their habits. Naming the approach from Week 1 gives a shared vocabulary the instructor can reference throughout.
+
+**Consequences:**
+- (+) Students have a deployment mental model from Week 1 that explains the CORS/config errors they inevitably encounter during setup
+- (+) The planning tool progression (preview in Week 2, single-feature in Week 3, project-level in Week 4) mirrors the existing manual spec-writing progression
+- (+) `/plan` reinforces rather than replaces hand-written specs: the recommended workflow is "write the what, let the tool map the how"
+- (+) "Agentic engineering" gives students a shared vocabulary for the disciplined approach; "vibe coding" gives a name to the anti-pattern they'll be tempted by
+- (+) Environment setup guide is now consistent with the curriculum (was using legacy api_server.py)
+- (-) Week 1 lesson time increases by ~5 min (now ~75 min total, tight but within tolerance)
+- (-) Week 3 and Week 4 lesson times each increase by ~5-10 min (absorbed from guided work time)
+- (-) Week 5 lesson time increases by ~10 min for the deployment audit (offset by existing "deployment readiness" topic that was previously content-free)
+
+---
+
 ## DEC-004: Curriculum Restructuring to Integrate Tooling, Review Pipelines, and Project Management Artifacts
 
 **Date:** 2026-05-07

@@ -186,6 +186,53 @@ Draw this on a whiteboard or shared screen:
 
 **Key concept for students**: When a user clicks "Step" in the UI, the frontend calls `POST /api/simulation-instances/{id}/advance`. The backend reads households and stores from the DB, splits households across CPU cores, runs each household's `step()` method (distance calculation, store selection, MFAI scoring), bulk-inserts the results as a new simulation step, and the frontend re-renders the map with updated colors. Student D will trace this flow in detail during assigned work; the full 8-step lifecycle is documented in the endpoint trace table below.
 
+#### Where each layer runs: deployment configurations (~5 min)
+
+The three-layer diagram above shows how the layers talk to each other. But each layer can run in different environments, and each can be configured independently to point at a different environment. This is a common source of confusion.
+
+Draw a second diagram showing the environments side by side:
+
+```
+              LOCAL                STAGING (Tapis)           PRODUCTION
+           +------------+       +----------------+       +----------------+
+Frontend   | localhost   |       | fassfrontstage |       | (future)       |
+           | :5173       |       | .pods...       |       |                |
+           +------+------+       +-------+--------+       +-------+--------+
+                  | client.js             |                        |
+                  | baseURL               |                        |
+                  v                       v                        v
+           +------------+       +----------------+       +----------------+
+Backend    | localhost   |       | Tapis staging  |       | (future)       |
+           | :8000       |       | API            |       |                |
+           +------+------+       +-------+--------+       +-------+--------+
+                  | .env                  |                        |
+                  | DB_HOST               |                        |
+                  v                       v                        v
+           +------------+       +----------------+       +----------------+
+Database   | localhost   |       | staging DB     |       | prod DB        |
+           | :5432       |       |                |       |                |
+           +------------+       +----------------+       +----------------+
+```
+
+Each arrow is a configuration decision. There are three levers that control which environment each layer talks to:
+
+1. **Frontend -> Backend**: `src/shared/client.js:3` sets the API base URL (currently hardcoded, not an env var). Change this to point your frontend at a different backend.
+2. **Backend -> Database**: `.env` file (DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS). Change these to point your backend at a different database.
+3. **Backend -> Frontend (CORS)**: CORS origins in `food_access_model/main.py` control which frontends the backend accepts requests from. If your frontend's origin isn't in the CORS list, requests fail silently.
+
+Common configurations:
+
+| Setup | Frontend | Backend | Database | When you'd use it |
+|-------|----------|---------|----------|--------------------|
+| Full local | localhost:5173 | localhost:8000 | localhost:5432 | Daily development |
+| Local FE + staging API | localhost:5173 | Tapis staging | staging DB | Frontend-only work, no local backend needed |
+| Full staging | Tapis FE | Tapis API | staging DB | Shared testing, demos |
+| Mixed (common mistake) | localhost:5173 | localhost:8000 | staging DB | Accidentally pointing local backend at shared DB |
+
+**Warning**: Mixing environments is powerful but risky. A local backend pointing at a staging database can corrupt shared data. A local frontend pointed at a staging backend with different CORS settings will fail silently. Always know which environment each of your three layers is targeting.
+
+You don't need to memorize this table. The point is to understand that the three layers are independently configurable, and that most setup problems come from one layer pointing at the wrong environment. When something breaks, check the three levers.
+
 #### Project management artifacts (~5 min)
 
 Before jumping to tools, briefly show how this curriculum repo (FEAST_edu) manages itself using three lightweight artifacts:
@@ -198,10 +245,22 @@ Show each file on screen briefly. Don't explain the format in detail; just estab
 
 #### Agentic coding tools: setup and the landscape (~20 min)
 
+##### Agentic engineering vs. vibe coding (~3 min)
+
+There are two fundamentally different ways to use AI coding tools:
+
+**Vibe coding** is prompting a tool, accepting what it produces, running it, and if it works, moving on. The developer acts as a prompter and acceptor. The code might work today, but nobody (including the person who prompted it) can explain why, maintain it, or debug it when it breaks. This is fast and sometimes fun, but it produces code that's a liability in any project with more than one contributor or a lifespan beyond a weekend.
+
+**Agentic engineering** is using AI tools as collaborators in a disciplined workflow: you define what you want and why, the tool proposes an approach, you review it critically, push back on what doesn't make sense, and iterate until the result meets your standards. You maintain understanding and ownership throughout. The tool amplifies your capabilities; it doesn't replace your judgment.
+
+This cohort teaches agentic engineering. Everything that follows -- the rules, the progressive tool restrictions, the spec-first workflow, the review pipeline, the planning tools -- is designed to build the habits of agentic engineering. Vibe coding is tempting because it feels productive. Agentic engineering is harder because it requires you to think, but it produces code you can stand behind.
+
 Two rules that don't change across all 6 weeks:
 
 1. **You must be able to explain every line in your PR without looking at your chat history.**
 2. **Write code for future you.** Every function, variable name, and structural choice should be readable and understandable six months from now by someone with no context. "Working" is not enough; code that works but can't be understood is a liability. When you use an AI tool to write code, your job is to iteratively shape the output until it meets this standard, not to accept the first thing it produces.
+
+These rules are the practical test for agentic engineering: if you can't explain it, you vibe-coded it.
 
 ##### The tool landscape (~5 min)
 
@@ -316,6 +375,13 @@ Step 5: Frontend setup
    (The file has commented alternatives for staging/production URLs.
    There is no .env-based configuration; the URL is hardcoded.)
 
+   WHY THIS STEP MATTERS: You're configuring which backend your
+   frontend talks to. The staging instance at fassfrontstage.pods...
+   has its own backend. Your local frontend could point at either.
+   For development, you want everything local so your changes are
+   isolated. See the deployment configurations diagram from the
+   architecture section for the full picture.
+
    npm run dev
    Open http://localhost:5173 in your browser.
 
@@ -346,6 +412,10 @@ Common problems:
 - Store data loading: If the database has no stores, use
   insert_stores.py with a CSV file to load store data:
   python insert_stores.py stores.csv
+- Unexpected data / "someone else's simulation": Your local
+  backend might be pointed at the staging database instead of
+  your local one. Check .env -- DB_HOST should be localhost
+  for local development, not a remote hostname.
 
 S students: Help J students debug setup issues. If you solve
 something non-obvious, write it down. These notes become part of
@@ -483,7 +553,7 @@ Demo: Show the "interview first" pattern. Instead of "write tests for this funct
 
 **Topic: "The tool is a first draft, not a final answer"**
 
-Starting this week, students write real code. The temptation is to prompt the tool, accept the output, and move on. That's how you end up with code that works but that nobody (including you) can maintain.
+Starting this week, students write real code. The temptation is to prompt the tool, accept the output, and move on. That's vibe coding, and it produces code that works but that nobody (including you) can maintain. Agentic engineering -- the approach we introduced in Week 1 -- means treating the tool's output as a first draft that you actively shape.
 
 Demo the iterative pattern using a concrete example from the FEAST codebase (e.g., adding a type-hinted helper function):
 
@@ -494,6 +564,8 @@ Demo the iterative pattern using a concrete example from the FEAST codebase (e.g
 5. **Verify readability.** "If someone reads this function six months from now with no context, what would confuse them?" Fix whatever the tool identifies, and fix anything else you notice.
 
 The goal is not to get code faster. The goal is to get code that's **functional, readable, and no more complex than it needs to be**. The tool is a collaborator in achieving that, not a code printer.
+
+**Preview: structured planning.** Claude Code also has a `/plan` command that creates a structured plan before making changes. The concept is the same as the iterative pattern above: start with intent, get a plan, review it critically, then execute. We'll use `/plan` hands-on in Week 3; for now, just know it exists and that it follows the same "review before accepting" principle.
 
 #### Architecture Decision Records (~5 min)
 
@@ -654,11 +726,24 @@ Demo: Take a recent PR and run it through Claude Code in a fresh session with a 
 
 Every PR from here on gets all three layers: (1) CI checks (automated), (2) human peer review, (3) LLM adversarial review by a different student.
 
-#### Specs before code (~10 min)
+#### Specs before code (~15 min)
 
 Demo the "spec first" pattern: before implementing, write a short specification in the issue comment describing what you'll change, why, and how you'll verify it worked. For design decisions (choosing between approaches, changing behavior), write this as a short ADR using the template. For straightforward fixes, a paragraph in the issue comment is sufficient.
 
 Show an example: the optimization student (#74) should write an ADR; the bug fix student (#47) should write a diagnosis paragraph.
+
+##### Using `/plan` for structured feature planning
+
+After showing hand-written specs, demo Claude Code's `/plan` command. Take one of this week's assigned issues (e.g., #74 optimization) and show the workflow:
+
+1. **Invoke `/plan`** with a description of what you want to accomplish: "I want to optimize the household step function to iterate over stores once instead of four times. The relevant code is in `food_access_model/abm/household.py`."
+2. **Claude Code explores the codebase** and produces a structured plan: which files to change, in what order, what tests to write, how to verify the refactor didn't change behavior.
+3. **Review the plan critically.** Same rules as reviewing generated code. Does it make sense? Did it miss anything? Is it over-scoped? Did it identify files or dependencies you wouldn't have thought of?
+4. **Compare to a hand-written spec** for the same issue. What's different? (The tool usually maps file-level specifics better; the human usually captures intent and constraints better.)
+
+Key teaching point: `/plan` is most useful for **single-feature implementations** where you know what you want but need to map the code changes. It is not a substitute for thinking about *whether* to do something (that's the ADR). It's a tool for mapping *how* after you've decided *what*.
+
+Best workflow: write your hand-written spec first (the *what* and *why*), then feed it to `/plan` as context to get the *how*. You get your reasoning about intent and the tool's mapping of implementation details.
 
 ### Assigned Work
 
@@ -697,6 +782,12 @@ This is a reported bug: after running a simulation step, all houses appear to ha
 LLM usage: Describe the bug and your hypothesis to the LLM.
    Ask "What else could cause all households to report the
    same store count?" See if it suggests causes you missed.
+
+LLM planning: After writing your diagnosis, try Claude Code's
+   /plan command to map the implementation. Compare its plan to
+   yours. Did it identify files or dependencies you missed? Did
+   it over-scope the change? Use the plan as a cross-check, not
+   a replacement for your own thinking.
 ```
 
 #### Issue #74: Optimize step function (1 student, S)
@@ -733,6 +824,13 @@ LLM usage: After writing your spec, ask the LLM to interview you:
    "I want to optimize a function that iterates stores 4 times per
    household. Ask me questions about my approach."
    The LLM should push back on edge cases you might miss.
+
+LLM planning: After your spec is reviewed, use Claude Code's
+   /plan command to map the refactor. It's particularly useful
+   here because a single-pass optimization touches multiple
+   functions and the plan will identify all the call sites.
+   Compare its plan to your ADR. Did it find dependencies you
+   missed? Did it suggest a different decomposition?
 ```
 
 #### Issue #27: Clean up redundant functions (1 student, J+S pair)
@@ -866,6 +964,29 @@ Show FEAST_edu's ROADMAP.md as an example. Discuss how it stays useful:
 
 Demo: Show Claude Code generating a roadmap summary from `git log`. Compare to the manually maintained ROADMAP.md. What's lost when you auto-generate? (Priorities, dependencies, judgment about what matters, forward-looking decisions.) Auto-generated changelogs are useful artifacts, but they're not roadmaps.
 
+#### Planning at different scales: `/plan` vs. `/ultraplan` (~10 min)
+
+In Week 3, you used `/plan` for a single feature. That's the fine-grained use case: "I know what I'm building, help me map the code changes." This week introduces tools for larger-scope planning.
+
+**`/ultraplan`** is for planning across multiple related issues or an entire project phase. Demo: take the reporting feature cluster (#94 + #79 + frontend #36). These three issues are interdependent: the backend needs an API (#94) that serves metrics (#79) that the frontend displays (#36). Show `/ultraplan` generating a plan that covers all three, identifies the dependency chain (backend API contract must exist before frontend can consume it), and proposes an implementation order.
+
+Compare to the team's manually maintained roadmap:
+- What does `/ultraplan` capture that the manual roadmap doesn't? (Usually: file-level specifics, dependency ordering, implementation sequencing.)
+- What does the manual roadmap capture that `/ultraplan` doesn't? (Usually: priorities, stakeholder context, what *not* to build, judgment about what matters.)
+
+**`/ultrareview`** is the review counterpart. Like the adversarial review rotation from Week 3, but more comprehensive: it can review an entire branch's changes rather than a single PR's diff. This is the tool-assisted version of what students have been doing manually in the adversarial review rotation. We'll use this more in Week 5.
+
+**When to use each:**
+
+| Tool | Scope | Input | Good for |
+|------|-------|-------|----------|
+| `/plan` | Single feature | Issue description + codebase | Mapping code changes for one task |
+| `/ultraplan` | Multiple issues / project phase | Set of issues + codebase | Sequencing work, finding dependencies |
+| `/ultrareview` | Branch or PR set | Diff against base branch | Comprehensive review before merge |
+| Hand-written spec/ADR | Any | Your reasoning | Capturing *why* and *what*, not just *how* |
+
+Neither `/plan` nor `/ultraplan` replaces the human judgment of *which* goals matter. That's the roadmap and ADR layer. The tools map *how*; you decide *what* and *why*.
+
 #### CLAUDE.md check-in (~5 min)
 
 Quick round: each student opens their CLAUDE.md. Has it been updated since Week 1? Does it reflect what you've learned about the codebase? Take 2-3 minutes to update it now. This is a maintenance habit, not a one-time task.
@@ -977,6 +1098,14 @@ LLM usage: Both students can use the LLM to brainstorm what
    designing the SQL aggregation queries. The frontend student
    can ask for help with React component structure.
    Both must understand and be able to explain their code.
+
+Planning across the feature: Before splitting up work, use
+   Claude Code's /plan (or /ultraplan for the combined scope)
+   to map the full feature across backend API, metrics
+   calculation, and frontend display. This helps identify the
+   API contract both students need to agree on. The backend
+   student should define the API spec first; /plan can help
+   map the endpoint design and response model.
 ```
 
 ### Solo Work (later in the week)
@@ -1011,6 +1140,17 @@ At the week 5 session, spend 15 minutes on roadmap planning:
 
 Demo: Run Claude Code's adversarial security review on the current codebase. Show the real issues it finds (raw SQL patterns, hardcoded CORS, no input validation, global mutable state). Discuss which are real risks vs. theoretical.
 
+#### Deployment configuration audit (~10 min)
+
+Revisit the deployment topology from Week 1. As a group exercise:
+
+1. **Map the current topology.** Where is the staging instance running? What backend does it talk to? What database? How are those configured? Have students trace the actual configuration values, not guess.
+2. **Verify local setups.** Each student checks their own three configuration levers (client.js baseURL, .env DB_HOST, CORS origins). Are all three layers pointing where they expect? Anyone accidentally pointing at staging?
+3. **Discuss new environment deployment.** What would need to change to deploy to a new environment? Walk through the list: new DB credentials, new CORS origins, new client.js baseURL (or the env var if frontend #10 was completed), Docker configuration, DNS.
+4. **Connect to security.** The security hardening scaffold already mentions CORS consolidation and env vars. This exercise makes those abstract items concrete. A misconfigured deployment is a security issue.
+
+This exercise should take 10 minutes and reinforces the mental model from Week 1 with 5 weeks of hands-on experience.
+
 #### Review pipeline retrospective (~15 min)
 
 The full three-layer review pipeline has been running since Week 3. Take stock as a group:
@@ -1019,6 +1159,8 @@ The full three-layer review pipeline has been running since Week 3. Take stock a
 - **LLM adversarial review:** What's it catching that humans miss? What are the most common false positives? Is the rotation working, or should we adjust?
 
 Adjust the process based on what the team has learned. This is an explicit process improvement step, not just a chat.
+
+**Try `/ultrareview`:** If the team hasn't used it yet, run `/ultrareview` on the current branch (the accumulated changes since branching from main). Compare its findings to the per-PR adversarial review comments from Weeks 3-5. Is it catching cross-cutting issues that per-PR reviews missed? Is it generating noise? Discuss whether `/ultrareview` should be part of the pre-merge checklist for the next cohort, and if so, at what cadence (per PR, per milestone, before merge to main).
 
 #### CLAUDE.md and artifact audit (~5 min)
 
@@ -1046,6 +1188,10 @@ Run through this checklist. Fix what you can; file issues for the rest.
 [ ] Env vars: Verify .env.example is complete and .env is in .gitignore
 [ ] Auth: There is currently zero authentication on any endpoint.
     Document whether this is acceptable for the deployment context.
+[ ] Deployment configuration: Verify each layer's configuration
+    points are documented and environment-appropriate. No local
+    .env files should contain staging/production credentials.
+    client.js baseURL should not point at production in dev branches.
 
 Use the LLM adversarial review to scan for issues you missed:
    "Review this file for OWASP Top 10 security risks. Be thorough."
@@ -1120,6 +1266,8 @@ Final prioritization before week 6. Each student reviews the full issue list and
    - Where did AI tools lead you astray? What did you learn to watch for?
    - How did the review pipeline (CI + human + LLM adversarial) affect code quality?
    - Were the project management artifacts (CLAUDE.md, ADRs, roadmaps) worth the effort? Which would you keep, drop, or change?
+   - Agentic engineering vs. vibe coding: when did you catch yourself slipping into vibe coding? What pulled you back? Did the progressive restrictions help or just slow you down?
+   - How did `/plan`, `/ultraplan`, and `/ultrareview` compare to hand-written specs and manual review? When was each more useful?
    - What would you tell the next cohort?
 3. **Handoff** (20 min): Finalize the roadmap for the next cohort.
 
@@ -1154,7 +1302,9 @@ This is the team's final output beyond the code itself. Write a `docs/ROADMAP.md
    - ADRs written this cohort: list them with one-line summaries so the next team knows what decisions are settled
 
 5. **What we learned about LLM-assisted development and project management**: 3-5 bullet points each on:
+   - Agentic engineering vs. vibe coding: concrete examples of when each happened, what the consequences were, and what habits helped you stay in the agentic engineering mode
    - Which agentic tool patterns were most helpful and which led you astray
+   - How `/plan`, `/ultraplan`, and `/ultrareview` compared to hand-written specs and manual review
    - How the progressive LLM usage restriction affected your learning (would you change the progression?)
    - Which project management artifacts (CLAUDE.md, ADRs, roadmaps) were most useful in practice
    - Advice for the next cohort on working with AI tools and maintaining project artifacts
@@ -1169,11 +1319,11 @@ This is the team's final output beyond the code itself. Write a `docs/ROADMAP.md
 
 | Week | Assigned Issues (group session) | Solo Work Focus | Tool/Process Pattern | Roadmap Activity |
 |------|-------------------------------|----------------|---------------------|-----------------|
-| 1 | (orientation, codebase traces) | File issues + create CLAUDE.md | Agentic tools installed, LLM as explainer only, project mgmt artifacts introduced | Seed the backlog |
-| 2 | #24, #18, #19, #20 + first tests | Apply same skill to adjacent files | CI pipeline + peer review start, ADRs introduced, edge case brainstorming | Triage + prioritize backlog |
-| 3 | #47, #74, #27, #50 | Pick an issue from backlog, work it | LLM adversarial review rotation starts (full 3-layer pipeline), ADR-format specs | Nominate priorities for weeks 4-5 |
-| 4 | #91, #67, #94/#36 (reporting), #79 | File new issues + pick from backlog | Manual vs. auto-generated ADRs, LLM as design partner, CLAUDE.md check-in | Roadmap check: what's realistic? |
-| 5 | #63 + security + frontend #10 + integration | Full autonomy: ship highest-impact work | Review pipeline retrospective, security scanning, CLAUDE.md audit | Tag issues for next cohort |
+| 1 | (orientation, codebase traces) | File issues + create CLAUDE.md | Agentic tools installed, LLM as explainer only, project mgmt artifacts introduced, deployment configuration mental model | Seed the backlog |
+| 2 | #24, #18, #19, #20 + first tests | Apply same skill to adjacent files | CI pipeline + peer review start, ADRs introduced, edge case brainstorming, `/plan` previewed | Triage + prioritize backlog |
+| 3 | #47, #74, #27, #50 | Pick an issue from backlog, work it | LLM adversarial review rotation starts (full 3-layer pipeline), ADR-format specs, `/plan` for feature specs | Nominate priorities for weeks 4-5 |
+| 4 | #91, #67, #94/#36 (reporting), #79 | File new issues + pick from backlog | Manual vs. auto-generated ADRs, `/plan` vs. `/ultraplan` vs. `/ultrareview`, LLM as design partner, CLAUDE.md check-in | Roadmap check: what's realistic? |
+| 5 | #63 + security + frontend #10 + integration | Full autonomy: ship highest-impact work | Review pipeline retrospective, deployment config audit, `/ultrareview` evaluation, security scanning, CLAUDE.md audit | Tag issues for next cohort |
 | 6 | Documentation + roadmap handoff | Final push: close or reassign everything | Tool config handoff, process retrospective, reflection on tool usage | Write ROADMAP.md for next cohort |
 
 Note: Issue numbers above are from the `ICICLE-ai/Food-Access-Model` repo unless prefixed with "frontend" (from `ICICLE-ai/FASS-Frontend`).
@@ -1198,11 +1348,11 @@ Pair J and S students on cross-cutting work (e.g., #94 backend + #79 frontend).
 
 | Week | Tool/Process Milestones | Allowed LLM Usage | Not Yet |
 |------|------------------------|-------------------|---------|
-| 1 | Agentic tools installed (Claude Code, Copilot, etc.). CLAUDE.md created. Project mgmt artifacts introduced. | Ask for explanations of existing code. Compare tool responses. | Code generation |
-| 2 | CI pipeline live. Peer review required. First ADR written (linting student). Iterative code quality pattern introduced. | Edge case brainstorming, type hint questions, "what does this error mean." ADR drafting assistance (student owns the decision). Interactive code refinement (push back on complexity, ask for best practices). | Writing functions, writing tests |
-| 3 | Full 3-layer review pipeline (CI + human + LLM adversarial). ADR-format specs for design decisions. | Spec review ("interview me about my approach"), adversarial PR review rotation. | "Fix this bug for me" |
-| 4 | LLM-generated ADRs from diffs/PRs (compare to manual). Roadmap maintenance. CLAUDE.md updates. | Design discussion ("what are the tradeoffs of X vs Y"), small code generation with spec. Auto-generate ADR drafts, then review and edit. | Generating without a spec |
-| 5-6 | Review pipeline retrospective. Tool and process audit. Tool config handoff. | Full workflow, adversarial security review. Choose manual vs. assisted artifact generation based on decision complexity. | n/a, full access earned |
+| 1 | Agentic tools installed (Claude Code, Copilot, etc.). CLAUDE.md created. Project mgmt artifacts introduced. Deployment configuration mental model introduced. | Ask for explanations of existing code. Compare tool responses. | Code generation |
+| 2 | CI pipeline live. Peer review required. First ADR written (linting student). Iterative code quality pattern introduced. `/plan` previewed (demonstrated, not yet used independently). | Edge case brainstorming, type hint questions, "what does this error mean." ADR drafting assistance (student owns the decision). Interactive code refinement (push back on complexity, ask for best practices). | Writing functions, writing tests, using `/plan` independently |
+| 3 | Full 3-layer review pipeline (CI + human + LLM adversarial). ADR-format specs for design decisions. `/plan` introduced for single-feature implementation planning. | Spec review ("interview me about my approach"), adversarial PR review rotation. Use `/plan` to cross-check hand-written specs. | "Fix this bug for me." Using `/plan` output without reviewing it. Using `/ultraplan`. |
+| 4 | LLM-generated ADRs from diffs/PRs (compare to manual). `/ultraplan` and `/ultrareview` introduced for project-level scaffolding. Roadmap maintenance. CLAUDE.md updates. | Design discussion ("what are the tradeoffs of X vs Y"), small code generation with spec. Auto-generate ADR drafts, then review and edit. Use `/plan` independently for feature work. `/ultraplan` for multi-issue planning. `/ultrareview` for branch-level review. | Generating without a spec. Skipping hand-written specs entirely in favor of `/plan`. |
+| 5-6 | Review pipeline retrospective. `/ultrareview` evaluated for pre-merge checklist. Deployment configuration audit. Tool and process audit. Tool config handoff. | Full workflow, adversarial security review. Choose manual vs. assisted artifact generation based on decision complexity. Choose between manual specs and `/plan` based on scope. | n/a, full access earned |
 
 The progression matters because students need to build the muscle of *thinking first* before they get the power of *generating*. A freshman who learns to generate code in week 1 will never learn to read code. A senior who is forced to read code in week 1 will use generation more effectively later.
 
@@ -1263,9 +1413,12 @@ The tooling progression runs in parallel: tools are set up early (Week 1), proce
 
 **For the students:**
 - Can read and understand unfamiliar code without LLM help
+- Practice agentic engineering, not vibe coding: can explain every line, write specs before generating code, and critically review tool output
 - Know how to write specs and ADRs before implementing, both manually and with LLM assistance
+- Can use `/plan` for feature-level implementation mapping, `/ultraplan` for multi-issue coordination, and `/ultrareview` for branch-level review
 - Can write meaningful tests (not just happy-path)
 - Fluent with agentic coding tools (Claude Code and at least one alternative); know when to use them and when not to
+- Understand the deployment topology: how frontend, backend, and database connect across environments, and how to configure each
 - Understand and can maintain project management artifacts (CLAUDE.md, ADRs, roadmaps)
 - Have shipped real features through a real PR workflow with a three-layer review pipeline
 - Can do adversarial code review (with and without LLM assistance)

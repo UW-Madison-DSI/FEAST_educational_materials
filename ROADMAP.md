@@ -5,7 +5,7 @@ title: "Roadmap"
 
 # ROADMAP
 
-Last updated: 2026-05-07
+Last updated: 2026-05-08
 
 ## Current State
 
@@ -54,6 +54,17 @@ Last updated: 2026-05-07
   - [x] Update LLM Usage Progression table
   - [x] Update Issue-to-Week Mapping Summary table
 - [x] Update CONTENT_MAP.md to reflect curriculum changes (slide impact per week)
+- [x] **Curriculum additions (DEC-005):** Deployment configuration mental model, Claude Code planning workflows, agentic engineering framing
+  - [x] Week 1: Deployment topology diagram, configuration matrix, three configuration levers
+  - [x] Week 2: `/plan` preview in iterative code pattern demo
+  - [x] Week 3: `/plan` for single-feature spec cross-checking, scaffold updates for #47 and #74
+  - [x] Week 4: `/plan` vs. `/ultraplan` vs. `/ultrareview` section, reporting feature scaffold update
+  - [x] Week 5: Deployment configuration audit exercise, `/ultrareview` in retrospective, security checklist update
+  - [x] Week 1: "Agentic engineering vs. vibe coding" framing section, Week 2 callback, Week 6 retrospective questions, success criteria updates
+  - [x] Update LLM Usage Progression table and Issue-to-Week Mapping Summary
+  - [x] Update CONTENT_MAP.md with new deployment and planning content
+  - [x] Fix environment setup guide (01) for consistency with curriculum (run_local.py, port 8000, client.js)
+  - [x] New guides: 10-deployment-configuration.md, 11-planning-with-claude-code.md
 - [ ] Consistency review across all written materials (cross-references, terminology, scaffolding tiers)
 - [ ] Verify FEAST code references (file paths, line numbers) against current codebase state
 

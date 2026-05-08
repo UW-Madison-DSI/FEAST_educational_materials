@@ -24,3 +24,8 @@ Scaffolded guides that walk you through increasingly complex contributions to th
 
 8. [Adversarial Code Review](08-adversarial-review) -- stress-test LLM-generated code
 9. [Self-Directed Work](09-self-directed-work) -- choose and complete a contribution independently
+
+## Reference Guides
+
+10. [Deployment Configuration](10-deployment-configuration) -- understand how frontend, backend, and database connect across environments
+11. [Planning with Claude Code](11-planning-with-claude-code) -- when and how to use `/plan`, `/ultraplan`, and `/ultrareview`

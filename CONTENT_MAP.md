@@ -19,18 +19,19 @@ This file maps sections of `STUDENT_ONBOARDING_PLAN.md` to slide numbers in each
 
 | Curriculum section (line) | Slide(s) | Shared facts to keep in sync |
 |---|---|---|
-| Constraints (L8-16) | -- | Branch names, repo URLs |
-| How This Plan Works (L17-31) | 02 How the week works, 03 Weekly rhythm | Session structure, solo work description |
-| **Food accessibility** (L44-60) | 05 Section, 06 Four factors, 07 Why it matters, 08 Decisions FEAST answers | Four factors list, USDA stats, example questions |
-| **ABM approach** (L62-106) | 10 Section, 11 What is ABM, 12 Two agents, 13 Household step, 14 MFAI formula, 15 MFAI worked example, 16 Mesa | ABM properties, agent types, step logic, MFAI scores (95/55/25), trip counts (7/8/6), income thresholds, has_resources() line ref, Mesa components |
-| Use cases and stakeholders (L108-123) | 09 Stakeholders, 18 Origin | Stakeholder list, example scenarios, ICICLE/NSF origin |
-| **Architecture** (L125-178) | 19 Section, 20 Three layers, 21 Frontend, 22 Backend, 23 Database, 24 Step lifecycle (condensed) | Three-layer diagram, frontend tech (React 19/Vite/Leaflet), backend tech (FastAPI/Mesa/asyncpg), DB schema, CRS (4326 vs 3857), entry points, step lifecycle (condensed summary), multiprocessing, client.js hardcoded URL, port numbers |
-| **Project mgmt artifacts** (L179-189) | NEW: slide(s) needed | CLAUDE.md, ROADMAP.md, DECISIONS.md overview; brief on-screen display |
-| **Agentic coding tools** (L190-225) | 25 Section (REWORK), 25b The one rule, NEW: tool landscape slides, NEW: CLAUDE.md as config slide, NEW: live demo slide, 27 Week 1 rules | Tool landscape (Claude Code, Cursor, Copilot, Aider), CLAUDE.md as agent config, the one rule (explain every line), live demo comparing tools, week 1 LLM restrictions |
-| **Setup** (L227-337) | 28 Section, 29 Prerequisites, 30 Setup steps (NOW INCLUDES Claude Code install as Step 3), 31 Working state, 32 Common problems | Prerequisites list, clone/branch/install steps, Claude Code install, run_local.py port 8000, client.js edit, common problems list, live instance URL |
-| Assigned work (L293-319) | 33 Section, 34 Use the app, 35 Endpoint traces, 36 Deliverable | Endpoint trace table (5 students), deliverable (PR with trace), live instance URL |
-| Solo work (L374-441) | 37 Section, 38 Solo explore, NEW: CLAUDE.md creation slide, 39 Solo file issues, 40 Things you'll find, 41 Stretch | J vs S exploration targets, CLAUDE.md creation in FEAST repo, issue filing expectations (3+), example issues list, stretch goals |
-| Roadmap activity (L385-387) | 42 Roadmap kickoff | Review + label + project board |
+| Constraints (L8-15) | -- | Branch names, repo URLs |
+| How This Plan Works (L17-32) | 02 How the week works, 03 Weekly rhythm | Session structure, solo work description |
+| **Food accessibility** (L54-70) | 05 Section, 06 Four factors, 07 Why it matters, 08 Decisions FEAST answers | Four factors list, USDA stats, example questions |
+| **ABM approach** (L72-116) | 10 Section, 11 What is ABM, 12 Two agents, 13 Household step, 14 MFAI formula, 15 MFAI worked example, 16 Mesa | ABM properties, agent types, step logic, MFAI scores (95/55/25), trip counts (7/8/6), income thresholds, has_resources() line ref, Mesa components |
+| Use cases and stakeholders (L118-133) | 09 Stakeholders, 18 Origin | Stakeholder list, example scenarios, ICICLE/NSF origin |
+| **Architecture** (L135-187) | 19 Section, 20 Three layers, 21 Frontend, 22 Backend, 23 Database, 24 Step lifecycle (condensed) | Three-layer diagram, frontend tech (React 19/Vite/Leaflet), backend tech (FastAPI/Mesa/asyncpg), DB schema, CRS (4326 vs 3857), entry points, step lifecycle (condensed summary), multiprocessing, client.js hardcoded URL, port numbers |
+| **Deployment configurations** (L189-234) | NEW: slide(s) needed (after slide 24) | Deployment topology diagram (3 environments x 3 layers), configuration matrix table, three configuration levers (client.js, .env, CORS), common configurations, cross-environment safety warning |
+| **Project mgmt artifacts** (L236-244) | NEW: slide(s) needed | CLAUDE.md, ROADMAP.md, DECISIONS.md overview; brief on-screen display |
+| **Agentic coding tools** (L246-297) | 25 Section (REWORK), NEW: agentic engineering vs vibe coding slide, 25b The one rule, NEW: tool landscape slides, NEW: CLAUDE.md as config slide, NEW: live demo slide, 27 Week 1 rules | Agentic engineering vs. vibe coding distinction, tool landscape (Claude Code, Cursor, Copilot, Aider), CLAUDE.md as agent config, the one rule (explain every line), live demo comparing tools, week 1 LLM restrictions |
+| **Setup** (L299-423) | 28 Section, 29 Prerequisites, 30 Setup steps (NOW INCLUDES Claude Code install as Step 3), 31 Working state, 32 Common problems | Prerequisites list, clone/branch/install steps, Claude Code install, run_local.py port 8000, client.js edit, common problems list, live instance URL |
+| Assigned work (L425-454) | 33 Section, 34 Use the app, 35 Endpoint traces, 36 Deliverable | Endpoint trace table (5 students), deliverable (PR with trace), live instance URL |
+| Solo work (L455-522) | 37 Section, 38 Solo explore, NEW: CLAUDE.md creation slide, 39 Solo file issues, 40 Things you'll find, 41 Stretch | J vs S exploration targets, CLAUDE.md creation in FEAST repo, issue filing expectations (3+), example issues list, stretch goals |
+| Roadmap activity (L523-526) | 42 Roadmap kickoff | Review + label + project board |
 | -- | 01 Title, 03b Live demo, 04a Act I, 24b Act II, 43 Recap, 44 Q&A | Structural slides, no curriculum counterpart |
 
 ### Key shared values (Week 1)
@@ -51,15 +52,18 @@ These specific values appear in both the curriculum and slides. If any change, b
 - **Agentic tools listed:** Claude Code, Cursor, Copilot, Aider
 - **Review pipeline layers:** CI checks (Week 2), peer review (Week 2), LLM adversarial review (Week 3)
 - **Project mgmt artifacts:** CLAUDE.md, ROADMAP.md, DECISIONS.md
+- **Configuration levers:** client.js baseURL (frontend->backend), .env DB_HOST (backend->DB), CORS origins (backend->frontend). Appears in three places: `STUDENT_ONBOARDING_PLAN.md` (Week 1 deployment config section), `docs/guides/01-environment-setup.md` (Configuration Points), and `docs/guides/10-deployment-configuration.md`. All three must stay in sync.
+- **Common configurations:** full local, local FE + staging API, full staging, mixed (mistake)
+- **Planning tools:** `/plan` (Week 3), `/ultraplan` (Week 4), `/ultrareview` (Week 4)
 
 ## Weeks 2-6
 
 Slide decks for these weeks do not exist yet. When created, add mappings here following the Week 1 format.
 
-| Week | Curriculum topics (post-DEC-004 restructuring) | Slide deck | Status |
+| Week | Curriculum topics (post-DEC-004/DEC-005 restructuring) | Slide deck | Status |
 |---|---|---|---|
-| 2 | Review pipeline (CI + peer review), ADR introduction, edge case brainstorming, PR workflow, CLAUDE.md review | `slides/week-2/index.html` | Not started |
-| 3 | LLM adversarial review rotation (completing 3-layer pipeline), specs before code, ADR-format specs | `slides/week-3/index.html` | Not started |
-| 4 | Manual vs. auto-generated artifacts, ADR generation from diffs, roadmap maintenance, CLAUDE.md check-in | `slides/week-4/index.html` | Not started |
-| 5 | Security review, deployment readiness, review pipeline retrospective, CLAUDE.md audit | `slides/week-5/index.html` | Not started |
+| 2 | Review pipeline (CI + peer review), ADR introduction, edge case brainstorming, PR workflow, `/plan` preview, CLAUDE.md review | `slides/week-2/index.html` | Not started |
+| 3 | LLM adversarial review rotation (completing 3-layer pipeline), specs before code, `/plan` for feature specs, ADR-format specs | `slides/week-3/index.html` | Not started |
+| 4 | Manual vs. auto-generated artifacts, ADR generation from diffs, `/plan` vs. `/ultraplan` vs. `/ultrareview`, roadmap maintenance, CLAUDE.md check-in | `slides/week-4/index.html` | Not started |
+| 5 | Security review, deployment configuration audit, `/ultrareview` evaluation, review pipeline retrospective, CLAUDE.md audit | `slides/week-5/index.html` | Not started |
 | 6 | Retrospective (tools + process), demo, handoff (may be discussion-driven, slides optional) | `slides/week-6/index.html` | Not started |
