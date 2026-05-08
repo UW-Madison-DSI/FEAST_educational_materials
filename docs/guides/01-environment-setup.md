@@ -49,12 +49,16 @@ You'll need to create the database and tables. Check if there's a schema file or
 ### 3. Run the backend
 
 ```bash
-uv run uvicorn api_server:app --host 0.0.0.0 --port 8080 --reload
+uv run python run_local.py
 ```
+
+This runs `uvicorn food_access_model.main:app --reload --port 8000`.
+
+**Important:** Use `run_local.py` (which runs `food_access_model.main:app`). Do NOT use `api_server.py` -- it's an older entry point with different CORS settings that will cause issues with your local frontend.
 
 Test it:
 ```bash
-curl http://localhost:8080/api/simulation-instances
+curl http://localhost:8000/api/simulation-instances
 ```
 
 You should get a JSON response (possibly an empty list if no data yet).
@@ -62,14 +66,17 @@ You should get a JSON response (possibly an empty list if no data yet).
 ### 4. Frontend setup
 
 ```bash
-cd fass-frontend/fass-react
+cd FASS-Frontend/fass-react
+git checkout Brown-County-Frontend
 npm install
 ```
 
-Create or edit `.env`:
+Edit `src/shared/client.js` line 3 -- change the `baseURL` to:
 ```
-VITE_API_URL=http://localhost:8080/api
+http://127.0.0.1:8000/api
 ```
+
+The API URL is hardcoded in this file, not configured via environment variable. The file has commented alternatives for staging/production URLs.
 
 ```bash
 npm run dev
@@ -81,12 +88,25 @@ Open http://localhost:5173 in your browser.
 
 You should see a Leaflet map centered on Brown County, WI. If there's data in the database, you'll see colored household markers and store markers.
 
+## Configuration Points
+
+Your local setup has three configuration levers. Most setup problems come from one of these pointing at the wrong place.
+
+| Lever | File | Controls |
+|-------|------|----------|
+| Frontend -> Backend | `src/shared/client.js:3` (baseURL) | Which backend API the frontend talks to |
+| Backend -> Database | `.env` (DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS) | Which database the backend reads/writes |
+| Backend -> Frontend (CORS) | `food_access_model/main.py` (CORS origins) | Which frontends the backend accepts requests from |
+
+For local development, all three should point at localhost. See the [Deployment Configuration](10-deployment-configuration) guide for the full picture of how these work across environments.
+
 ## Common Problems
 
-- **"Connection refused" on backend**: Is PostgreSQL running? Are `.env` creds correct?
+- **"Connection refused" on backend**: Is PostgreSQL running? Are `.env` creds correct? Is the backend on port 8000 (`run_local.py`)? Make sure `client.js` baseURL matches.
 - **Empty map**: Database might not have data. Check the preprocessing pipeline or ask if there's a database dump to restore.
-- **CORS errors in browser console**: Backend CORS is hardcoded to a Tapis URL in `api_server.py:70`. Change it to allow your localhost origin, or set it to `["*"]` for local dev.
-- **Import errors**: Make sure you're on the `minimum_viable_product` branch, not `main`.
+- **CORS errors in browser console**: If using `food_access_model/main.py` (via `run_local.py`), CORS already allows `localhost:5173`. If you accidentally used `api_server.py`, it only allows a Tapis staging URL and you'll get CORS errors.
+- **Import errors**: Make sure you're on the `minimum_viable_product` branch (backend) and `Brown-County-Frontend` branch (frontend), not `main`.
+- **Unexpected data / "someone else's simulation"**: Your backend might be pointed at a staging database instead of your local one. Check `.env` -- `DB_HOST` should be `localhost`.
 
 ## LLM Usage
 
@@ -95,6 +115,6 @@ You should see a Leaflet map centered on Brown County, WI. If there's data in th
 
 ## Definition of Done
 
-- [ ] Backend responds to `curl http://localhost:8080/api/simulation-instances`
+- [ ] Backend responds to `curl http://localhost:8000/api/simulation-instances`
 - [ ] Frontend loads in browser and shows a map
 - [ ] You can see households and/or stores on the map
