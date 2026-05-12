@@ -541,7 +541,77 @@ Every PR from this week forward goes through a structured review pipeline. This 
 
 Demo: Show a GitHub Actions workflow that runs flake8 on a PR. Show what a failing check looks like. Show what a passing check looks like. Walk through the PR template.
 
-Also introduce: Branch workflow (`dev` -> feature branches), commit conventions.
+#### Git workflow for teams (~15 min)
+
+Week 1 introduced the basic git commands (clone, commit, push). This session covers how the team uses git together: branches, pull requests, and commit conventions.
+
+[SCAFFOLD: Git Workflow Guide]
+
+**Branch strategy.** The FEAST project uses three levels of branches:
+
+- `main` is the stable, deployed version. You never push directly to main.
+- `dev` is the integration branch. Your feature branches merge into dev via pull request.
+- Feature branches are where you do your work. Always create them from an up-to-date `dev`:
+
+```bash
+git checkout dev
+git pull
+git checkout -b feature/issue-NUMBER-short-desc
+```
+
+Name your branch after the issue you're working on: `feature/issue-24-linting`, `feature/issue-47-store-count-fix`. This makes it obvious what each branch is for.
+
+**Commit conventions.** Good commit messages help your teammates (and future you) understand what changed and why.
+
+Rules:
+1. Use imperative mood (like giving a command): "Add flake8 configuration" not "Added flake8" or "flake8 stuff"
+2. Reference issue numbers: "Fix store count bug (#47)"
+3. One logical change per commit. If you did two things, make two commits.
+
+Good examples:
+- `Add flake8 configuration and pre-commit hook (#24)`
+- `Fix duplicate store count in household step (#47)`
+- `Add type hints to simulation endpoint (#18)`
+
+Bad examples:
+- `fixed stuff`
+- `updates`
+- `WIP`
+- `asdfasdf`
+
+**Pull request workflow.** Once your code is ready to share:
+
+1. Push your branch: `git push -u origin feature/issue-NUMBER-desc`
+2. Open a pull request on GitHub. The PR template asks for: Summary, Changes, Test Plan, Tradeoffs, Checklist.
+3. Link to the issue with "Closes #NUMBER" in the PR description.
+4. Request a reviewer (another student).
+5. Keep PRs small: aim for under ~200 lines of changed code (non-test). Smaller PRs get reviewed faster and have fewer bugs.
+6. Respond to review comments, push additional commits to the same branch, and re-request review.
+7. Once approved and CI passes, merge to `dev`.
+
+**The daily git rhythm (J-tier checklist):**
+
+```
+Starting work:
+  git checkout dev
+  git pull
+  git checkout -b feature/issue-NUMBER-desc   (new branch)
+  -- or --
+  git checkout feature/my-existing-branch      (resume work)
+  git pull                                     (get any updates)
+
+While working:
+  git status                    (check where you are)
+  git add <specific files>      (stage changes)
+  git commit -m "descriptive message (#NUMBER)"
+
+Sharing work:
+  git push -u origin <branch>   (first push)
+  git push                      (subsequent pushes)
+  Open a PR on GitHub when ready for review
+```
+
+**S-tier expectations.** S students should be able to: resolve merge conflicts, rebase a feature branch onto an updated `dev` (`git checkout feature/... && git rebase dev`), and help J students recover from git mistakes. If a J student is stuck on git, pair with them until they're unstuck.
 
 #### Edge case brainstorming with LLMs (~10 min)
 
@@ -1387,7 +1457,7 @@ The tooling progression runs in parallel: tools are set up early (Week 1), proce
 - GitHub Issues for technical discussion (keeps it with the code)
 - Short standup at start of each group session: "What I shipped, what's blocking me, what I filed"
 
-**Branch strategy:**
+**Branch strategy** (see the Week 2 Git Workflow scaffold above for the full guide):
 - `main` is stable (deployed)
 - `dev` is integration
 - Feature branches off `dev`, named `feature/issue-NUMBER-short-desc`

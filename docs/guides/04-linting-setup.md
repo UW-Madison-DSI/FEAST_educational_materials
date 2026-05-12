@@ -15,7 +15,7 @@ The FEAST codebase has no automated linting or CI checks. This means style issue
 
 - [ ] Read `pyproject.toml` to understand current dependencies
 - [ ] Read `eslint.config.js` in the frontend (it exists but may not be wired up)
-- [ ] Branch: `feature/issue-24-linting`
+- [ ] Branch: `feature/issue-24-linting` (see [Git Fundamentals in Guide 01](01-environment-setup#git-fundamentals) for branching conventions)
 
 ## Steps
 

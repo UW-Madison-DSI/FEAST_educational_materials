@@ -9,7 +9,7 @@ Scaffolded guides that walk you through increasingly complex contributions to th
 
 ## Weeks 1-2: Foundations
 
-1. [Environment Setup](01-environment-setup) -- clone repos, configure tools, run the app locally
+1. [Environment Setup](01-environment-setup) -- git fundamentals, clone repos, configure tools, run the app locally
 2. [Filing Good Issues](02-issue-filing) -- write clear, actionable bug reports and feature requests
 3. [Adding Type Hints](03-type-hints) -- annotate function signatures and add docstrings
 4. [Setting Up Linting](04-linting-setup) -- configure flake8 and pre-commit hooks

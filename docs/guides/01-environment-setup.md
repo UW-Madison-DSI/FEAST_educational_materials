@@ -14,8 +14,85 @@ Get the FEAST backend and frontend running locally so you can use the tool and e
 - [ ] Python 3.11+ installed
 - [ ] Node.js 18+ and npm installed
 - [ ] PostgreSQL running locally (or access to a shared instance)
-- [ ] Git configured with GitHub access
+- [ ] Git configured with GitHub access (verify: `git --version`, `git config --get user.name`, `ssh -T git@github.com`)
 - [ ] uv installed (`pip install uv`)
+
+## Git Fundamentals
+
+If you've never used git before, this section is for you. If you're comfortable with git already, skip ahead to [Steps](#steps) and help a teammate who's learning.
+
+### What is git?
+
+Git is version control for code. Think of it as a system of save points: every time you commit, git takes a snapshot of all your files. You can always go back to any previous snapshot. When multiple people work on the same project, git tracks everyone's changes and helps combine them.
+
+Two key pieces:
+- **Your local copy.** When you clone a repo, you get the entire project and its history on your machine. You work here.
+- **GitHub (the remote).** The shared copy that everyone pushes to and pulls from. This is the source of truth.
+
+### Core concepts
+
+| Concept | What it means |
+|---------|--------------|
+| **Repository (repo)** | A project folder tracked by git. Contains every file and the full history of changes. |
+| **Commit** | A snapshot of your files at a moment in time. Each commit has a message describing what changed. Like a save point you can return to. |
+| **Branch** | A named line of development. The FEAST project uses `main` (stable), `dev` (integration), and feature branches (your work). |
+| **Staging area** | A holding zone between "files you changed" and "files you committed." You choose which changes go into each commit using `git add`. |
+| **Remote** | The copy of the repo on GitHub. `git push` sends your commits there; `git pull` brings down everyone else's. |
+
+### Commands you need this week
+
+| Command | What it does | When you use it |
+|---------|-------------|-----------------|
+| `git clone <url>` | Download a repo from GitHub to your machine | Once, during setup |
+| `git checkout <branch>` | Switch to a different branch | When moving between branches |
+| `git status` | Show what files changed, what's staged, what branch you're on | Constantly. This is your "where am I?" command. |
+| `git add <file>` | Stage a file for the next commit | Before committing |
+| `git commit -m "message"` | Save a snapshot with a descriptive message | After staging changes |
+| `git push` | Upload your commits to GitHub | After committing, to share your work |
+| `git pull` | Download the latest changes from GitHub | Before starting new work |
+| `git log --oneline` | See recent commits (one line each) | To check history |
+| `git diff` | See what you changed since the last commit | To review your own changes before committing |
+
+### Your first commit (J-tier walkthrough)
+
+You'll do this for real during the endpoint trace assignment. Here's what the sequence looks like:
+
+```bash
+# 1. Make sure you're on the dev branch and up to date
+git checkout dev
+git pull
+
+# 2. Create a new branch for your work
+git checkout -b feature/trace-your-name
+
+# 3. Do your work (create your trace file, etc.)
+
+# 4. Check what changed
+git status
+
+# 5. Stage your new file
+git add docs/traces/your-trace-file.md
+
+# 6. Commit with a descriptive message
+git commit -m "Add endpoint trace for GET /simulation-instances"
+
+# 7. Push to GitHub
+git push -u origin feature/trace-your-name
+```
+
+After pushing, you'll open a pull request on GitHub. We'll cover PRs in detail during Week 2.
+
+### Common mistakes and how to recover
+
+**"I don't know what's going on."** Run `git status`. It tells you what branch you're on, what files changed, and what's staged. When in doubt, `git status`.
+
+**"git won't let me switch branches because of uncommitted changes."** You have unsaved work. Either commit it first (`git add` then `git commit`) or stash it temporarily (`git stash`, switch branches, then `git stash pop` to get it back).
+
+**"I committed to the wrong branch."** Don't try to fix this yourself yet. Ask your S-tier partner or an instructor. Git can undo almost anything, but the recovery commands are easy to get wrong.
+
+**"I see a merge conflict."** This means two people changed the same lines. The file will have markers like `<<<<<<<` and `>>>>>>>` showing both versions. Ask your S-tier partner to walk you through resolving it. This is normal and expected when teams share code.
+
+> **S-tier students:** You probably know most of this already. Your job this week is to help J students through their first commit and push. If a J student's git is broken, that's your problem too.
 
 ## Steps
 

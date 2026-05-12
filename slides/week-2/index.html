@@ -1,0 +1,1225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>FEAST Week 2 — Linting, Type Hints, and First Real PRs</title>
+<link rel="stylesheet" href="colors_and_type.css"/>
+<style>
+  /* =========================================================
+     Type & spacing scale (deck-wide)
+     ========================================================= */
+  :root {
+    --type-display: 120px;
+    --type-title: 64px;
+    --type-subtitle: 44px;
+    --type-body: 34px;
+    --type-small: 28px;
+    --type-eyebrow: 24px;
+    --pad-top: 96px;
+    --pad-bottom: 130px;
+    --pad-x: 100px;
+    --gap-title: 48px;
+    --gap-item: 28px;
+  }
+
+  body { background: #1a1816; margin: 0; }
+
+  /* Slide chrome */
+  deck-stage section {
+    background: var(--bone);
+    position: relative;
+    overflow: hidden;
+    padding: var(--pad-top) var(--pad-x) var(--pad-bottom);
+    display: flex;
+    flex-direction: column;
+    color: var(--ink);
+    font-family: var(--font-body);
+  }
+
+  /* ---- Reusable elements ---- */
+  .pattern-bg {
+    position: absolute; inset: 0;
+    opacity: 0.05;
+    background-image: radial-gradient(circle, var(--ink) 1.5px, transparent 1.5px);
+    background-size: 28px 28px;
+    pointer-events: none;
+  }
+  .pattern-bg.on-dark {
+    opacity: 0.08;
+    background-image: radial-gradient(circle, #fff 1.5px, transparent 1.5px);
+  }
+  .red-bar { width: 80px; height: 8px; background: var(--badger-red); border-radius: 4px; }
+
+  .eyebrow-slide {
+    font-family: var(--font-display);
+    font-size: var(--type-eyebrow);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--fg-2);
+  }
+  .eyebrow-slide.on-dark { color: var(--mist); }
+
+  .slide-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--type-title);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: 16px 0 var(--gap-title);
+    color: var(--ink);
+    max-width: 1500px;
+  }
+
+  .slide-sub {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: var(--type-subtitle);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--fg-2);
+    margin: 0 0 var(--gap-title);
+    max-width: 1500px;
+  }
+
+  .body-text {
+    font-size: var(--type-body);
+    line-height: 1.5;
+    color: var(--ink);
+    max-width: 1500px;
+  }
+  .body-text.muted { color: var(--fg-2); }
+
+  /* Footer chip on content slides */
+  deck-stage section > div:not(.pattern-bg):not(.deck-footer) {
+    padding-bottom: 80px;
+  }
+  .deck-footer {
+    position: absolute;
+    bottom: 40px; left: var(--pad-x); right: var(--pad-x);
+    font-size: 16px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--font-mono);
+    font-size: 16px;
+    color: var(--fg-3);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .deck-footer .dot { color: var(--badger-red); margin: 0 10px; }
+  section.dark .deck-footer { color: var(--mist); }
+
+  /* Cards used across slides */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+  }
+  .card .tag {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: #FBE5E5;
+    color: #9B0000;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .card .tag.slate { background: #E5ECEF; color: #2E4756; }
+  .card .tag.moss  { background: #E4EBDB; color: #3F5E2A; }
+  .card .tag.wheat { background: #F4E9C9; color: #7A5F00; }
+  .card .tag.ink   { background: #E5E2DC; color: #1C1A19; }
+
+  .card h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 30px;
+    margin: 18px 0 10px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .card p {
+    font-size: 22px;
+    line-height: 1.45;
+    color: var(--fg-2);
+    margin: 0;
+  }
+
+  /* Numbered list (steps, factors) */
+  .num-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 28px; }
+  .num-list li { display: grid; grid-template-columns: 80px 1fr; align-items: start; gap: 24px; }
+  .num-list .num {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 56px;
+    line-height: 1;
+    color: var(--badger-red);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+  .num-list .label {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .num-list .desc {
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--fg-2);
+    margin-top: 6px;
+  }
+
+  /* Section divider */
+  section.section-divider {
+    background: var(--ink);
+    color: var(--bone);
+    justify-content: center;
+  }
+  section.section-divider .part-label {
+    font-family: var(--font-display);
+    font-size: var(--type-eyebrow);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--mist);
+  }
+  section.section-divider .part-title {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 144px;
+    line-height: 0.96;
+    margin: 28px 0 0;
+    letter-spacing: -0.03em;
+    color: var(--bone);
+    max-width: 1600px;
+  }
+  section.section-divider .part-title .accent { color: var(--badger-red); }
+  section.section-divider .part-meta {
+    font-family: var(--font-mono);
+    font-size: 24px;
+    color: var(--mist);
+    margin-top: 56px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  /* Title slide */
+  section.title-slide { padding-top: 0; padding-bottom: 0; justify-content: center; }
+  section.title-slide .title-block { position: relative; }
+  section.title-slide h1 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 116px;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin: 0;
+    max-width: 1600px;
+    color: var(--ink);
+  }
+  section.title-slide .accent { color: var(--badger-red); }
+  section.title-slide .meta {
+    margin-top: 56px;
+    font-family: var(--font-display);
+    font-size: 24px;
+    color: var(--fg-2);
+    display: flex;
+    gap: 28px;
+    align-items: center;
+  }
+  section.title-slide .meta .pipe { color: var(--mist); }
+
+  /* Code chip */
+  .code-chip {
+    font-family: var(--font-mono);
+    background: var(--cream);
+    border: 1px solid var(--border);
+    color: var(--ink);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.92em;
+  }
+
+  /* Lifecycle (numbered horizontal) */
+  .lifecycle {
+    display: grid;
+    gap: 12px;
+    margin-top: 24px;
+  }
+  .lc-step {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 16px;
+    position: relative;
+    display: flex; flex-direction: column;
+    min-height: 200px;
+  }
+  .lc-step .lc-num {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 36px;
+    color: var(--badger-red);
+    line-height: 1;
+    margin-bottom: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+  .lc-step .lc-where {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--fg-3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+  .lc-step .lc-text {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 1.3;
+    color: var(--ink);
+  }
+
+  /* Two-column layouts */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    align-items: start;
+  }
+  .col h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 30px;
+    margin: 0 0 18px;
+    color: var(--ink);
+  }
+  .col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 14px;
+    font-size: 22px;
+    color: var(--fg-2);
+    line-height: 1.45;
+  }
+  .col ul li::before {
+    content: '-- ';
+    color: var(--badger-red);
+    font-weight: 700;
+  }
+
+  /* Tweaks-driven theming hooks */
+  body.dense {
+    --pad-top: 72px;
+    --pad-bottom: 60px;
+    --pad-x: 80px;
+  }
+</style>
+
+<script type="application/json" id="speaker-notes">
+[
+  "Welcome back. Week 1 was about understanding what FEAST is and getting set up. This week we start writing real code and shipping real PRs. By the end of today, you'll understand how every PR gets reviewed, how git branching works for a team, and how to use LLM tools iteratively instead of just accepting the first output.",
+
+  "Quick recap. Last week you cloned the repos, traced an endpoint through the stack, filed issues, and set up your CLAUDE.md. Those issues you filed become the work for this week and beyond. You also learned five git commands: clone, checkout, add and commit, push, and status. Today we build on that foundation.",
+
+  "Part one: the review pipeline. From this week on, every PR goes through a structured review process before it can merge. We start with two layers and add a third next week.",
+
+  "Three layers, added incrementally. Layer one is automated CI. A GitHub Actions workflow runs flake8 on every PR. If it fails, the PR cannot merge. The student working on issue 24 sets this up first so everyone else benefits. Layer two is human peer review. Every PR gets reviewed by one other student. You check: does the code match the stated intent? Are there obvious errors? Is the description clear? Post at least one substantive comment. Not just LGTM. Layer three comes in Week 3: LLM adversarial review, where a student runs a structured adversarial review and posts findings as PR comments.",
+
+  "Here's what CI looks like in practice. When you push a commit or open a PR, GitHub Actions automatically runs the flake8 workflow. Green check means it passed. Red X means it failed. Click into the details to see which lines have issues. Fix them, push again, and the check reruns. You cannot merge with a red X.",
+
+  "As a reviewer, your job is to actually read the code. Check the diff, not just the description. Does the code do what the PR says it does? Are there edge cases the author missed? Is the naming clear? Could you maintain this code six months from now? Leave at least one comment that shows you read it. If something is confusing, say so. If something is good, say that too.",
+
+  "The PR template has five sections. Summary: one or two sentences on what this PR does and why. Changes: bullet list of what you actually changed. Test plan: how you verified it works. Tradeoffs: what alternatives you considered and why you chose this approach. Checklist: CI passes, reviewer assigned, issue linked. Fill in every section. The template exists because 'see diff' is not a useful PR description.",
+
+  "Part two: git workflow for teams. Last week you learned clone, commit, push. This week: branches, pull requests, and the team workflow.",
+
+  "Three levels of branches. Main is the stable, deployed version. You never push directly to main. Dev is the integration branch. Your feature branches merge into dev. Feature branches are where you do your work. Always create them from an up-to-date dev. The naming convention is feature slash issue dash number dash short dash description. This makes it obvious what each branch is for when you look at the list on GitHub.",
+
+  "The PR lifecycle, step by step. First, file an issue describing what you're going to do. Then create a feature branch from dev. Write your code, making commits as you go. Push to GitHub. Open a PR using the template. Link it to the issue with Closes hash number. Request a reviewer. Respond to feedback, push fixes. Once approved and CI is green, merge to dev.",
+
+  "Commit messages matter. Good messages use imperative mood, like giving a command. Add flake8 configuration. Fix store count bug. Not added, not fixed, not stuff. Reference the issue number so there's a trail. And keep each commit to one logical change. If you did two things, make two commits.",
+
+  "Here is your daily git rhythm. Tape this to your monitor until it becomes muscle memory. Starting work: checkout dev, pull, create or switch to your feature branch. While working: git status to check where you are, git add specific files, git commit with a descriptive message. Sharing work: git push, then open a PR on GitHub. When in doubt at any point: git status.",
+
+  "Part three: using LLMs to find edge cases. One of the most valuable things an LLM can do is help you think about what could go wrong before it goes wrong.",
+
+  "The interview-first pattern. Instead of asking the tool to write tests, describe what the function does and ask: what edge cases should I test? The tool is good at generating scenarios you haven't thought of. You still write the tests yourself. The tool helps you think more completely about the problem space.",
+
+  "Concrete example. Take the has_resources function in household.py. It checks income against a threshold that varies by household size. Ask the tool: what edge cases should I consider? It might suggest: household size of zero, negative income, income exactly at the threshold boundary, very large household sizes, missing data fields. Some of those are real risks. Some are not possible given the data model. Your job is to evaluate which ones matter and write tests for those.",
+
+  "Part four: writing code with AI tools. Starting this week, you write real code. The key principle: the tool's output is a first draft, not a final answer.",
+
+  "Five steps. First, start with intent. Describe what you need and why, not step-by-step instructions. Second, read the output critically. Does the naming make sense? Are there magic numbers? Third, ask for best practices. The tool knows conventions you might not. Fourth, ask about complexity. Is this the simplest way? What could you remove? Fifth, verify readability. Would someone reading this six months from now understand it without context?",
+
+  "This is the difference between vibe coding and agentic engineering. Vibe coding: prompt, accept, move on. It produces code that works but that nobody can maintain. Agentic engineering: treat the output as a first draft. Push back on naming, structure, complexity. Shape the code until it is functional, readable, and no more complex than it needs to be. The tool is a collaborator, not a printer.",
+
+  "Preview: the plan command. Claude Code has a /plan command that creates a structured plan before making changes. Same principle as the iterative pattern: start with intent, get a plan, review it critically, then execute. We will use /plan hands-on in Week 3. For now, just know it exists.",
+
+  "Part five: Architecture Decision Records. When you make a choice that someone else might question later, write a short ADR documenting what you decided and why.",
+
+  "The ADR template has four fields. Title: a short description of the decision. Status: proposed, accepted, or superseded. Context: what prompted the decision. Decision: what you chose and why. Alternatives: what else you considered and why you rejected it. This week, the linting student writes an ADR for their flake8 configuration choices. By Week 4, everyone will have written at least one.",
+
+  "Example: We chose to ignore E501 because the project convention allows long lines. Alternative: enforce 120-character limit. Rejected because the existing codebase has many long lines and reformatting them all would create noisy diffs during onboarding. That is an ADR. Short, specific, and it answers the question future you will have.",
+
+  "Part six: CLAUDE.md check-in. Quick round. Each student shows their CLAUDE.md from last week. Are you capturing useful information? Is anything missing? One to two minutes per student.",
+
+  "Part seven: this week's work. Issues from the backlog, paired J with S where possible.",
+
+  "Issue 24: incorporate linting. One student. Add flake8 to dev dependencies. Create a flake8 config ignoring E501, max complexity 10. Add a GitHub Actions workflow that runs flake8 on PRs. Get CI running first so everyone else's PRs benefit. Write an ADR for your configuration choices. Then fix the linting errors in priority files.",
+
+  "Issues 18, 19, 20: add type hints. Three students. Each student takes one module. Start from the function signatures and work inward. Follow the existing patterns in the codebase. Your first PR should be a small, focused set of type hints. Not the whole file at once.",
+
+  "Solo work this week. Update your CLAUDE.md with patterns you learned this week. File at least two more issues for things you discover while working. Review at least one teammate's PR with a substantive comment. Stretch: start on your assigned issue if you haven't already.",
+
+  "Recap. This week you learned four things. The review pipeline: CI plus peer review on every PR. Git workflow: branches, commits, PRs, and the daily rhythm. Iterative coding: the tool is a first draft, not a final answer. ADRs: document decisions so future you understands why. Next week we add the third review layer, LLM adversarial review, and start using /plan for structured feature work."
+]
+</script>
+</head>
+
+<body>
+
+<deck-stage width="1920" height="1080">
+
+  <!-- ============================================================
+       01 — TITLE
+       ============================================================ -->
+  <section class="title-slide" data-screen-label="01 Title">
+    <div class="pattern-bg"></div>
+    <div class="title-block" style="position: relative;">
+      <div class="red-bar" style="margin-bottom: 56px;"></div>
+      <h1>Linting, Type Hints,<br/>and First Real <span class="accent">PRs.</span></h1>
+      <div class="meta">
+        <span>FEAST Academy</span>
+        <span class="pipe">|</span>
+        <span>Week 2</span>
+        <span class="pipe">|</span>
+        <span>Summer 2026</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       02 — Week 1 recap
+       ============================================================ -->
+  <section data-screen-label="02 Week 1 recap">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Where we left off</div>
+      <h2 class="slide-title">Week 1: what you built.</h2>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+        <div class="card" style="padding: 28px;">
+          <div class="tag slate">Setup</div>
+          <h3>Environment running</h3>
+          <p>Backend on port 8000, frontend on 5173, map in browser.</p>
+        </div>
+        <div class="card" style="padding: 28px;">
+          <div class="tag">Trace</div>
+          <h3>Endpoint traced</h3>
+          <p>You followed one request through frontend, backend, and database.</p>
+        </div>
+        <div class="card" style="padding: 28px;">
+          <div class="tag moss">Issues</div>
+          <h3>Issues filed</h3>
+          <p>Real bugs and improvements, filed in GitHub. These become our backlog.</p>
+        </div>
+        <div class="card" style="padding: 28px;">
+          <div class="tag wheat">Config</div>
+          <h3>CLAUDE.md created</h3>
+          <p>Your project context file. We'll review these today.</p>
+        </div>
+      </div>
+      <div class="deck-footer">
+        <span>Week 2 · Recap</span>
+        <span><span class="dot">●</span> Week 1 summary</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       03 — SECTION DIVIDER · Review Pipeline
+       ============================================================ -->
+  <section class="section-divider dark" data-screen-label="03 Section · Review pipeline">
+    <div class="pattern-bg on-dark"></div>
+    <div style="position: relative;">
+      <div class="part-label">Part one</div>
+      <h2 class="part-title">
+        The review<br/>
+        <span class="accent">pipeline.</span>
+      </h2>
+      <div class="part-meta">15 minutes · every PR from now on</div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       04 — Three layers
+       ============================================================ -->
+  <section data-screen-label="04 Three layers">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Quality gates</div>
+      <h2 class="slide-title">Every PR goes through three layers.</h2>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
+        <div class="card" style="padding: 32px; border-top: 6px solid var(--badger-red);">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Layer 1 · This week</div>
+          <h3>Automated CI</h3>
+          <p>GitHub Actions runs flake8 on every PR. Red X means it cannot merge. The linting student (#24) sets this up first.</p>
+        </div>
+        <div class="card" style="padding: 32px; border-top: 6px solid var(--slate);">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--slate); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Layer 2 · This week</div>
+          <h3>Human peer review</h3>
+          <p>One student reviews every PR. Check: does the code match the stated intent? Post at least one substantive comment.</p>
+        </div>
+        <div class="card" style="padding: 32px; border-top: 6px solid var(--fg-3);">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--fg-3); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Layer 3 · Week 3</div>
+          <h3>LLM adversarial review</h3>
+          <p>A student runs a structured adversarial review in a fresh Claude Code session and posts findings as PR comments.</p>
+        </div>
+      </div>
+      <div class="deck-footer">
+        <span>Week 2 · Review pipeline</span>
+        <span><span class="dot">●</span> Three layers</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       05 — CI in practice
+       ============================================================ -->
+  <section data-screen-label="05 CI in practice">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Layer 1</div>
+      <h2 class="slide-title">CI: green check or red X.</h2>
+      <div class="two-col">
+        <div class="col">
+          <h3>How it works</h3>
+          <ul>
+            <li>Push a commit or open a PR</li>
+            <li>GitHub Actions runs the flake8 workflow automatically</li>
+            <li>Green check = passed, Red X = failed</li>
+            <li>Click into details to see which lines have issues</li>
+            <li>Fix, push again, check reruns</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>Rules</h3>
+          <ul>
+            <li>You cannot merge with a red X</li>
+            <li>CI failures are your responsibility to fix</li>
+            <li>Run <span class="code-chip">flake8</span> locally before pushing to avoid surprises</li>
+            <li>If CI is broken for everyone, that is the top priority</li>
+          </ul>
+        </div>
+      </div>
+      <div class="deck-footer">
+        <span>Week 2 · Review pipeline</span>
+        <span><span class="dot">●</span> CI checks</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       06 — Peer review
+       ============================================================ -->
+  <section data-screen-label="06 Peer review">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Layer 2</div>
+      <h2 class="slide-title">Reviewing code: what to look for.</h2>
+      <ul class="num-list" style="max-width: 1400px;">
+        <li>
+          <div class="num">1</div>
+          <div><div class="label">Read the diff, not just the description.</div>
+          <div class="desc">Does the code actually do what the PR says it does? Check line by line.</div></div>
+        </li>
+        <li>
+          <div class="num">2</div>
+          <div><div class="label">Look for edge cases.</div>
+          <div class="desc">What inputs would break this? What happens if the data is missing or unexpected?</div></div>
+        </li>
+        <li>
+          <div class="num">3</div>
+          <div><div class="label">Check naming and clarity.</div>
+          <div class="desc">Could you maintain this code six months from now without the PR description?</div></div>
+        </li>
+        <li>
+          <div class="num">4</div>
+          <div><div class="label">Leave at least one real comment.</div>
+          <div class="desc">Show that you read it. If something is confusing, say so. If something is good, say that too.</div></div>
+        </li>
+      </ul>
+      <div class="deck-footer">
+        <span>Week 2 · Review pipeline</span>
+        <span><span class="dot">●</span> Peer review</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       07 — PR template
+       ============================================================ -->
+  <section data-screen-label="07 PR template">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Every PR</div>
+      <h2 class="slide-title">The PR template: fill in every section.</h2>
+      <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;">
+        <div class="card" style="padding: 24px;">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Section 1</div>
+          <h3 style="font-size: 24px;">Summary</h3>
+          <p style="font-size: 18px;">One or two sentences. What does this PR do and why.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Section 2</div>
+          <h3 style="font-size: 24px;">Changes</h3>
+          <p style="font-size: 18px;">Bullet list of what you actually changed.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Section 3</div>
+          <h3 style="font-size: 24px;">Test plan</h3>
+          <p style="font-size: 18px;">How you verified it works.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Section 4</div>
+          <h3 style="font-size: 24px;">Tradeoffs</h3>
+          <p style="font-size: 18px;">Alternatives you considered and why you chose this.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Section 5</div>
+          <h3 style="font-size: 24px;">Checklist</h3>
+          <p style="font-size: 18px;">CI passes, reviewer assigned, issue linked.</p>
+        </div>
+      </div>
+      <p class="body-text muted" style="margin-top: 30px; font-size: 22px;">"See diff" is not a useful PR description. The template exists for a reason.</p>
+      <div class="deck-footer">
+        <span>Week 2 · Review pipeline</span>
+        <span><span class="dot">●</span> PR template</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       08 — SECTION DIVIDER · Git Workflow
+       ============================================================ -->
+  <section class="section-divider dark" data-screen-label="08 Section · Git workflow">
+    <div class="pattern-bg on-dark"></div>
+    <div style="position: relative;">
+      <div class="part-label">Part two</div>
+      <h2 class="part-title">
+        Git workflow<br/>
+        for <span class="accent">teams.</span>
+      </h2>
+      <div class="part-meta">15 minutes · branches, PRs, commit conventions</div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       09 — Branch strategy
+       ============================================================ -->
+  <section data-screen-label="09 Branch strategy">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Three levels</div>
+      <h2 class="slide-title">Branches: main, dev, and yours.</h2>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
+        <div class="card" style="padding: 32px; border-top: 6px solid var(--ink);">
+          <div style="font-family: var(--font-mono); font-size: 18px; color: var(--ink); font-weight: 700;">main</div>
+          <h3>Stable / deployed</h3>
+          <p>The production version. You never push directly to main. Only merged from dev at the end of week 6.</p>
+        </div>
+        <div class="card" style="padding: 32px; border-top: 6px solid var(--slate);">
+          <div style="font-family: var(--font-mono); font-size: 18px; color: var(--slate); font-weight: 700;">dev</div>
+          <h3>Integration</h3>
+          <p>Where feature branches merge. Always branch from an up-to-date dev. Pull before you branch.</p>
+        </div>
+        <div class="card" style="padding: 32px; border-top: 6px solid var(--badger-red);">
+          <div style="font-family: var(--font-mono); font-size: 18px; color: var(--badger-red); font-weight: 700;">feature/issue-N-desc</div>
+          <h3>Your work</h3>
+          <p>One branch per issue. Name it after the issue: <span class="code-chip">feature/issue-24-linting</span></p>
+        </div>
+      </div>
+      <div style="margin-top: 30px; background: var(--cream); border-radius: 12px; padding: 24px 32px; font-family: var(--font-mono); font-size: 20px; color: var(--ink);">
+        git checkout dev && git pull && git checkout -b feature/issue-NUMBER-short-desc
+      </div>
+      <div class="deck-footer">
+        <span>Week 2 · Git workflow</span>
+        <span><span class="dot">●</span> Branch strategy</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       10 — PR lifecycle
+       ============================================================ -->
+  <section data-screen-label="10 PR lifecycle">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">The full cycle</div>
+      <h2 class="slide-title">From issue to merged code.</h2>
+      <div class="lifecycle" style="grid-template-columns: repeat(7, 1fr);">
+        <div class="lc-step">
+          <div class="lc-num">1</div>
+          <div class="lc-where">GitHub</div>
+          <div class="lc-text">File an issue describing the work</div>
+        </div>
+        <div class="lc-step">
+          <div class="lc-num">2</div>
+          <div class="lc-where">Terminal</div>
+          <div class="lc-text">Create a feature branch from dev</div>
+        </div>
+        <div class="lc-step">
+          <div class="lc-num">3</div>
+          <div class="lc-where">Editor</div>
+          <div class="lc-text">Write code, make commits</div>
+        </div>
+        <div class="lc-step">
+          <div class="lc-num">4</div>
+          <div class="lc-where">Terminal</div>
+          <div class="lc-text">Push to GitHub</div>
+        </div>
+        <div class="lc-step">
+          <div class="lc-num">5</div>
+          <div class="lc-where">GitHub</div>
+          <div class="lc-text">Open PR, link issue, request reviewer</div>
+        </div>
+        <div class="lc-step">
+          <div class="lc-num">6</div>
+          <div class="lc-where">GitHub</div>
+          <div class="lc-text">Respond to feedback, push fixes</div>
+        </div>
+        <div class="lc-step">
+          <div class="lc-num">7</div>
+          <div class="lc-where">GitHub</div>
+          <div class="lc-text">CI green + approved = merge to dev</div>
+        </div>
+      </div>
+      <p class="body-text muted" style="margin-top: 20px; font-size: 22px;">Keep PRs under ~200 lines of changed code (non-test). Smaller PRs get reviewed faster and have fewer bugs.</p>
+      <div class="deck-footer">
+        <span>Week 2 · Git workflow</span>
+        <span><span class="dot">●</span> PR lifecycle</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       11 — Commit conventions
+       ============================================================ -->
+  <section data-screen-label="11 Commit conventions">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Messages that help</div>
+      <h2 class="slide-title">Write commit messages for future you.</h2>
+      <div class="two-col">
+        <div class="col">
+          <h3 style="color: var(--moss);">Good</h3>
+          <div style="display: grid; gap: 12px;">
+            <div style="background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 18px 24px; font-family: var(--font-mono); font-size: 20px; color: var(--ink);">Add flake8 configuration and pre-commit hook (#24)</div>
+            <div style="background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 18px 24px; font-family: var(--font-mono); font-size: 20px; color: var(--ink);">Fix duplicate store count in household step (#47)</div>
+            <div style="background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 18px 24px; font-family: var(--font-mono); font-size: 20px; color: var(--ink);">Add type hints to simulation endpoint (#18)</div>
+          </div>
+        </div>
+        <div class="col">
+          <h3 style="color: var(--badger-red);">Bad</h3>
+          <div style="display: grid; gap: 12px;">
+            <div style="background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 18px 24px; font-family: var(--font-mono); font-size: 20px; color: var(--fg-3); text-decoration: line-through;">fixed stuff</div>
+            <div style="background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 18px 24px; font-family: var(--font-mono); font-size: 20px; color: var(--fg-3); text-decoration: line-through;">updates</div>
+            <div style="background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 18px 24px; font-family: var(--font-mono); font-size: 20px; color: var(--fg-3); text-decoration: line-through;">WIP</div>
+            <div style="background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 18px 24px; font-family: var(--font-mono); font-size: 20px; color: var(--fg-3); text-decoration: line-through;">asdfasdf</div>
+          </div>
+        </div>
+      </div>
+      <p class="body-text" style="margin-top: 24px; font-size: 24px;">Imperative mood ("Add", not "Added"). Reference issue numbers. One logical change per commit.</p>
+      <div class="deck-footer">
+        <span>Week 2 · Git workflow</span>
+        <span><span class="dot">●</span> Commit conventions</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       12 — Daily git rhythm
+       ============================================================ -->
+  <section data-screen-label="12 Daily git rhythm">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Muscle memory</div>
+      <h2 class="slide-title">The daily git rhythm.</h2>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
+        <div class="card" style="padding: 32px;">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Starting work</div>
+          <div style="margin-top: 20px; display: grid; gap: 12px; font-family: var(--font-mono); font-size: 18px; color: var(--ink); line-height: 1.5;">
+            <div>git checkout dev</div>
+            <div>git pull</div>
+            <div>git checkout -b feature/issue-N-desc</div>
+          </div>
+        </div>
+        <div class="card" style="padding: 32px;">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">While working</div>
+          <div style="margin-top: 20px; display: grid; gap: 12px; font-family: var(--font-mono); font-size: 18px; color: var(--ink); line-height: 1.5;">
+            <div>git status</div>
+            <div>git add &lt;specific files&gt;</div>
+            <div>git commit -m "message (#N)"</div>
+          </div>
+        </div>
+        <div class="card" style="padding: 32px;">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Sharing work</div>
+          <div style="margin-top: 20px; display: grid; gap: 12px; font-family: var(--font-mono); font-size: 18px; color: var(--ink); line-height: 1.5;">
+            <div>git push -u origin &lt;branch&gt;</div>
+            <div>Open PR on GitHub</div>
+            <div>Request a reviewer</div>
+          </div>
+        </div>
+      </div>
+      <p class="body-text muted" style="margin-top: 24px; font-size: 24px;">When in doubt at any point: <span class="code-chip">git status</span></p>
+      <div class="deck-footer">
+        <span>Week 2 · Git workflow</span>
+        <span><span class="dot">●</span> Daily rhythm</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       13 — SECTION DIVIDER · Edge Cases
+       ============================================================ -->
+  <section class="section-divider dark" data-screen-label="13 Section · Edge cases">
+    <div class="pattern-bg on-dark"></div>
+    <div style="position: relative;">
+      <div class="part-label">Part three</div>
+      <h2 class="part-title">
+        Edge case<br/>
+        <span class="accent">brainstorming.</span>
+      </h2>
+      <div class="part-meta">10 minutes · LLMs as thinking partners</div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       14 — Interview first pattern
+       ============================================================ -->
+  <section data-screen-label="14 Interview first">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">The pattern</div>
+      <h2 class="slide-title">Interview first, then test.</h2>
+      <div class="two-col">
+        <div class="col">
+          <h3 style="color: var(--badger-red);">Don't do this</h3>
+          <div style="background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 24px; font-family: var(--font-mono); font-size: 18px; color: var(--fg-3); line-height: 1.6;">
+            "Write tests for has_resources()"
+          </div>
+          <p style="margin-top: 16px; font-size: 20px; color: var(--fg-2);">Skips the thinking. The tool writes generic tests that miss the real risks.</p>
+        </div>
+        <div class="col">
+          <h3 style="color: var(--moss);">Do this</h3>
+          <div style="background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 24px; font-family: var(--font-mono); font-size: 18px; color: var(--ink); line-height: 1.6;">
+            "has_resources() checks income against a threshold that varies by household size. What edge cases should I test?"
+          </div>
+          <p style="margin-top: 16px; font-size: 20px; color: var(--fg-2);">You think about the problem. The tool helps you think more completely. You write the tests.</p>
+        </div>
+      </div>
+      <div class="deck-footer">
+        <span>Week 2 · Edge cases</span>
+        <span><span class="dot">●</span> Interview first</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       15 — Concrete example
+       ============================================================ -->
+  <section data-screen-label="15 Edge case example">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Example</div>
+      <h2 class="slide-title">has_resources(): what could go wrong?</h2>
+      <p class="body-text" style="margin-bottom: 24px; font-size: 24px;">Ask the tool: "What edge cases should I consider for a function that checks household income against a size-dependent threshold?"</p>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+        <div class="card" style="padding: 24px;">
+          <div class="tag">Boundary</div>
+          <h3 style="font-size: 22px;">Income exactly at threshold</h3>
+          <p style="font-size: 18px;">$10,000 for single, $15,000 for 2-person, $25,000 for 3+. What happens at the boundary?</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <div class="tag slate">Data</div>
+          <h3 style="font-size: 22px;">Household size of zero</h3>
+          <p style="font-size: 18px;">Is this possible in the data model? If not, should the function guard against it?</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <div class="tag wheat">Range</div>
+          <h3 style="font-size: 22px;">Negative income</h3>
+          <p style="font-size: 18px;">Census data can have negative values for certain income categories. How does the function handle it?</p>
+        </div>
+      </div>
+      <p class="body-text muted" style="margin-top: 20px; font-size: 20px;">Your job: evaluate which edge cases are real risks given the data model, and write tests for those.</p>
+      <div class="deck-footer">
+        <span>Week 2 · Edge cases</span>
+        <span><span class="dot">●</span> Concrete example</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       16 — SECTION DIVIDER · Iterative Coding
+       ============================================================ -->
+  <section class="section-divider dark" data-screen-label="16 Section · Iterative coding">
+    <div class="pattern-bg on-dark"></div>
+    <div style="position: relative;">
+      <div class="part-label">Part four</div>
+      <h2 class="part-title">
+        Writing code<br/>
+        with AI <span class="accent">tools.</span>
+      </h2>
+      <div class="part-meta">10 minutes · first draft, not final answer</div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       17 — Five steps
+       ============================================================ -->
+  <section data-screen-label="17 Five steps">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">The iterative pattern</div>
+      <h2 class="slide-title">Shape the output. Don't just accept it.</h2>
+      <ul class="num-list" style="max-width: 1400px;">
+        <li>
+          <div class="num">1</div>
+          <div><div class="label">Start with intent, not instructions.</div>
+          <div class="desc">Describe what you need and why. Let the tool propose an approach.</div></div>
+        </li>
+        <li>
+          <div class="num">2</div>
+          <div><div class="label">Read the output critically.</div>
+          <div class="desc">Does the naming make sense? Are there magic numbers? Is the structure obvious?</div></div>
+        </li>
+        <li>
+          <div class="num">3</div>
+          <div><div class="label">Ask for best practices.</div>
+          <div class="desc">The tool knows conventions you might not. Use that knowledge, but verify it.</div></div>
+        </li>
+        <li>
+          <div class="num">4</div>
+          <div><div class="label">Ask about complexity.</div>
+          <div class="desc">Is this the simplest way? What could you remove without losing functionality?</div></div>
+        </li>
+        <li>
+          <div class="num">5</div>
+          <div><div class="label">Verify readability.</div>
+          <div class="desc">Would someone reading this six months from now understand it without context?</div></div>
+        </li>
+      </ul>
+      <div class="deck-footer">
+        <span>Week 2 · Iterative coding</span>
+        <span><span class="dot">●</span> Five steps</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       18 — Vibe coding vs agentic engineering
+       ============================================================ -->
+  <section data-screen-label="18 Vibe vs agentic">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">The distinction</div>
+      <h2 class="slide-title">Vibe coding vs. agentic engineering.</h2>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+        <div class="card" style="padding: 36px; border-top: 6px solid var(--fg-3);">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--fg-3); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Vibe coding</div>
+          <h3 style="color: var(--fg-3);">Prompt, accept, move on.</h3>
+          <p>Code that works but that nobody (including you) can maintain. You didn't learn anything. You can't explain the code. When it breaks, you're stuck.</p>
+        </div>
+        <div class="card" style="padding: 36px; border-top: 6px solid var(--badger-red);">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Agentic engineering</div>
+          <h3>First draft, then shape it.</h3>
+          <p>Push back on naming, structure, complexity. The goal: code that is functional, readable, and no more complex than it needs to be. You understand every line.</p>
+        </div>
+      </div>
+      <div class="deck-footer">
+        <span>Week 2 · Iterative coding</span>
+        <span><span class="dot">●</span> The distinction</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       19 — /plan preview
+       ============================================================ -->
+  <section style="background: var(--cream);" data-screen-label="19 Plan preview">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Coming in week 3</div>
+      <h2 class="slide-title">Preview: the /plan command.</h2>
+      <p class="body-text" style="max-width: 1400px;">
+        Claude Code has a <span class="code-chip">/plan</span> command that creates a structured plan before making changes. Same principle as the iterative pattern: start with intent, get a plan, review it critically, then execute.
+      </p>
+      <p class="body-text muted" style="margin-top: 24px; max-width: 1400px;">
+        We'll use /plan hands-on in Week 3. For now, just know it exists and that it follows the same "review before accepting" principle.
+      </p>
+      <div class="deck-footer">
+        <span>Week 2 · Iterative coding</span>
+        <span><span class="dot">●</span> /plan preview</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       20 — SECTION DIVIDER · ADRs
+       ============================================================ -->
+  <section class="section-divider dark" data-screen-label="20 Section · ADRs">
+    <div class="pattern-bg on-dark"></div>
+    <div style="position: relative;">
+      <div class="part-label">Part five</div>
+      <h2 class="part-title">
+        Architecture<br/>
+        Decision <span class="accent">Records.</span>
+      </h2>
+      <div class="part-meta">5 minutes · document the why</div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       21 — ADR template
+       ============================================================ -->
+  <section data-screen-label="21 ADR template">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">The format</div>
+      <h2 class="slide-title">Four fields. Keep it short.</h2>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+        <div class="card" style="padding: 28px;">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Field 1</div>
+          <h3 style="font-size: 24px;">Title + Status</h3>
+          <p style="font-size: 18px;">Short description of the decision. Status: proposed, accepted, or superseded.</p>
+        </div>
+        <div class="card" style="padding: 28px;">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Field 2</div>
+          <h3 style="font-size: 24px;">Context</h3>
+          <p style="font-size: 18px;">What prompted the decision. The problem or constraint you were responding to.</p>
+        </div>
+        <div class="card" style="padding: 28px;">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Field 3</div>
+          <h3 style="font-size: 24px;">Decision</h3>
+          <p style="font-size: 18px;">What you chose and why. Be specific.</p>
+        </div>
+        <div class="card" style="padding: 28px;">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Field 4</div>
+          <h3 style="font-size: 24px;">Alternatives</h3>
+          <p style="font-size: 18px;">What else you considered and why you rejected it.</p>
+        </div>
+      </div>
+      <p class="body-text muted" style="margin-top: 24px; font-size: 22px;">ADR template is at <span class="code-chip">templates/adr-template.md</span>. The linting student writes the first one this week.</p>
+      <div class="deck-footer">
+        <span>Week 2 · ADRs</span>
+        <span><span class="dot">●</span> Template</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       22 — ADR example
+       ============================================================ -->
+  <section style="background: var(--cream);" data-screen-label="22 ADR example">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Example</div>
+      <h2 class="slide-title">ADR: Ignore E501 in flake8.</h2>
+      <div style="background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 40px; max-width: 1300px;">
+        <div style="font-family: var(--font-display); font-weight: 700; font-size: 28px; color: var(--ink); margin-bottom: 24px;">Decision: Ignore E501 (line length)</div>
+        <div style="display: grid; gap: 20px; font-size: 22px; line-height: 1.6; color: var(--fg-2);">
+          <div><strong style="color: var(--ink);">Context:</strong> The project convention allows long lines. The existing codebase has many lines over 79 characters.</div>
+          <div><strong style="color: var(--ink);">Decision:</strong> Ignore E501 in the flake8 configuration.</div>
+          <div><strong style="color: var(--ink);">Alternative:</strong> Enforce a 120-character limit. Rejected because reformatting all existing long lines would create noisy diffs during onboarding.</div>
+        </div>
+      </div>
+      <p class="body-text muted" style="margin-top: 24px; font-size: 22px;">That's an ADR. Short, specific, and it answers the question future you will have.</p>
+      <div class="deck-footer">
+        <span>Week 2 · ADRs</span>
+        <span><span class="dot">●</span> Example</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       23 — SECTION DIVIDER · CLAUDE.md Check-in
+       ============================================================ -->
+  <section class="section-divider dark" data-screen-label="23 Section · CLAUDE.md check-in">
+    <div class="pattern-bg on-dark"></div>
+    <div style="position: relative;">
+      <div class="part-label">Part six</div>
+      <h2 class="part-title">
+        CLAUDE.md<br/>
+        <span class="accent">check-in.</span>
+      </h2>
+      <div class="part-meta">5 minutes · quick round</div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       24 — CLAUDE.md review
+       ============================================================ -->
+  <section data-screen-label="24 CLAUDE.md review">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Group review</div>
+      <h2 class="slide-title">Show your CLAUDE.md. One minute each.</h2>
+      <div class="two-col">
+        <div class="col">
+          <h3>What to check</h3>
+          <ul>
+            <li>Are you capturing useful information?</li>
+            <li>Is anything missing that would help the tool help you?</li>
+            <li>Are your project conventions documented?</li>
+            <li>Did you add any patterns you learned this week?</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>Good signs</h3>
+          <ul>
+            <li>Specific file paths and function names</li>
+            <li>Build and test commands that actually work</li>
+            <li>Architecture notes in your own words</li>
+            <li>Gotchas you discovered during setup</li>
+          </ul>
+        </div>
+      </div>
+      <div class="deck-footer">
+        <span>Week 2 · CLAUDE.md</span>
+        <span><span class="dot">●</span> Review</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       25 — SECTION DIVIDER · This Week's Work
+       ============================================================ -->
+  <section class="section-divider dark" data-screen-label="25 Section · Assigned work">
+    <div class="pattern-bg on-dark"></div>
+    <div style="position: relative;">
+      <div class="part-label">Part seven</div>
+      <h2 class="part-title">
+        This week's<br/>
+        <span class="accent">work.</span>
+      </h2>
+      <div class="part-meta">Issues from the backlog · paired J with S</div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       26 — Assigned issues
+       ============================================================ -->
+  <section data-screen-label="26 Assigned issues">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Backlog issues</div>
+      <h2 class="slide-title">Four issues, four students.</h2>
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+        <div class="card" style="padding: 28px; border-left: 6px solid var(--badger-red);">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Priority</div>
+          <h3 style="font-size: 24px;">#24: Incorporate linting</h3>
+          <p style="font-size: 18px;">Add flake8 to dev deps, create config (ignore E501, max-complexity 10), add GitHub Actions CI workflow. Ship CI first so everyone benefits. Write an ADR for your choices.</p>
+        </div>
+        <div class="card" style="padding: 28px; border-left: 6px solid var(--slate);">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--slate); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Parallel</div>
+          <h3 style="font-size: 24px;">#18, #19, #20: Add type hints</h3>
+          <p style="font-size: 18px;">Three students, one module each. Start from function signatures and work inward. First PR should be small and focused.</p>
+        </div>
+      </div>
+      <div class="deck-footer">
+        <span>Week 2 · Assigned work</span>
+        <span><span class="dot">●</span> Issues</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       27 — Solo work
+       ============================================================ -->
+  <section data-screen-label="27 Solo work">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Async this week</div>
+      <h2 class="slide-title">Solo work.</h2>
+      <ul class="num-list" style="max-width: 1400px;">
+        <li>
+          <div class="num">1</div>
+          <div><div class="label">Update your CLAUDE.md</div>
+          <div class="desc">Add patterns you learned this week. Build and test commands. Architecture notes.</div></div>
+        </li>
+        <li>
+          <div class="num">2</div>
+          <div><div class="label">File at least two more issues</div>
+          <div class="desc">Things you discover while working on your assigned issue. Keep building the backlog.</div></div>
+        </li>
+        <li>
+          <div class="num">3</div>
+          <div><div class="label">Review one teammate's PR</div>
+          <div class="desc">Use the review checklist. Post at least one substantive comment.</div></div>
+        </li>
+        <li>
+          <div class="num">4</div>
+          <div><div class="label">Start on your assigned issue</div>
+          <div class="desc">Create a feature branch. Make small commits. Open a PR by Friday.</div></div>
+        </li>
+      </ul>
+      <div class="deck-footer">
+        <span>Week 2 · Solo work</span>
+        <span><span class="dot">●</span> Deliverables</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       28 — Recap
+       ============================================================ -->
+  <section style="background: var(--ink); color: var(--bone);" class="dark" data-screen-label="28 Recap">
+    <div class="pattern-bg on-dark"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide on-dark">Week 2 recap</div>
+      <h2 class="slide-title" style="color: var(--bone);">Four things you learned today.</h2>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+        <div style="border-top: 4px solid var(--badger-red); padding-top: 24px;">
+          <h3 style="font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--bone); margin: 0 0 12px;">Review pipeline</h3>
+          <p style="font-size: 20px; color: var(--mist); line-height: 1.45;">CI + peer review on every PR. LLM adversarial review starts next week.</p>
+        </div>
+        <div style="border-top: 4px solid var(--badger-red); padding-top: 24px;">
+          <h3 style="font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--bone); margin: 0 0 12px;">Git workflow</h3>
+          <p style="font-size: 20px; color: var(--mist); line-height: 1.45;">Branches, commits, PRs, and the daily rhythm.</p>
+        </div>
+        <div style="border-top: 4px solid var(--badger-red); padding-top: 24px;">
+          <h3 style="font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--bone); margin: 0 0 12px;">Iterative coding</h3>
+          <p style="font-size: 20px; color: var(--mist); line-height: 1.45;">The tool is a first draft, not a final answer. Shape the output.</p>
+        </div>
+        <div style="border-top: 4px solid var(--badger-red); padding-top: 24px;">
+          <h3 style="font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--bone); margin: 0 0 12px;">ADRs</h3>
+          <p style="font-size: 20px; color: var(--mist); line-height: 1.45;">Document decisions so future you understands why.</p>
+        </div>
+      </div>
+      <p style="margin-top: 40px; font-family: var(--font-display); font-size: 24px; color: var(--mist);">Next week: LLM adversarial review and /plan for structured feature work.</p>
+      <div class="deck-footer">
+        <span style="color: var(--mist);">FEAST Academy · Week 2</span>
+        <span style="color: var(--mist);"><span class="dot">●</span> End</span>
+      </div>
+    </div>
+  </section>
+
+</deck-stage>
+
+<!-- Tweaks panel -->
+<div id="tweaks-root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="tweaks-app.jsx"></script>
+
+<script src="deck-stage.js"></script>
+<script src="image-slot.js"></script>
+</body>
+</html>
