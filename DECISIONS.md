@@ -71,7 +71,7 @@ Also fixed the environment setup guide (01) for consistency with the curriculum 
 
 **Context:** The original 6-week curriculum treats agentic coding tools, code review, and project management artifacts as mid-to-late topics. Agentic tools get a 5-minute mention in Week 1; structured review starts in Week 3; ADRs appear in Week 4. This pacing means students submit PRs for two weeks with no automated checks and no structured review, and don't encounter project management frameworks until halfway through. Three specific gaps were identified:
 
-1. **Agentic coding tools.** Claude Code is never named or set up. CLAUDE.md is in the templates but not taught. Students have no awareness of the tool landscape (Cursor, Copilot, Aider).
+1. **Agentic coding tools.** Claude Code is never named or set up. CLAUDE.md is in the templates but not taught. Students have no awareness of the tool landscape (Gemini CLI, Cursor, Copilot).
 2. **Automated + human code review.** The review pipeline (CI checks, peer review, LLM adversarial review) doesn't fully exist until Week 3. Weeks 1-2 PRs go through with minimal feedback.
 3. **Project management artifacts.** ADRs, roadmaps, and the distinction between manually written vs. LLM-generated versions of these artifacts aren't covered until Week 4, after students have already been making undocumented design decisions.
 
@@ -80,7 +80,7 @@ The overriding design constraint: get students contributing real work as soon as
 **Decision:** Restructure the curriculum to integrate all three topics earlier, with a progression from manual to tool-assisted:
 
 **Week 1 changes:**
-- Expand "How LLM tools fit" from 5 min to 20 min. Rename to "Agentic coding tools: setup and the landscape." Cover Claude Code, Cursor, Copilot, Aider. Demo CLAUDE.md as both documentation and agent configuration. Include a brief hands-on comparison if students have access to multiple tools.
+- Expand "How LLM tools fit" from 5 min to 20 min. Rename to "Agentic coding tools: setup and the landscape." Cover Claude Code, Gemini CLI, Cursor, Copilot. Demo CLAUDE.md as both documentation and agent configuration. Include a brief hands-on comparison if students have access to multiple tools.
 - Add Claude Code (or best-available agentic tool) to the setup scaffold, alongside repo cloning. Tool access depends on what's available via GitHub educational accounts; the scaffold handles multiple paths.
 - Plant the project management artifacts seed (5 min): show CLAUDE.md, ROADMAP.md, DECISIONS.md in the FEAST_edu repo. No deep dive; just establish they exist.
 - Solo work: students create a CLAUDE.md in their FEAST repo fork.

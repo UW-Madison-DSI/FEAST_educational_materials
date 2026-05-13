@@ -266,7 +266,7 @@ These rules are the practical test for agentic engineering: if you can't explain
 
 There are several categories of AI-assisted coding tools. Students should understand the landscape, not just one tool:
 
-- **CLI agents** (Claude Code, Aider): Run in your terminal alongside any editor. You describe what you want in natural language; the agent reads your codebase, proposes changes, and can execute commands. Claude Code uses CLAUDE.md files for project context.
+- **CLI agents** (Claude Code, Gemini CLI): Run in your terminal alongside any editor. You describe what you want in natural language; the agent reads your codebase, proposes changes, and can execute commands. Claude Code uses CLAUDE.md files for project context; Gemini CLI is free and open source (Apache 2.0) with a generous daily quota on any Google account.
 - **AI-native IDEs** (Cursor, Windsurf): Full editors with AI built into every interaction. Code completion, inline chat, multi-file editing. Heavier-weight, more opinionated about workflow.
 - **Inline assistants** (GitHub Copilot, Codeium): Plugins for existing editors (VS Code, JetBrains). Primarily autocomplete and inline suggestions. Lightest-weight integration.
 

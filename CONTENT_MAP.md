@@ -27,7 +27,7 @@ This file maps sections of `STUDENT_ONBOARDING_PLAN.md` to slide numbers in each
 | **Architecture** (L135-187) | 19 Section, 20 Three layers, 21 Frontend, 22 Backend, 23 Database, 24 Step lifecycle (condensed) | Three-layer diagram, frontend tech (React 19/Vite/Leaflet), backend tech (FastAPI/Mesa/asyncpg), DB schema, CRS (4326 vs 3857), entry points, step lifecycle (condensed summary), multiprocessing, client.js hardcoded URL, port numbers |
 | **Deployment configurations** (L189-234) | NEW: slide(s) needed (after slide 24) | Deployment topology diagram (3 environments x 3 layers), configuration matrix table, three configuration levers (client.js, .env, CORS), common configurations, cross-environment safety warning |
 | **Project mgmt artifacts** (L236-244) | NEW: slide(s) needed | CLAUDE.md, ROADMAP.md, DECISIONS.md overview; brief on-screen display |
-| **Agentic coding tools** (L246-297) | 25 Section (REWORK), NEW: agentic engineering vs vibe coding slide, 25b The one rule, NEW: tool landscape slides, NEW: CLAUDE.md as config slide, NEW: live demo slide, 27 Week 1 rules | Agentic engineering vs. vibe coding distinction, tool landscape (Claude Code, Cursor, Copilot, Aider), CLAUDE.md as agent config, the one rule (explain every line), live demo comparing tools, week 1 LLM restrictions |
+| **Agentic coding tools** (L246-297) | 25 Section (REWORK), NEW: agentic engineering vs vibe coding slide, 25b The one rule, NEW: tool landscape slides, NEW: CLAUDE.md as config slide, NEW: live demo slide, 27 Week 1 rules | Agentic engineering vs. vibe coding distinction, tool landscape (Claude Code, Gemini CLI, Cursor, Copilot), CLAUDE.md as agent config, the one rule (explain every line), live demo comparing tools, week 1 LLM restrictions |
 | **Git fundamentals** (NEW, in Guide 01) | 28b Git concepts, 28c Git commands | Core concepts (repo, commit, branch), five commands (clone, checkout, add+commit, push, status) |
 | **Setup** (L299-423) | 28 Section, 28b Git concepts, 28c Git commands, 29 Prerequisites, 30 Setup steps (NOW INCLUDES Claude Code install as Step 3), 31 Working state, 32 Common problems | Prerequisites list, git fundamentals, clone/branch/install steps, Claude Code install, run_local.py port 8000, client.js edit, common problems list, live instance URL |
 | Assigned work (L425-454) | 33 Section, 34 Use the app, 35 Endpoint traces, 36 Deliverable | Endpoint trace table (5 students), deliverable (PR with trace), live instance URL |
@@ -50,7 +50,7 @@ These specific values appear in both the curriculum and slides. If any change, b
 - **Entry points:** run_local.py (correct), api_server.py (legacy), server.py (legacy)
 - **has_resources() line ref:** household.py:169
 - **get_mfai() line ref:** household.py:218
-- **Agentic tools listed:** Claude Code, Cursor, Copilot, Aider
+- **Agentic tools listed:** Claude Code, Gemini CLI, Cursor, Copilot
 - **Review pipeline layers:** CI checks (Week 2), peer review (Week 2), LLM adversarial review (Week 3)
 - **Project mgmt artifacts:** CLAUDE.md, ROADMAP.md, DECISIONS.md
 - **Configuration levers:** client.js baseURL (frontend->backend), .env DB_HOST (backend->DB), CORS origins (backend->frontend). Appears in three places: `STUDENT_ONBOARDING_PLAN.md` (Week 1 deployment config section), `docs/guides/01-environment-setup.md` (Configuration Points), and `docs/guides/10-deployment-configuration.md`. All three must stay in sync.
