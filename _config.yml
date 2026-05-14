@@ -1,5 +1,6 @@
 title: "FEAST Academy"
 description: "Student developer onboarding for the Food Equity Access Simulation Technology project"
+version: "0.5.0"
 baseurl: "/FEAST_educational_materials"
 exclude:
   - templates/
