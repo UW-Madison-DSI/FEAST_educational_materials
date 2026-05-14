@@ -1317,7 +1317,7 @@ Verification is after **every phase**, not just at the end. Deferred verificatio
 
 The "explain every line" rule is the checkpoint that prevents vibe coding from sneaking in during execution. Tests can pass even when the code is over-engineered, poorly named, or doing something you did not intend. The diff review catches what tests cannot.
 
-You can encode workflow rules in your project context file to make the process automatic. A workflow section in your CLAUDE.md or GEMINI.md tells the agent to follow phased execution, run tests after each phase, and flag complexity. See Guide 13 for an example.
+You can encode workflow rules in your project context file to make the process automatic. A workflow section in your CLAUDE.md or GEMINI.md tells the agent to follow phased execution, run tests after each phase, and flag complexity. When you write these rules, you are programming the agent's behavior in natural language, the same way the tool's code-level harness programs it in Python. The difference is that your instructions run inside the LLM's context window: flexible and easy to author, but interpreted rather than executed mechanically. This is why phased verification matters: you are the reliability layer. See Guide 13 for the full reference.
 
 **Matching workflow to task size:**
 
