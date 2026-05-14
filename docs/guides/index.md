@@ -29,3 +29,5 @@ Scaffolded guides that walk you through increasingly complex contributions to th
 
 10. [Deployment Configuration](10-deployment-configuration) -- understand how frontend, backend, and database connect across environments
 11. [Structured Planning with CLI Agents](11-planning-with-claude-code) -- when and how to use structured planning, multi-issue planning, and branch-level review
+12. [Agentic Engineering Concepts](12-agentic-engineering-concepts) -- what agents are, how they work, and why the focus shifts from syntax to engineering
+13. [Agentic Workflow Best Practices](13-agentic-workflow-best-practices) -- the complete spec-plan-execute-verify loop, workflow selection by task size, and a printable checklist

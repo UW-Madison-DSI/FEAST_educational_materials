@@ -262,6 +262,24 @@ Two rules that don't change across all 6 weeks:
 
 These rules are the practical test for agentic engineering: if you can't explain it, you vibe-coded it.
 
+##### What makes a tool an "agent"? (~3 min)
+
+An LLM (large language model) takes text in and produces text out. One question, one answer. It has no memory of your files and no ability to run commands. An **agent** is an LLM inside a loop: it **observes** its environment (reads files, checks errors), **thinks** about what to do next, **acts** (edits files, runs commands), and then observes the results. The loop continues until the task is done or the agent decides to stop.
+
+When you type a question into Claude Code or Gemini CLI, you are not just calling an LLM. You are starting an agent loop.
+
+**Three types of agents:**
+
+- **Conversational agents:** Answer questions, explain code, brainstorm ideas. The loop is short (read a file, think, respond). This is what you use in Week 1.
+- **Task agents:** Execute multi-step work. Read the codebase, plan changes, edit files, run tests, fix failures. The loop can run for many iterations. This is what you unlock in later weeks when the progressive restrictions lift.
+- **Orchestrator agents:** Coordinate multiple task agents or manage complex workflows. Multi-issue planning (Week 4) is a taste of orchestration. You will not build orchestrators in this curriculum, but understanding the concept helps you recognize what advanced tooling does.
+
+**The harness.** The agent is not just the LLM. The harness is the software around the LLM that gives it file access, command execution, and context management. Claude Code's harness is what lets the model see your codebase and run your tests. Your project context file (CLAUDE.md, GEMINI.md) is configuration for the harness: it tells the agent what to pay attention to. Without the harness, the LLM is just a chatbot.
+
+**The focus shift.** Because agents handle syntax, boilerplate, and implementation mechanics, the developer's job shifts to higher-level engineering work: problem decomposition, architecture decisions (ADRs), specification writing, code review, testing strategy, and documentation. These are exactly the skills this curriculum teaches. The agent handles "how do I write this in Python." You handle "what should we build, why, and how do we verify it works." This is what makes it engineering, and it is why the curriculum spends more time on planning, review, and communication than on writing code.
+
+For a deeper look at agent concepts and design patterns, see [Guide 12: Agentic Engineering Concepts](docs/guides/12-agentic-engineering-concepts).
+
 ##### The tool landscape (~5 min)
 
 There are several categories of AI-assisted coding tools. Students should understand the landscape, not just one tool:
@@ -829,6 +847,12 @@ Key teaching point: structured planning is most useful for **single-feature impl
 
 Best workflow: write your hand-written spec first (the *what* and *why*), then feed it to your agent's planning feature as context to get the *how*. You get your reasoning about intent and the tool's mapping of implementation details.
 
+##### Connecting the dots: you are doing engineering (~2 min)
+
+Pause and take stock. Over the past three weeks, you have: filed issues (problem decomposition), reviewed code (evaluating quality), written ADRs (documenting decisions), built a review pipeline (designing quality gates), and now written specs before code (planning). None of these are "coding." All of them are engineering.
+
+Remember the focus shift from Week 1: when agents handle syntax and boilerplate, the developer's job shifts to these higher-level skills. You have been doing exactly that. The agent loop (observe, think, act) handles implementation mechanics. Your job is deciding what to build, why, and how to verify it works. That split is agentic engineering, and you have been practicing it since Week 1, even when you did not have a name for it yet.
+
 ### Assigned Work
 
 #### Issue #47: Check 'Stores within 1 Mile' logic (1 student, S)
@@ -1071,6 +1095,20 @@ Compare to the team's manually maintained roadmap:
 
 No planning tool replaces the human judgment of *which* goals matter. That's the roadmap and ADR layer. The tools map *how*; you decide *what* and *why*.
 
+##### Recognizing agentic design patterns (~5 min)
+
+At this point in the curriculum, you have been practicing several agentic design patterns without naming them. Now that you have hands-on experience, it is worth naming them:
+
+- **Reflection:** The adversarial review rotation (Week 3). A reviewer opens a fresh agent session that critiques code it did not produce. One agent evaluates another's output.
+- **Planning:** You have been using structured planning since Week 3 and multi-issue planning this week. The agent explores the codebase and produces a structured plan before writing code.
+- **Human-in-the-loop:** Every workflow in this curriculum has you reviewing, approving, or redirecting agent output. The agent never ships code autonomously. This is the pattern that separates agentic engineering from vibe coding.
+- **Tool use:** Every time the agent reads a file, runs tests, or checks git, it is using tools provided by the harness. This is what makes agents different from chatbots: they can verify their own answers.
+- **Evaluation:** The three-layer review pipeline (CI + human peer review + LLM adversarial review) is an evaluation pattern. Multiple evaluators with different perspectives check the same output.
+
+These are not just "things we do." They are recognized design patterns in agentic systems. Understanding them gives you a framework for evaluating new tools: when someone shows you a new AI development tool, ask "what patterns does it use?" If it has no human-in-the-loop, no planning step, and no reflection, it is optimized for speed, not quality.
+
+For the full set of patterns and deeper definitions, see [Guide 12: Agentic Engineering Concepts](docs/guides/12-agentic-engineering-concepts).
+
 #### Project context file check-in (~5 min)
 
 Quick round: each student opens their project context file. Has it been updated since Week 1? Does it reflect what you've learned about the codebase? Take 2-3 minutes to update it now. This is a maintenance habit, not a one-time task.
@@ -1245,6 +1283,48 @@ The full three-layer review pipeline has been running since Week 3. Take stock a
 Adjust the process based on what the team has learned. This is an explicit process improvement step, not just a chat.
 
 **Try a branch-level review:** If the team hasn't done one yet, feed the full branch diff (the accumulated changes since branching from main) to your CLI agent and ask for a comprehensive review. (In Claude Code, `/ultrareview` does this automatically.) Compare its findings to the per-PR adversarial review comments from Weeks 3-5. Is it catching cross-cutting issues that per-PR reviews missed? Is it generating noise? Discuss whether branch-level review should be part of the pre-merge checklist for the next cohort, and if so, at what cadence (per PR, per milestone, before merge to main).
+
+#### The complete agentic workflow (~10 min)
+
+Over the past four weeks, you have practiced every piece of a disciplined agentic workflow: iterative code shaping (Week 2), specs before code (Week 3), phased planning at different scales (Weeks 3-4), review at multiple layers (Weeks 2-3), and decision documentation (Weeks 2-4). This section assembles those pieces into a single, repeatable process you can use for any task from this point forward.
+
+**The core loop: Spec, Plan, Execute, Verify**
+
+1. **Spec** (you write). Before touching the agent, write 2-3 sentences: what are you changing, why, and how will you know it worked? This is your engineering judgment. The agent does not decide what to build.
+2. **Plan** (agent + you). Ask the agent to create a phased plan based on your spec. Each phase must leave the codebase in a working, testable state. Review the plan before any code is written.
+3. **Execute** (agent, one phase at a time). Implement one phase. Do not batch phases.
+4. **Verify** (you, after each phase). Four checks:
+   - Run the full test suite (not just the file you changed)
+   - Review the diff line by line (the "explain every line" rule applies here)
+   - Check for unnecessary complexity (did the agent over-engineer?)
+   - Update the plan if what you learned changes the approach
+5. **Document** (you, when needed). Write an ADR if a phase involved choosing between approaches. Not every phase needs one.
+6. **Repeat** until all phases are verified. Then do a final branch-level review and open the PR.
+
+Walk through a concrete example: take the security hardening task (or whichever assigned issue the student is working on). Trace it through the loop: the spec is "add input validation to the simulation parameters endpoint to prevent injection and malformed data," the plan breaks into phases (identify endpoints, add validation, add tests, update docs), each phase gets verified independently.
+
+**Key teaching points:**
+
+The loop is **adaptive**. You update the plan after each phase based on what you learned. A plan that never changes is a sign you are not paying attention, not a sign of good planning.
+
+Verification is after **every phase**, not just at the end. Deferred verification is how wrong approaches compound into expensive rework.
+
+The "explain every line" rule is the checkpoint that prevents vibe coding from sneaking in during execution. Tests can pass even when the code is over-engineered, poorly named, or doing something you did not intend. The diff review catches what tests cannot.
+
+You can encode workflow rules in your project context file to make the process automatic. A workflow section in your CLAUDE.md or GEMINI.md tells the agent to follow phased execution, run tests after each phase, and flag complexity. See Guide 13 for an example.
+
+**Matching workflow to task size:**
+
+| Task scope | Workflow |
+|-----------|----------|
+| Quick fix (< 30 min) | Spec (1 sentence) -> implement -> verify. No phasing needed. |
+| Single feature (1-4 hours) | Full spec-plan-execute-verify loop with phases |
+| Cross-cutting (multi-issue) | Same loop, add multi-issue planning to sequence work |
+| Exploratory (unknown scope) | Investigation phase first (read code, form hypothesis), then spec |
+
+The judgment of which workflow fits which task is itself an engineering skill. When in doubt, default to phased execution. The overhead is small; the safety margin is large.
+
+For the full reference, including the verification checkpoint in detail, common failure modes, context file encoding, and a printable checklist, see [Guide 13: Agentic Workflow Best Practices](docs/guides/13-agentic-workflow-best-practices).
 
 #### Project context file and artifact audit (~5 min)
 
@@ -1500,6 +1580,7 @@ The tooling progression runs in parallel: tools are set up early (Week 1), proce
 **For the students:**
 - Can read and understand unfamiliar code without LLM help
 - Practice agentic engineering, not vibe coding: can explain every line, write specs before generating code, and critically review tool output
+- Can execute the full agentic workflow (spec, plan, execute, verify) independently and adapt it to different task sizes
 - Know how to write specs and ADRs before implementing, both manually and with LLM assistance
 - Can use agent planning tools for feature-level implementation mapping, multi-issue coordination, and branch-level review
 - Can write meaningful tests (not just happy-path)

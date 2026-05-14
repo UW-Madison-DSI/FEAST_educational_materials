@@ -357,7 +357,7 @@
 
   "Five steps. First, start with intent. Describe what you need and why, not step-by-step instructions. Second, read the output critically. Does the naming make sense? Are there magic numbers? Third, ask for best practices. The tool knows conventions you might not. Fourth, ask about complexity. Is this the simplest way? What could you remove? Fifth, verify readability. Would someone reading this six months from now understand it without context?",
 
-  "This is the difference between vibe coding and agentic engineering. Vibe coding: prompt, accept, move on. It produces code that works but that nobody can maintain. Agentic engineering: treat the output as a first draft. Push back on naming, structure, complexity. Shape the code until it is functional, readable, and no more complex than it needs to be. The tool is a collaborator, not a printer.",
+  "This is the distinction in practice. Vibe coding: prompt, accept, move on. You skipped the engineering. No spec, no review, no decision record. Agentic engineering: you do the engineering, the agent does the typing. You spec the work, shape the output, review critically, document the decision. Remember the focus shift slide from Week 1? Everything you learned today — review pipelines, git workflow, ADRs, iterative shaping — is in the engineering column. Those are the skills that matter when the agent handles syntax for you.",
 
   "Preview: structured planning. Many CLI agents have built-in planning features (e.g., Claude Code's /plan command) that create a structured plan before making changes. Same principle as the iterative pattern: start with intent, get a plan, review it critically, then execute. We will use structured planning hands-on in Week 3. For now, just know the capability exists.",
 
@@ -377,7 +377,7 @@
 
   "Solo work this week. Update your project context file with patterns you learned this week. File at least two more issues for things you discover while working. Review at least one teammate's PR with a substantive comment. Stretch: start on your assigned issue if you haven't already.",
 
-  "Recap. This week you learned four things. The review pipeline: CI plus peer review on every PR. Git workflow: branches, commits, PRs, and the daily rhythm. Iterative coding: the tool is a first draft, not a final answer. ADRs: document decisions so future you understands why. Next week we add the third review layer, LLM adversarial review, and start using structured planning for feature work."
+  "Recap. Four engineering skills you practiced today. Code review: CI plus peer review, evaluating correctness and design, not just syntax. Coordination: branches, commits, PRs — the workflow that keeps a team in sync. Iterative shaping: the agent drafts, you refine. Decision records: ADRs, documenting not just what you chose but why. All four of these are in the engineering column from Week 1's focus shift. The agent handles the typing; you handle these. Next week we add adversarial review and structured planning."
 ]
 </script>
 </head>
@@ -463,12 +463,12 @@
     <div class="pattern-bg"></div>
     <div style="position: relative;">
       <div class="eyebrow-slide">Quality gates</div>
-      <h2 class="slide-title">Every PR goes through three layers.</h2>
+      <h2 class="slide-title">Every PR (pull request) goes through three layers.</h2>
       <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
         <div class="card" style="padding: 32px; border-top: 6px solid var(--badger-red);">
           <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Layer 1 · This week</div>
-          <h3>Automated CI</h3>
-          <p>GitHub Actions runs flake8 on every PR. Red X means it cannot merge. The linting student (#24) sets this up first.</p>
+          <h3>Automated CI <span style="font-weight: 400; font-size: 18px; color: var(--fg-2);">(continuous integration)</span></h3>
+          <p>GitHub Actions runs flake8 on every pull request. Red X means it cannot merge. The linting student (#24) sets this up first.</p>
         </div>
         <div class="card" style="padding: 32px; border-top: 6px solid var(--slate);">
           <div style="font-family: var(--font-mono); font-size: 14px; color: var(--slate); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Layer 2 · This week</div>
@@ -933,19 +933,22 @@
   <section data-screen-label="18 Vibe vs agentic">
     <div class="pattern-bg"></div>
     <div style="position: relative;">
-      <div class="eyebrow-slide">The distinction</div>
+      <div class="eyebrow-slide">The distinction in practice</div>
       <h2 class="slide-title">Vibe coding vs. agentic engineering.</h2>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
-        <div class="card" style="padding: 36px; border-top: 6px solid var(--fg-3);">
+        <div class="card" style="padding: 32px 36px; border-top: 6px solid var(--fg-3);">
           <div style="font-family: var(--font-mono); font-size: 14px; color: var(--fg-3); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Vibe coding</div>
           <h3 style="color: var(--fg-3);">Prompt, accept, move on.</h3>
-          <p>Code that works but that nobody (including you) can maintain. You didn't learn anything. You can't explain the code. When it breaks, you're stuck.</p>
+          <p>Code that works but that nobody can maintain. You skipped the engineering: no spec, no review, no decision record. When it breaks, you start over.</p>
         </div>
-        <div class="card" style="padding: 36px; border-top: 6px solid var(--badger-red);">
+        <div class="card" style="padding: 32px 36px; border-top: 6px solid var(--badger-red);">
           <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Agentic engineering</div>
-          <h3>First draft, then shape it.</h3>
-          <p>Push back on naming, structure, complexity. The goal: code that is functional, readable, and no more complex than it needs to be. You understand every line.</p>
+          <h3>You do the engineering. The agent does the typing.</h3>
+          <p>Spec the work, shape the output, review critically, document the decision. The agent handles syntax; you handle judgment.</p>
         </div>
+      </div>
+      <div style="margin-top: 24px; padding: 16px 28px; background: var(--cream); border-radius: 10px; max-width: 1700px;">
+        <p style="font-size: 20px; color: var(--ink); line-height: 1.45; margin: 0;">Remember the <strong>focus shift</strong> from Week 1: review pipelines, git workflow, architecture decision records, iterative coding. Everything you learned today is in the engineering column.</p>
       </div>
       <div class="deck-footer">
         <span>Week 2 · Iterative coding</span>
@@ -1188,26 +1191,27 @@
     <div class="pattern-bg on-dark"></div>
     <div style="position: relative;">
       <div class="eyebrow-slide on-dark">Week 2 recap</div>
-      <h2 class="slide-title" style="color: var(--bone);">Four things you learned today.</h2>
+      <h2 class="slide-title" style="color: var(--bone);">Four engineering skills you practiced today.</h2>
       <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
         <div style="border-top: 4px solid var(--badger-red); padding-top: 24px;">
-          <h3 style="font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--bone); margin: 0 0 12px;">Review pipeline</h3>
-          <p style="font-size: 20px; color: var(--mist); line-height: 1.45;">CI + peer review on every PR. LLM adversarial review starts next week.</p>
+          <h3 style="font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--bone); margin: 0 0 12px;">Code review</h3>
+          <p style="font-size: 20px; color: var(--mist); line-height: 1.45;">CI + peer review on every PR. Evaluating correctness, not just syntax.</p>
         </div>
         <div style="border-top: 4px solid var(--badger-red); padding-top: 24px;">
-          <h3 style="font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--bone); margin: 0 0 12px;">Git workflow</h3>
-          <p style="font-size: 20px; color: var(--mist); line-height: 1.45;">Branches, commits, PRs, and the daily rhythm.</p>
+          <h3 style="font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--bone); margin: 0 0 12px;">Coordination</h3>
+          <p style="font-size: 20px; color: var(--mist); line-height: 1.45;">Branches, commits, PRs. The workflow that keeps a team in sync.</p>
         </div>
         <div style="border-top: 4px solid var(--badger-red); padding-top: 24px;">
-          <h3 style="font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--bone); margin: 0 0 12px;">Iterative coding</h3>
-          <p style="font-size: 20px; color: var(--mist); line-height: 1.45;">The tool is a first draft, not a final answer. Shape the output.</p>
+          <h3 style="font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--bone); margin: 0 0 12px;">Iterative shaping</h3>
+          <p style="font-size: 20px; color: var(--mist); line-height: 1.45;">The agent drafts, you refine. First output is never the final answer.</p>
         </div>
         <div style="border-top: 4px solid var(--badger-red); padding-top: 24px;">
-          <h3 style="font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--bone); margin: 0 0 12px;">ADRs</h3>
-          <p style="font-size: 20px; color: var(--mist); line-height: 1.45;">Document decisions so future you understands why.</p>
+          <h3 style="font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--bone); margin: 0 0 12px;">Decision records</h3>
+          <p style="font-size: 20px; color: var(--mist); line-height: 1.45;">ADRs: documenting not just what you chose, but why.</p>
         </div>
       </div>
-      <p style="margin-top: 40px; font-family: var(--font-display); font-size: 24px; color: var(--mist);">Next week: LLM adversarial review and structured planning for feature work.</p>
+      <p style="margin-top: 32px; font-family: var(--font-display); font-size: 22px; color: var(--mist);">All four are in the &ldquo;engineering column&rdquo; from Week 1. The agent handles syntax. You handle these.</p>
+      <p style="margin-top: 12px; font-family: var(--font-display); font-size: 22px; color: var(--mist);">Next week: LLM adversarial review and structured planning for feature work.</p>
       <div class="deck-footer">
         <span style="color: var(--mist);">FEAST Academy · Week 2</span>
         <span style="color: var(--mist);"><span class="dot">●</span> End</span>

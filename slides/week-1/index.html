@@ -765,6 +765,10 @@
 
   "This is the rule that doesn't change for the next six weeks. You must be able to explain every line in your PR without looking at your chat history. If you can't explain it, you don't ship it. That's the contract. LLM tools are amplifiers, not replacements. We'll talk about what's allowed when, but this rule sits underneath everything.",
 
+  "Quick conceptual frame before we look at specific tools. An LLM by itself is a model. You send it text, it sends back text. One turn, one answer. An agent is what you get when you put an LLM in a loop. The agent can observe its environment — read your files, check errors, look at test output. Then it thinks about what to do next. Then it acts — edits a file, runs a command, installs a package. Then it observes the result and decides whether to keep going. Claude Code, Gemini CLI, all the tools we'll look at in a moment — they're agents, not just LLMs. The thing that makes them agents is the harness: the software around the LLM that gives it file access, command execution, and context management. Your project context file — CLAUDE.md, GEMINI.md — is literally configuration for the harness. Three types of agents to know: conversational, which is what you'll use this week — ask questions, get answers. Task agents, which do multi-step work like plan, edit, test, fix — you'll unlock those in later weeks. And orchestrator agents, which coordinate multiple agents across complex workflows. There's a reference guide — Guide 12 — if you want the deeper version.",
+
+  "This is the key insight of agentic engineering, and it's why we structured the curriculum the way we did. When the agent handles syntax, boilerplate, imports, and API lookups, what's left for you? The hard stuff. The engineering. Planning what to build. Writing specs. Making architecture decisions. Designing tests. Reviewing code critically. Documenting decisions. Look at the right column — that's what this curriculum teaches, week by week. Week 2 is review pipelines and ADRs. Week 3 is specs before code. Week 4 is project-level planning. The agent is the amplifier. The engineering judgment is yours. That's the shift: you act more like an engineer or project manager, less like a typist.",
+
   "So what does that look like in practice? Two patterns. Bad pattern: 'write me a function that does X.' That skips learning. You ship code you don't understand and the review fails. Good pattern: 'walk me through what this function does and why it's structured this way.' That accelerates learning. You ship code you understand. The point is that you understand the code well enough that you could have written it yourself, even if you didn't.",
 
   "For week one specifically: LLM use is for asking questions about code you're reading. Not for writing code. Two patterns. Bad pattern: 'write me a function that does X.' Good pattern: 'walk me through what this function does and why it's structured this way.' The first skips learning. The second accelerates it. We'll unlock more capability week by week — by week six you'll have full access — but the muscle has to be built first.",
@@ -879,8 +883,8 @@
         <li>
           <span class="num">03</span>
           <div>
-            <div class="label">PR review and issue creation — async</div>
-            <div class="desc">Review each other's PRs. File issues for anything you discover. Issues are the heartbeat of this team — and starting today, you own the backlog.</div>
+            <div class="label">PR (pull request) review and issue creation — async</div>
+            <div class="desc">Review each other's pull requests. File issues for anything you discover. Issues are the heartbeat of this team — and starting today, you own the backlog.</div>
           </div>
         </li>
       </ol>
@@ -947,7 +951,7 @@
       <div style="margin-top: 56px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1500px;">
         <div style="padding: 24px; border: 1px solid rgba(255,255,255,0.2); border-radius: 12px;">
           <div style="font-family: var(--font-display); font-weight: 700; font-size: 24px; color: var(--bone); margin-bottom: 8px;">The tool has rough edges</div>
-          <div style="font-size: 20px; color: var(--mist); line-height: 1.4;">Hardcoded geography, missing tests, no CI, inconsistent data handling, mixed frontend patterns.</div>
+          <div style="font-size: 20px; color: var(--mist); line-height: 1.4;">Hardcoded geography, missing tests, no CI (continuous integration), inconsistent data handling, mixed frontend patterns.</div>
         </div>
         <div style="padding: 24px; border: 1px solid rgba(255,255,255,0.2); border-radius: 12px;">
           <div style="font-family: var(--font-display); font-weight: 700; font-size: 24px; color: var(--bone); margin-bottom: 8px;">Your job: ship improvements</div>
@@ -1905,6 +1909,104 @@
       <div class="deck-footer">
         <span style="color: var(--mist);">Week 1 · Agentic tools</span>
         <span style="color: var(--mist);"><span class="dot">●</span> The contract</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       25b-ii — What is an agent?
+       ============================================================ -->
+  <section style="background: var(--ink); color: var(--bone);" class="dark" data-screen-label="25b-ii What is an agent">
+    <div class="pattern-bg on-dark"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide on-dark">Before we look at tools</div>
+      <h2 class="slide-title" style="color: var(--bone); margin-bottom: 32px;">What makes a tool an <span style="color: var(--badger-red);">agent?</span></h2>
+      <div style="display: grid; gap: 20px; max-width: 1700px;">
+        <div class="card" style="padding: 28px 36px; background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.12);">
+          <div style="display: grid; grid-template-columns: 160px 1fr; gap: 24px; align-items: center;">
+            <div>
+              <span class="tag" style="background: var(--fg-3); color: var(--bone);">LLM</span>
+              <div style="font-family: var(--font-mono); font-size: 16px; color: var(--mist); margin-top: 8px;">One turn</div>
+            </div>
+            <div style="font-size: 22px; color: var(--mist); line-height: 1.4;">Text in, text out. One question, one answer. No memory of your files. No ability to run commands or check its work.</div>
+          </div>
+        </div>
+        <div class="card" style="padding: 28px 36px; background: rgba(255,255,255,0.06); border-color: var(--badger-red); border-width: 2px;">
+          <div style="display: grid; grid-template-columns: 160px 1fr; gap: 24px; align-items: center;">
+            <div>
+              <span class="tag">Agent</span>
+              <div style="font-family: var(--font-mono); font-size: 16px; color: var(--mist); margin-top: 8px;">Loop</div>
+            </div>
+            <div style="font-size: 22px; color: var(--bone); line-height: 1.4;">LLM inside a loop. <strong style="color: var(--badger-red);">Observe</strong> (read files, check errors) &rarr; <strong style="color: var(--badger-red);">Think</strong> (plan next step) &rarr; <strong style="color: var(--badger-red);">Act</strong> (edit, run commands) &rarr; repeat until done.</div>
+          </div>
+        </div>
+        <div class="card" style="padding: 28px 36px; background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.12);">
+          <div style="display: grid; grid-template-columns: 160px 1fr; gap: 24px; align-items: center;">
+            <div>
+              <span class="tag" style="background: var(--fg-3); color: var(--bone);">Harness</span>
+              <div style="font-family: var(--font-mono); font-size: 16px; color: var(--mist); margin-top: 8px;">Powers</div>
+            </div>
+            <div style="font-size: 22px; color: var(--mist); line-height: 1.4;">The software around the LLM: file access, command execution, context management. Your project context file configures the harness.</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top: 24px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1700px;">
+        <div style="text-align: center; padding: 16px;">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">Conversational</div>
+          <div style="font-size: 18px; color: var(--mist); line-height: 1.35;">Answer questions, explain code. Short loop. <strong style="color: var(--bone);">Week 1.</strong></div>
+        </div>
+        <div style="text-align: center; padding: 16px;">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">Task</div>
+          <div style="font-size: 18px; color: var(--mist); line-height: 1.35;">Multi-step work: plan, edit, test, fix. Many iterations. <strong style="color: var(--bone);">Weeks 3+.</strong></div>
+        </div>
+        <div style="text-align: center; padding: 16px;">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">Orchestrator</div>
+          <div style="font-size: 18px; color: var(--mist); line-height: 1.35;">Coordinate multiple agents. Multi-issue planning is a taste. <strong style="color: var(--bone);">Week 4.</strong></div>
+        </div>
+      </div>
+      <div class="deck-footer">
+        <span style="color: var(--mist);">Week 1 · Agentic tools</span>
+        <span style="color: var(--mist);"><span class="dot">●</span> What is an agent</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       25b-iii — Focus shift
+       ============================================================ -->
+  <section style="background: var(--cream);" data-screen-label="25b-iii Focus shift">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Why agentic engineering changes your role</div>
+      <h2 class="slide-title" style="margin-bottom: 32px;">Your focus <span style="color: var(--badger-red);">shifts.</span></h2>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 1700px;">
+        <div class="card" style="padding: 32px 36px;">
+          <h3 style="font-size: 24px; color: var(--fg-3); margin-bottom: 20px;">Without agents</h3>
+          <div style="display: grid; gap: 12px;">
+            <div style="font-size: 20px; color: var(--fg-2); line-height: 1.35; padding-left: 20px; border-left: 3px solid var(--rule);">Figure out syntax</div>
+            <div style="font-size: 20px; color: var(--fg-2); line-height: 1.35; padding-left: 20px; border-left: 3px solid var(--rule);">Write boilerplate</div>
+            <div style="font-size: 20px; color: var(--fg-2); line-height: 1.35; padding-left: 20px; border-left: 3px solid var(--rule);">Look up API docs</div>
+            <div style="font-size: 20px; color: var(--fg-2); line-height: 1.35; padding-left: 20px; border-left: 3px solid var(--rule);">Debug typos and imports</div>
+            <div style="font-size: 20px; color: var(--fg-2); line-height: 1.35; padding-left: 20px; border-left: 3px solid var(--rule);">Manage dependencies</div>
+          </div>
+        </div>
+        <div class="card" style="padding: 32px 36px; border-color: var(--badger-red); border-width: 2px;">
+          <h3 style="font-size: 24px; color: var(--ink); margin-bottom: 20px;">With agentic engineering</h3>
+          <div style="display: grid; gap: 12px;">
+            <div style="font-size: 20px; color: var(--ink); line-height: 1.35; padding-left: 20px; border-left: 3px solid var(--badger-red);">Plan the architecture</div>
+            <div style="font-size: 20px; color: var(--ink); line-height: 1.35; padding-left: 20px; border-left: 3px solid var(--badger-red);">Write specs and ADRs</div>
+            <div style="font-size: 20px; color: var(--ink); line-height: 1.35; padding-left: 20px; border-left: 3px solid var(--badger-red);">Design testing strategy</div>
+            <div style="font-size: 20px; color: var(--ink); line-height: 1.35; padding-left: 20px; border-left: 3px solid var(--badger-red);">Review code critically</div>
+            <div style="font-size: 20px; color: var(--ink); line-height: 1.35; padding-left: 20px; border-left: 3px solid var(--badger-red);">Document decisions</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top: 28px; padding: 20px 32px; background: var(--white); border-radius: 12px; max-width: 1700px;">
+        <p style="font-size: 24px; color: var(--ink); line-height: 1.45; margin: 0; font-family: var(--font-display); font-weight: 700;">The agent handles syntax. You handle engineering. <span style="color: var(--fg-3); font-weight: 400;">This curriculum teaches the right column.</span></p>
+      </div>
+      <div class="deck-footer">
+        <span>Week 1 · Agentic tools</span>
+        <span><span class="dot">●</span> Focus shift</span>
       </div>
     </div>
   </section>

@@ -46,6 +46,10 @@ docs/guides/
   07-optimization.md          Optimizing performance
   08-adversarial-review.md    Adversarial code review
   09-self-directed-work.md    Self-directed work
+  10-deployment-configuration.md  Deployment configuration
+  11-planning-with-claude-code.md Structured planning with CLI agents
+  12-agentic-engineering-concepts.md Agentic engineering concepts
+  13-agentic-workflow-best-practices.md Agentic workflow best practices
 slides/
   week-1/                     Week 1 slide deck (self-contained HTML)
 templates/
