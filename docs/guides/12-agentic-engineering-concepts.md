@@ -13,14 +13,17 @@ This guide provides the conceptual foundation for the agentic engineering approa
 
 An **LLM** (large language model) is a model that takes text in and produces text out. You send it a question, it sends back an answer. One turn, one response. It has no memory of your files, no ability to run commands, and no way to check whether its answer was correct.
 
-An **agent** is an LLM inside a loop. Instead of one question and one answer, an agent can:
+An **agent** is built from five pieces:
 
-1. **Observe** its environment: read your files, check git status, look at test output, examine error messages
-2. **Think** about what to do next: decide which file to edit, what command to run, whether to ask for clarification
-3. **Act** on its environment: edit a file, run a test, install a package, create a commit
-4. **Observe the result** and decide whether to continue, try something different, or stop
+1. **One LLM.** The brain. It reads text and produces text.
+2. **A stable identity.** The agent persists across a conversation or task. It remembers what it has seen, what it tried, and what worked. A fresh prompt to a web chatbot has none of this; a CLI agent session does.
+3. **A job.** A defined goal: answer a question, fix a bug, add type hints, plan a feature. The job scopes what the agent does and when it stops.
+4. **A toolbox.** Capabilities the LLM cannot perform alone: reading files, running shell commands, searching code, editing files, executing tests. Tools are what let the agent verify its own answers against reality instead of guessing.
+5. **A harness.** The software that puts it all together. The harness connects the LLM to the toolbox, manages context (deciding what fits in the LLM's limited window), and enforces safety rules (what the agent can do without asking permission).
 
-This observe-think-act loop is what makes an agent fundamentally different from a chatbot. When you ask Claude Code or Gemini CLI a question about your codebase, the agent reads your files before answering. When you ask it to fix a bug, it reads the code, proposes a change, runs the tests, and if the tests fail, it reads the error and tries again. That loop is the agent at work.
+When the pieces are assembled, the agent works in a loop: **observe** (read files, check errors), **think** (plan next step), **act** (edit, run commands), then observe the results and repeat. The loop continues until the job is done or the agent decides to stop.
+
+This loop is what makes an agent fundamentally different from a chatbot. When you ask Claude Code or Gemini CLI a question about your codebase, the agent reads your files before answering. When you ask it to fix a bug, it reads the code, proposes a change, runs the tests, and if the tests fail, it reads the error and tries again. That loop is the agent at work.
 
 ## The Agent Loop in Practice
 
@@ -64,9 +67,9 @@ Coordinate multiple task agents or manage complex workflows across several files
 
 The boundaries between these types are not rigid. A single conversation can start in conversational mode (you ask a question), shift to task mode (you ask the agent to implement a fix), and touch on orchestration (the fix spans multiple files with dependencies). The categories describe the dominant interaction pattern, not a strict classification.
 
-## What Is a Harness?
+## The Harness in Detail
 
-The agent is not just the LLM. The **harness** is the software around the LLM that gives it the ability to interact with your development environment. A harness typically provides:
+The harness (piece #5 from the model above) deserves a closer look because it is what varies most between tools. A harness typically provides:
 
 - **File system access:** Read and write files in your project
 - **Command execution:** Run shell commands (tests, linters, git, build tools)

@@ -264,17 +264,23 @@ These rules are the practical test for agentic engineering: if you can't explain
 
 ##### What makes a tool an "agent"? (~3 min)
 
-An LLM (large language model) takes text in and produces text out. One question, one answer. It has no memory of your files and no ability to run commands. An **agent** is an LLM inside a loop: it **observes** its environment (reads files, checks errors), **thinks** about what to do next, **acts** (edits files, runs commands), and then observes the results. The loop continues until the task is done or the agent decides to stop.
+An LLM (large language model) takes text in and produces text out. One question, one answer. It has no memory of your files and no ability to run commands. An **agent** is built from five pieces:
 
-When you type a question into Claude Code or Gemini CLI, you are not just calling an LLM. You are starting an agent loop.
+1. **One LLM.** The brain. It reads text and produces text.
+2. **A stable identity.** The agent persists across a conversation or task. It remembers what it has seen, what it tried, and what worked. A fresh prompt to a web chatbot has none of this; a CLI agent session does.
+3. **A job.** A defined goal: answer a question, fix a bug, add type hints, plan a feature. The job scopes what the agent does and when it stops.
+4. **A toolbox.** Capabilities the LLM cannot perform alone: reading files, running shell commands, searching code, editing files, executing tests. Tools are what let the agent verify its own answers against reality instead of guessing.
+5. **A harness.** The software that puts it all together. The harness connects the LLM to the toolbox, manages context (deciding what fits in the LLM's limited window), and enforces safety rules (what the agent can do without asking permission). Claude Code, Gemini CLI, Cursor, and Copilot all have different harnesses. The same LLM behaves differently depending on the harness it runs inside.
+
+Your project context file (CLAUDE.md, GEMINI.md) is configuration for the harness: it tells the agent what to pay attention to. Without the harness, the LLM is just a chatbot.
+
+When the pieces are assembled, the agent works in a loop: **observe** (read files, check errors) then **think** (plan next step) then **act** (edit, run commands) then observe the results. The loop repeats until the job is done.
 
 **Three types of agents:**
 
 - **Conversational agents:** Answer questions, explain code, brainstorm ideas. The loop is short (read a file, think, respond). This is what you use in Week 1.
 - **Task agents:** Execute multi-step work. Read the codebase, plan changes, edit files, run tests, fix failures. The loop can run for many iterations. This is what you unlock in later weeks when the progressive restrictions lift.
 - **Orchestrator agents:** Coordinate multiple task agents or manage complex workflows. Multi-issue planning (Week 4) is a taste of orchestration. You will not build orchestrators in this curriculum, but understanding the concept helps you recognize what advanced tooling does.
-
-**The harness.** The agent is not just the LLM. The harness is the software around the LLM that gives it file access, command execution, and context management. Claude Code's harness is what lets the model see your codebase and run your tests. Your project context file (CLAUDE.md, GEMINI.md) is configuration for the harness: it tells the agent what to pay attention to. Without the harness, the LLM is just a chatbot.
 
 **The focus shift.** Because agents handle syntax, boilerplate, and implementation mechanics, the developer's job shifts to higher-level engineering work: problem decomposition, architecture decisions (ADRs), specification writing, code review, testing strategy, and documentation. These are exactly the skills this curriculum teaches. The agent handles "how do I write this in Python." You handle "what should we build, why, and how do we verify it works." This is what makes it engineering, and it is why the curriculum spends more time on planning, review, and communication than on writing code.
 
