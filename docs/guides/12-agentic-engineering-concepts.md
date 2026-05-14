@@ -81,6 +81,8 @@ Claude Code, Gemini CLI, Cursor, and Copilot all have different harnesses. The s
 
 **Your project context file is harness configuration.** When you create a CLAUDE.md or GEMINI.md, you are telling the harness what to pay attention to: project structure, conventions, workflow rules, and what matters in this codebase. A well-written context file makes the agent's observations more relevant and its actions more aligned with the project's standards.
 
+**Two layers of the harness.** The harness operates at two levels. The **runtime level** is the tool's own code: Claude Code's software that provides file access, command execution, context management, and safety rules. This layer runs outside the LLM in deterministic code that you do not modify. The **context level** is your project context file and any other instructions that the LLM reads from inside its context window. When you write a workflow section in your CLAUDE.md ("create a phased plan, run tests after each phase, show the diff for review"), you are programming the agent's behavior in natural language. The LLM reads those instructions and follows them, but it interprets them rather than executing them mechanically. It follows them with high probability, not certainty. This is why the curriculum teaches phased verification after every step: your context file is powerful (it shapes every action the agent takes), but you are the reliability layer that confirms each step actually did what it should.
+
 ## The Focus Shift: Syntax to Engineering
 
 When agents handle syntax, boilerplate, API lookups, and implementation mechanics, the developer's job shifts to higher-level engineering work. This table maps each skill to where it appears in the curriculum:

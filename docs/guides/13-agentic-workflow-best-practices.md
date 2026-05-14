@@ -129,7 +129,7 @@ Updating the plan is not rework. It is the agent loop applied at a higher level:
 
 ## Encoding Workflow in Your Project Context File
 
-Your project context file (CLAUDE.md, GEMINI.md, .cursorrules) can encode workflow rules that the agent follows automatically. This is one of the most effective ways to make the process consistent.
+Your project context file (CLAUDE.md, GEMINI.md, .cursorrules) can encode workflow rules that the agent follows automatically. When you write these rules, you are doing something specific: writing behavioral instructions that the LLM reads and executes from inside its context window. This is a form of programming in natural language, and it is why a well-written workflow section has such a large effect on agent behavior. It is also why the verification steps in this guide are non-negotiable: unlike code, these instructions are interpreted by the LLM, so they are strong guidance rather than hard guarantees.
 
 **Example workflow section for a context file:**
 
@@ -163,6 +163,7 @@ Your project context file (CLAUDE.md, GEMINI.md, .cursorrules) can encode workfl
 - Over-constraining the agent with rules for every edge case (the context file should fit on one screen)
 - Encoding stale rules that no longer match the project's practices (audit the file regularly)
 - Duplicating what CI already enforces (if the linter catches it, you do not need to tell the agent)
+- Relying on the context file for safety-critical logic (if correctness depends on an exact check, like a threshold value or a file that must exist, verify it yourself or use a CI check; context-file instructions are guidance the LLM follows with high probability, not deterministic code)
 
 ## Common Failure Modes
 
