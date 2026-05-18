@@ -67,13 +67,13 @@ These specific values appear in both the curriculum and slides. If any change, b
 | Curriculum section (line) | Slide(s) | Shared facts to keep in sync |
 |---|---|---|
 | Week 1 recap | 01 Title, 02 Week 1 recap | Session structure, Week 1 deliverables |
-| **Review pipeline** (L532-542) | 03 Section, 04 Three layers, 05 CI in practice, 06 Peer review, 07 PR template | Three-layer pipeline (CI/peer/LLM), PR template sections (summary, changes, test plan, tradeoffs, checklist), PR size limit (~200 lines) |
-| **Git workflow for teams** (L544-614) | 08 Section, 09 Branch strategy, 10 PR lifecycle, 11 Commit conventions, 12 Daily git rhythm | Branch strategy (main/dev/feature), branch naming convention (feature/issue-NUMBER-desc), commit conventions (imperative mood, issue refs), PR lifecycle steps, daily git rhythm |
-| **Edge case brainstorming** (L616-620) | 13 Section, 14 Interview first, 15 Edge case example | Interview-first pattern, has_resources() edge cases, income thresholds |
-| **Writing code with AI tools** (L622-638) | 16 Section, 17 Five steps, 18 Vibe vs agentic, 19 Plan preview | Five-step iterative pattern, vibe coding vs agentic engineering, structured planning preview |
-| **ADRs** (L640-644) | 20 Section, 21 ADR template, 22 ADR example | ADR template fields (title+status, context, decision, alternatives), E501 example |
-| **Project context file review** (L646-648) | 23 Section, 24 Project context file review | Review checklist |
-| **Assigned work** (L650-667+) | 25 Section, 26 Assigned issues, 27 Solo work | Issue #24 (linting), Issues #18/#19/#20 (type hints), solo work deliverables |
+| **Review pipeline** (L564-576) | 03 Section, 04 Three layers, 05 CI in practice, 06 Peer review, 07 PR template | Three-layer pipeline (CI/peer/LLM), PR template sections (summary, changes, test plan, tradeoffs, checklist), PR size limit (~200 lines) |
+| **Git workflow for teams** (L578-650) | 08 Section, 09 Branch strategy, 10 PR lifecycle, 11 Commit conventions, 12 Daily git rhythm | Branch strategy (main/dev/feature), branch naming convention (feature/issue-NUMBER-desc), commit conventions (imperative mood, issue refs), PR lifecycle steps, daily git rhythm |
+| **Edge case brainstorming** (L652-656) | 13 Section, 14 Interview first, 15 Edge case example | Interview-first pattern, has_resources() edge cases, income thresholds |
+| **Writing code with AI tools** (L658-674) | 16 Section, 17 Five steps, 18 Vibe vs agentic, 19 Plan preview | Five-step iterative pattern, vibe coding vs agentic engineering, structured planning preview |
+| **ADRs** (L676-680) | 20 Section, 21 ADR template, 22 ADR example | ADR template fields (title+status, context, decision, alternatives), E501 example |
+| **Project context file review** (L682-684) | 23 Section, 24 Project context file review | Review checklist |
+| **Assigned work** (L686-812) | 25 Section, 26 Assigned issues, 27 Solo work | Issue #24 (linting), Issues #18/#19/#20 (type hints), first tests (household.py pure functions), solo work deliverables |
 | -- | 28 Recap | Structural slide, no curriculum counterpart |
 
 ### Key shared values (Week 2)
