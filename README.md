@@ -56,6 +56,7 @@ templates/
   CLAUDE.md                   CLAUDE.md template for FEAST repos
   CONTRIBUTING.md             Contributing guide template
   adr-template.md             ADR template
+  vision-plan-template.md     Vision and improvement plan template (Week 1 homework)
 references/
   README.md                   Annotated bibliography
 .github/

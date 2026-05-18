@@ -481,14 +481,14 @@ Then, each student traces one API endpoint through the full stack and writes a s
 
 > **Beyond this project:** Writing down what you learned, in your own words, is how professionals transfer knowledge. It forces you to verify you actually understand it, and it creates something others can learn from. In any job, the people who write things down become go-to resources; the people who keep knowledge in their heads become bottlenecks.
 
-### Deliverable
-Each student opens a PR adding their endpoint trace as a markdown file in `docs/traces/` and their project context file in the FEAST repo root. These get reviewed by a peer before the Week 2 session.
+### Deliverables
+Each student opens PRs for: (1) their endpoint trace as a markdown file in `docs/traces/`, (2) their project context file in the FEAST repo root, and (3) their Vision and Improvement Plan (see Solo Work Part 3). These get reviewed by a peer before the Week 2 session.
 
 ### Solo Work (later in the week)
 
 **Part 1: Explore more of the codebase and the domain.**
 
-Now that you've traced one endpoint, explore the parts you didn't cover. Some suggestions by experience level:
+Now that you've traced one endpoint, explore the parts you didn't cover. As you explore, keep notes on what seems wrong, confusing, or inconsistent. You will use these notes to write a Vision and Improvement Plan (Part 3). Some suggestions by experience level:
 
 **J students**: Read through the frontend code (`fass-react/src/App.jsx`, the component files in `src/components/`). Try to match what you see in the browser to what's in the code. Which component renders the map? (`MapComponent.js`, 526 lines). Which one handles "Add Store"? (`AddStoreButton.jsx` + `AddStoreModal.jsx`). Where do the household colors come from? (Hint: the backend sends them, but trace it.) Why does the code store things on the `window` object? Ask the LLM to explain things you don't understand, but verify against the code.
 
@@ -500,9 +500,39 @@ Using the template in `FEAST_edu/templates/CLAUDE.md` as a starting point, creat
 
 This is your first project management artifact. Keep it short (under 50 lines). You'll update it as you learn more in later weeks. Open a PR for it alongside your endpoint trace.
 
-**Part 3: File issues for everything you found.**
+**Part 3: Vision and Improvement Plan.**
 
-During your trace and exploration, you encountered things that seemed wrong, confusing, or inconsistent. Now turn each one into a GitHub issue. This is not busywork; this is how real projects build their backlog.
+What should an improved version of FEAST look like? Not a redesign from scratch, but the same application built the way a professional team would build it today. Then work backwards: what are the biggest gaps between where it is now and where it should be, and in what order should a team close them?
+
+Use the template at `FEAST_edu/templates/vision-plan-template.md`. Copy it into your FEAST repo (e.g., `docs/vision-plan-yourname.md`). For each area you investigate, answer two questions:
+1. What would a well-structured version of this look like?
+2. What are the specific gaps between here and there?
+
+**Investigation areas.** J students pick at least 2 areas marked (J). S students pick at least 3 from any tier.
+
+| Area | Tier | What to look at | Key files |
+|------|------|-----------------|-----------|
+| Frontend state management | J | `window` object usage vs React Context/state. Why is storing state on `window` an anti-pattern? | App.jsx, StoreContext.jsx, MapComponent.js |
+| Frontend consistency | J | Mixed Bootstrap + Tailwind, hardcoded API URL in client.js, error handling gaps | App.jsx, client.js, component .jsx files |
+| Backend entry points | J | Three ways to start the backend, different CORS settings in each. Which one is correct? | run_local.py, main.py, api_server.py, server.py |
+| Database access patterns | J/S | psycopg2 vs asyncpg: two libraries, sync vs async, same database, different connection patterns | routes.py, repository/db_repository.py |
+| Simulation core | S | Magic numbers (95, 55, 0.8, thresholds), duplicated constants, MFAI scoring logic | household.py (L169, L218, L259), constants.py |
+| Data pipeline / geographic scope | S | What is hardcoded to Brown County? CRS inconsistency (EPSG:4326 vs 3857) | preprocessing/get_data.py, constants.py |
+| Testing and reliability | S | No tests exist. Which functions are testable as-is? What makes others hard to test? | tests/ (absent), household.py pure functions |
+
+**Agent usage rules (Week 1 rules apply).** Use your agent to explain code, identify patterns and anti-patterns, and brainstorm. The vision and prioritization must be your own thinking. Test: if someone asks why you prioritized X over Y, can you answer from your own reasoning?
+
+**Time guidance.** The plan itself should take 1-2 hours to write, on top of the exploration time. If you have less than 4 hours total for solo work, focus on 2 areas done well with honest assessments. If you have more time, go deeper: more areas, harder sequencing questions, connections between areas.
+
+**Tier expectations (built into the same assignment):**
+- **J students (~4 hrs total solo):** 2 areas, 1-paragraph end-state vision, 2 gap sections, simple ordered improvement sequence, 1 open question.
+- **S students (10-20 hrs):** 4-5 areas, multi-paragraph vision naming architectural principles, gap sections with code quotes and trade-off reasoning, dependency-aware sequencing, issues mapped cleanly to plan areas.
+
+Open a PR with your completed plan. You will compare plans with the team in Week 2.
+
+**Part 4: File issues for everything you found.**
+
+During your trace and exploration, you encountered things that seemed wrong, confusing, or inconsistent. Now turn each one into a GitHub issue. This is not busywork; this is how real projects build their backlog. Your issues should connect to the areas you identified in your Vision and Improvement Plan. After filing, go back to your plan and add the issue links in the "Connections to Issues" section.
 
 [SCAFFOLD: Issue Filing Guide]
 ```
@@ -552,8 +582,15 @@ the backlog your team works from in later weeks.
 
 **S students helping J students:** If a J student is struggling to find issues, pair up over chat or a quick call. Walk them through one file together, pointing out things that seem off. The J student files the issues (they need the practice), but the S student helps them see what to look for.
 
-### Roadmap Activity
-Review each other's filed issues at the start of next week's session. As a group, label them by priority (must-fix, should-fix, nice-to-have) and add them to the GitHub project board.
+### Plan Comparison Activity (Week 2 opener, ~15 min)
+
+**Before the session:** Each student's vision plan PR should be open.
+
+**Step 1: Silent read (5 min).** Each student reads one other student's plan (pre-assigned pairings). Mark: (a) something you also identified, (b) something you missed, (c) something you would sequence differently.
+
+**Step 2: Round-robin (8 min, ~90 sec per student).** Each student shares: their number one priority improvement, one thing from the reviewed plan they missed, one sequencing disagreement. Instructor fills a three-column board: "Everyone noticed" / "Multiple people noticed" / "One person noticed."
+
+**Step 3: Converge (2 min).** "Everyone noticed" items anchor the team's shared priorities. This directly informs the issue triage that follows: issues supporting "everyone noticed" areas are strong must-fix candidates. Students see why their Week 2 assignments matter. The linting student sees everyone noticed there is no CI. The testing student sees everyone noticed there are no tests. The assigned work addresses problems the team collectively identified.
 
 ---
 
