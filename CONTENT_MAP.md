@@ -30,9 +30,9 @@ This file maps sections of `STUDENT_ONBOARDING_PLAN.md` to slide numbers in each
 | **Agentic coding tools** (L246-321) | 25 Section, 25b Two rules, 25b-ii What is an agent, 25b-iii Focus shift, 25c Tool landscape, 25d Project context files, 26 Patterns, 27 Week 1 rules | Agentic engineering vs. vibe coding distinction, five-piece agent model (one LLM, stable identity, a job, a toolbox, a harness), agent loop (observe/think/act), three agent types (conversational, task, orchestrator), focus shift (syntax to engineering), tool landscape (Claude Code, Gemini CLI, Cursor, Copilot), project context file as harness config, the two rules (explain every line, write for future you), week 1 LLM restrictions. Reference: Guide 12 |
 | **Git fundamentals** (NEW, in Guide 01) | 28b Git concepts, 28c Git commands | Core concepts (repo, commit, branch), five commands (clone, checkout, add+commit, push, status) |
 | **Setup** (L323-453) | 28 Section, 28b Git concepts, 28c Git commands, 29 Prerequisites, 30 Setup steps (NOW INCLUDES CLI agent install as Step 3), 31 Working state, 32 Common problems | Prerequisites list, git fundamentals, clone/branch/install steps, CLI agent install, run_local.py port 8000, client.js edit, common problems list, live instance URL |
-| Assigned work (L455-485) | 33 Section, 34 Use the app, 35 Endpoint traces, 36 Deliverable | Endpoint trace table (5 students), deliverable (PR with trace), live instance URL |
-| Solo work (L487-553) | 37 Section, 38 Solo explore, NEW: project context file creation slide, 39 Solo file issues, 40 Things you'll find, 41 Stretch | J vs S exploration targets, project context file creation in FEAST repo, issue filing expectations (3+), example issues list, stretch goals |
-| Roadmap activity (L555-558) | 42 Roadmap kickoff | Review + label + project board |
+| Assigned work (L455-485) | 33 Section, 34 Use the app, 35 Endpoint traces, 36 Deliverable | Endpoint trace table (5 students), deliverable (PR with trace + context file + vision plan), live instance URL |
+| Solo work (L487-583) | 37 Section, 38 Solo explore, NEW: project context file creation slide, NEW: vision plan slide(s), 39 Solo file issues, 40 Things you'll find, 41 Stretch | J vs S exploration targets, project context file creation in FEAST repo, vision plan (template in `templates/vision-plan-template.md`, investigation areas table, tier expectations), issue filing expectations (3+), example issues list, stretch goals |
+| Plan comparison activity (L585-595) | 42 Roadmap kickoff (NEEDS UPDATE: now plan comparison, not issue triage) | Silent read, round-robin, three-column board ("Everyone noticed" / "Multiple" / "One person"), connection to assigned work |
 | -- | 01 Title, 03b Live demo, 04a Act I, 24b Act II, 43 Recap, 44 Q&A | Structural slides, no curriculum counterpart |
 
 ### Key shared values (Week 1)
@@ -55,6 +55,7 @@ These specific values appear in both the curriculum and slides. If any change, b
 - **Project mgmt artifacts:** project context file (CLAUDE.md), ROADMAP.md, DECISIONS.md
 - **Configuration levers:** client.js baseURL (frontend->backend), .env DB_HOST (backend->DB), CORS origins (backend->frontend). Appears in three places: `STUDENT_ONBOARDING_PLAN.md` (Week 1 deployment config section), `docs/guides/01-environment-setup.md` (Configuration Points), and `docs/guides/10-deployment-configuration.md`. All three must stay in sync.
 - **Common configurations:** full local, local FE + staging API, full staging, mixed (mistake)
+- **Vision plan investigation areas:** Frontend state management, Frontend consistency, Backend entry points, Database access patterns, Simulation core, Data pipeline/geographic scope, Testing and reliability. Template: `templates/vision-plan-template.md`. Appears in: `STUDENT_ONBOARDING_PLAN.md` (Week 1 solo work Part 3)
 - **Planning tools:** structured planning (Week 3), multi-issue planning (Week 4), branch-level review (Week 4)
 - **Agent concepts:** Five-piece model (one LLM, stable identity, a job, a toolbox, a harness), agent loop (observe/think/act), three agent types (conversational, task, orchestrator), two-layer harness (runtime level vs. context level). Appears in: `STUDENT_ONBOARDING_PLAN.md` (Week 1 "What makes a tool an agent?" and Week 4 "Recognizing agentic design patterns" and Week 5 "context file encoding"), `slides/week-1/index.html` (25b-ii, 25b-iii), `docs/guides/12-agentic-engineering-concepts.md` ("Two layers of the harness"), `docs/guides/13-agentic-workflow-best-practices.md` ("Encoding Workflow")
 - **Focus shift skills:** problem decomposition, architecture decisions (ADRs), spec writing, testing strategy, code review, documentation. Appears in: `STUDENT_ONBOARDING_PLAN.md` (Week 1), `slides/week-1/index.html` (25b-iii), `docs/guides/12-agentic-engineering-concepts.md`
@@ -67,13 +68,13 @@ These specific values appear in both the curriculum and slides. If any change, b
 | Curriculum section (line) | Slide(s) | Shared facts to keep in sync |
 |---|---|---|
 | Week 1 recap | 01 Title, 02 Week 1 recap | Session structure, Week 1 deliverables |
-| **Review pipeline** (L564-576) | 03 Section, 04 Three layers, 05 CI in practice, 06 Peer review, 07 PR template | Three-layer pipeline (CI/peer/LLM), PR template sections (summary, changes, test plan, tradeoffs, checklist), PR size limit (~200 lines) |
-| **Git workflow for teams** (L578-650) | 08 Section, 09 Branch strategy, 10 PR lifecycle, 11 Commit conventions, 12 Daily git rhythm | Branch strategy (main/dev/feature), branch naming convention (feature/issue-NUMBER-desc), commit conventions (imperative mood, issue refs), PR lifecycle steps, daily git rhythm |
-| **Edge case brainstorming** (L652-656) | 13 Section, 14 Interview first, 15 Edge case example | Interview-first pattern, has_resources() edge cases, income thresholds |
-| **Writing code with AI tools** (L658-674) | 16 Section, 17 Five steps, 18 Vibe vs agentic, 19 Plan preview | Five-step iterative pattern, vibe coding vs agentic engineering, structured planning preview |
-| **ADRs** (L676-680) | 20 Section, 21 ADR template, 22 ADR example | ADR template fields (title+status, context, decision, alternatives), E501 example |
-| **Project context file review** (L682-684) | 23 Section, 24 Project context file review | Review checklist |
-| **Assigned work** (L686-812) | 25 Section, 26 Assigned issues, 27 Solo work | Issue #24 (linting), Issues #18/#19/#20 (type hints), first tests (household.py pure functions), solo work deliverables |
+| **Review pipeline** (L601-613) | 03 Section, 04 Three layers, 05 CI in practice, 06 Peer review, 07 PR template | Three-layer pipeline (CI/peer/LLM), PR template sections (summary, changes, test plan, tradeoffs, checklist), PR size limit (~200 lines) |
+| **Git workflow for teams** (L615-687) | 08 Section, 09 Branch strategy, 10 PR lifecycle, 11 Commit conventions, 12 Daily git rhythm | Branch strategy (main/dev/feature), branch naming convention (feature/issue-NUMBER-desc), commit conventions (imperative mood, issue refs), PR lifecycle steps, daily git rhythm |
+| **Edge case brainstorming** (L689-693) | 13 Section, 14 Interview first, 15 Edge case example | Interview-first pattern, has_resources() edge cases, income thresholds |
+| **Writing code with AI tools** (L695-711) | 16 Section, 17 Five steps, 18 Vibe vs agentic, 19 Plan preview | Five-step iterative pattern, vibe coding vs agentic engineering, structured planning preview |
+| **ADRs** (L713-717) | 20 Section, 21 ADR template, 22 ADR example | ADR template fields (title+status, context, decision, alternatives), E501 example |
+| **Project context file review** (L719-721) | 23 Section, 24 Project context file review | Review checklist |
+| **Assigned work** (L723-849) | 25 Section, 26 Assigned issues, 27 Solo work | Issue #24 (linting), Issues #18/#19/#20 (type hints), first tests (household.py pure functions), solo work deliverables |
 | -- | 28 Recap | Structural slide, no curriculum counterpart |
 
 ### Key shared values (Week 2)
