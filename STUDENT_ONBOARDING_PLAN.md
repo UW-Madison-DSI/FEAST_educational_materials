@@ -11,8 +11,9 @@ title: "6-Week Onboarding Plan"
 - **Solo time**: Additional async hours later in the week (varies by student availability)
 - **Team**: 5 CS students, freshmen to seniors, varying experience
 - **Goal**: Revamp the FEAST tool while teaching LLM-assisted development practices
-- **Repos**: `ICICLE-ai/Food-Access-Model` (backend, branch `minimum_viable_product`), `ICICLE-ai/FASS-Frontend` (frontend, branch `Brown-County-Frontend`)
-- **Active backend variant**: The `bc_pantries` branch extends the model with food pantry support (FSA score of 25 for pantries, prioritized for low-income households). Check which branch is canonical before the cohort starts.
+- **Upstream repos**: `ICICLE-ai/Food-Access-Model` (backend), `ICICLE-ai/FASS-Frontend` (frontend)
+- **Cohort repos**: Before the cohort starts, fork both upstream repos into a cohort-specific GitHub organization (e.g., `FASS-2026-Summer`). Students clone from the cohort org, not the upstream. This gives the team a clean issue tracker, write access for branches and PRs, and a fresh backlog built from their own vision plans. The cohort org name is referenced below as `[COHORT-ORG]`.
+- **Active branches**: `minimum_viable_product` (backend), `Brown-County-Frontend` (frontend). The `bc_pantries` branch extends the model with food pantry support (FSA score of 25 for pantries, prioritized for low-income households). Check which branch is canonical before the cohort starts.
 
 ## How This Plan Works
 
@@ -335,9 +336,9 @@ Prerequisites:
 - Git configured with GitHub access
 - uv installed (pip install uv)
 
-Step 1: Clone the repos
-   git clone https://github.com/ICICLE-ai/Food-Access-Model.git
-   git clone https://github.com/ICICLE-ai/FASS-Frontend.git
+Step 1: Clone the repos (from the cohort org, not upstream)
+   git clone https://github.com/[COHORT-ORG]/Food-Access-Model.git
+   git clone https://github.com/[COHORT-ORG]/FASS-Frontend.git
 
 Step 2: Backend setup
    cd Food-Access-Model
@@ -547,7 +548,13 @@ Body:
 - Why it's a problem
 - (Optional) What you think the fix might be
 
-Label it: bug, enhancement, or refactor
+Label it with two labels:
+- Type: bug, enhancement, or refactor
+- Area: use the investigation area from your vision plan
+  (e.g., area:frontend-state, area:backend-entry-points,
+  area:simulation-core, area:testing). Create the area
+  label if it doesn't exist yet. Consistent labeling lets
+  the team (and your agent) organize issues by area later.
 
 Examples of things you probably found:
 - Three different entry points (api_server.py, server.py,
@@ -591,6 +598,28 @@ the backlog your team works from in later weeks.
 **Step 2: Round-robin (8 min, ~90 sec per student).** Each student shares: their number one priority improvement, one thing from the reviewed plan they missed, one sequencing disagreement. Instructor fills a three-column board: "Everyone noticed" / "Multiple people noticed" / "One person noticed."
 
 **Step 3: Converge (2 min).** "Everyone noticed" items anchor the team's shared priorities. This directly informs the issue triage that follows: issues supporting "everyone noticed" areas are strong must-fix candidates. Students see why their Week 2 assignments matter. The linting student sees everyone noticed there is no CI. The testing student sees everyone noticed there are no tests. The assigned work addresses problems the team collectively identified.
+
+**Step 4: Encode priorities and organize with your agent (~5 min, can continue in solo time).**
+
+The convergence board is team knowledge. Make it available to your agent by adding it to your project context file. Open your CLAUDE.md (or equivalent) and add a "Team Priorities" section:
+
+```markdown
+## Team Priorities (from Week 2 plan comparison)
+
+### Convergence Board
+- Everyone noticed: [paste the items from the board]
+- Multiple people noticed: [paste]
+- One person noticed: [paste]
+
+### Issue Labels
+When filing or triaging issues, use area labels to connect work to these priorities:
+- area:frontend-state, area:frontend-consistency, area:backend-entry-points, etc.
+When asked to help with issues, group by area label and suggest priority based on the convergence board.
+```
+
+This is an example of using your context file to encode team knowledge, not just code conventions. Once these priorities are in the context file, your agent can help you organize and triage issues as the backlog grows. Try it: ask your agent to review open issues (`gh issue list`), group them by area label, and flag which ones align with the team's top priorities.
+
+> **Beyond this project:** The pattern here is general: when your team makes a decision or forms a shared understanding, encode it somewhere your tools can access it. A decision that lives only in someone's head (or in meeting notes no one re-reads) does not help the agent help you. The context file is the bridge between team knowledge and agent behavior.
 
 ---
 
