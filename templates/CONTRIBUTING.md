@@ -13,7 +13,7 @@
 ### Backend Setup
 
 ```bash
-git clone https://github.com/ICICLE-ai/Food-Access-Model.git
+git clone https://github.com/[COHORT-ORG]/Food-Access-Model.git
 cd Food-Access-Model
 git checkout minimum_viable_product
 cp .env.example .env   # edit with your DB credentials

@@ -18,6 +18,8 @@ The FEAST application lives in two separate repos:
 - **Frontend:** fass-frontend (React + Leaflet + Vite)
 - **Reference deployment:** [feast-test.services.dsi.wisc.edu](https://feast-test.services.dsi.wisc.edu/)
 
+Before starting a cohort, fork both repos into a cohort-specific GitHub organization (e.g., `FASS-2026-Summer`). Students clone from the cohort org, giving the team a clean issue tracker and write access. Clone URLs in the curriculum use `[COHORT-ORG]` as a placeholder.
+
 ## How the program works
 
 Students spend six weeks progressing from "run the project and understand what it does" to "independently plan and ship improvements." Each week has a group session (30-50 min) and async solo work.

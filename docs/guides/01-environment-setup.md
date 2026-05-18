@@ -99,8 +99,8 @@ After pushing, you'll open a pull request on GitHub. We'll cover PRs in detail d
 ### 1. Clone the repos
 
 ```bash
-git clone https://github.com/ICICLE-ai/Food-Access-Model.git
-git clone <fass-frontend-repo-url>
+git clone https://github.com/[COHORT-ORG]/Food-Access-Model.git
+git clone https://github.com/[COHORT-ORG]/FASS-Frontend.git
 ```
 
 ### 2. Backend setup
