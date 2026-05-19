@@ -38,6 +38,10 @@ See [DECISIONS.md](DECISIONS.md) for the full rationale behind these and other c
 ```
 STUDENT_ONBOARDING_PLAN.md    Master 6-week curriculum
 CONTENT_MAP.md                Maps curriculum sections to slide deck slides
+docs/
+  assignments/                 Week-by-week student assignment documents
+  guides/                      Scaffolded student guides (01 through 13)
+  instructor-guides/           Pre-session prep workflows for instructors
 docs/guides/
   01-environment-setup.md     Environment setup
   02-issue-filing.md          Filing good issues

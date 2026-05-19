@@ -5,23 +5,28 @@ title: "Roadmap"
 
 # ROADMAP
 
-Last updated: 2026-05-08
+Last updated: 2026-05-19
 
 ## Current State
 
 **What works:**
-- Complete 6-week onboarding plan with agentic tools, review pipelines, project management artifacts, issue mappings, student assignment strategy, and LLM/tooling usage progression (`STUDENT_ONBOARDING_PLAN.md`, restructured per DEC-004)
-- 9 scaffolded student guides covering environment setup through self-directed work (`docs/guides/`)
-- Templates for FEAST repos: CLAUDE.md, CONTRIBUTING.md, ADR template (`templates/`)
+- Complete 6-week onboarding plan with agentic tools, review pipelines, project management artifacts, issue mappings, student assignment strategy, and LLM/tooling usage progression (`STUDENT_ONBOARDING_PLAN.md`, restructured per DEC-004/005/006)
+- 14 scaffolded student guides covering environment setup through agentic workflow best practices (`docs/guides/`)
+- Templates for FEAST repos: CLAUDE.md, CONTRIBUTING.md, ADR template, vision plan template (`templates/`)
 - Annotated reference bibliography with pedagogical and domain sources (`references/`)
 - GitHub issue and PR templates (`.github/`)
 - Project management scaffold: CLAUDE.md, ROADMAP.md, DECISIONS.md, post-commit hook
-- Week 1 slide deck updated per DEC-004 (tool landscape, CLAUDE.md, project mgmt artifacts, setup scaffold)
+- Week 1 slide deck (58 sections: orientation, domain, architecture, agentic tools, setup, experience baseline, vision plan, plan comparison)
+- Week 2 slide deck (28+ slides: review pipeline, git workflow, edge cases, iterative coding, ADRs, assigned work)
+- Week 1 assignment document for senior developers (`docs/assignments/week-1-assignment.md`)
+- Vision and Improvement Plan template (`templates/vision-plan-template.md`)
+- Instructor prep guide for Week 2 LLM digest workflow (`docs/instructor-guides/week-2-prep.md`)
+- Cohort org fork pattern with `[COHORT-ORG]` placeholder across curriculum, guides, and templates
 - README with instructor setup instructions
 - GitHub Pages deployment via GitHub Actions
 
 **In progress:**
-- Slide decks for weeks 2-6
+- Slide decks for weeks 3-6
 
 **Not started:**
 - Consistency review across all written materials
@@ -65,6 +70,13 @@ Last updated: 2026-05-08
   - [x] Update CONTENT_MAP.md with new deployment and planning content
   - [x] Fix environment setup guide (01) for consistency with curriculum (run_local.py, port 8000, client.js)
   - [x] New guides: 10-deployment-configuration.md, 11-planning-with-claude-code.md
+- [x] **Curriculum additions (DEC-006):** Vision plans, cohort org fork, agent-assisted triage, plan comparison
+  - [x] Five-piece agent model and two-layer harness concept (curriculum, slides, guides 12-13)
+  - [x] Vision and Improvement Plan homework (Week 1 solo work restructure, template)
+  - [x] Cohort org fork pattern (`[COHORT-ORG]` across curriculum, guides, templates)
+  - [x] Agent-assisted issue triage (area labels, CLAUDE.md encoding, Plan Comparison Activity)
+  - [x] Week 1 assignment document (`docs/assignments/week-1-assignment.md`)
+  - [x] Instructor prep guide: LLM digest workflow (`docs/instructor-guides/week-2-prep.md`)
 - [ ] Consistency review across all written materials (cross-references, terminology, scaffolding tiers)
 - [ ] Verify FEAST code references (file paths, line numbers) against current codebase state
 
@@ -73,7 +85,9 @@ Last updated: 2026-05-08
 
 - [x] Week 1: Orientation, domain concepts, architecture, LLM tools intro (`slides/week-1/`)
 - [x] Week 1 update: Expand LLM tools slides (tool landscape, CLAUDE.md, Claude Code demo), add project mgmt artifacts slide, add Claude Code to setup slides
-- [ ] Week 2: Review pipelines, CI setup, ADR introduction, edge case brainstorming, PR workflow
+- [x] Week 1 update: Experience baseline (01b), vision plan (38c), plan comparison (42), area labels in issue filing (39)
+- [x] Week 2: Review pipelines, CI setup, ADR introduction, edge case brainstorming, PR workflow (`slides/week-2/`)
+- [ ] Week 2 update: Add vision plan recap card, assignment digest slide (02b)
 - [ ] Week 3: Adversarial review (manual + LLM rotation), specs before code, ADR practice
 - [ ] Week 4: Manual vs. auto-generated artifacts, roadmap maintenance, ADR generation from diffs
 - [ ] Week 5: Security review, deployment readiness, review pipeline retrospective
@@ -91,7 +105,9 @@ Last updated: 2026-05-08
 **Goal:** Everything an instructor needs to run the first cohort, end to end.
 
 - [x] README.md with instructor setup instructions
-- [ ] Pre-session checklist (what to prepare before each week)
+- [x] Pre-session LLM digest workflow for reviewing student submissions (`docs/instructor-guides/week-2-prep.md`)
+- [ ] Pre-session checklists for remaining weeks
+- [ ] Cohort GitHub org created and repos forked
 - [ ] Verify FEAST backend/frontend repos are in expected state for student onboarding
 - [ ] All materials reviewed by at least one other instructor or peer
 - [ ] Dry-run of Week 1 session flow

@@ -32,7 +32,7 @@ This file maps sections of `STUDENT_ONBOARDING_PLAN.md` to slide numbers in each
 | **Setup** (L324-454) | 28 Section, 28b Git concepts, 28c Git commands, 29 Prerequisites, 30 Setup steps (NOW INCLUDES CLI agent install as Step 3), 31 Working state, 32 Common problems | Prerequisites list, git fundamentals, clone from `[COHORT-ORG]`, clone/branch/install steps, CLI agent install, run_local.py port 8000, client.js edit, common problems list, live instance URL |
 | Assigned work (L456-485) | 33 Section, 34 Use the app, 35 Endpoint traces, 36 Deliverable | Endpoint trace table (5 students), deliverable (PR with trace + context file + vision plan), live instance URL |
 | Solo work (L488-590) | 37 Section, 38 Solo explore, 38b Context file, 38c Vision plan, 39 Solo file issues (now Part 4), 40 Things you'll find, 41 Stretch | J vs S exploration targets, project context file creation in FEAST repo, vision plan (template in `templates/vision-plan-template.md`, investigation areas table, tier expectations), issue filing with area labels (area:frontend-state, etc.), example issues list, stretch goals |
-| Plan comparison activity (L592-624) | 42 Plan comparison | Silent read, round-robin, three-column board ("Everyone noticed" / "Multiple" / "One person"), encode priorities in CLAUDE.md, agent-assisted issue triage via `gh issue list`, connection to assigned work |
+| Plan comparison activity (L592-626) | 42 Plan comparison | Silent read, round-robin, three-column board ("Everyone noticed" / "Multiple" / "One person"), encode priorities in CLAUDE.md, agent-assisted issue triage via `gh issue list`, connection to assigned work. Instructor prep note at L594 references `docs/instructor-guides/week-2-prep.md` |
 | -- | 01 Title, 01b Experience baseline, 03b Live demo, 04a Act I, 24b Act II, 43 Recap, 44 Q&A | Structural slides, no curriculum counterpart |
 
 ### Key shared values (Week 1)
@@ -45,7 +45,8 @@ These specific values appear in both the curriculum and slides. If any change, b
 - **Income thresholds:** $10k (single), $15k (2-person), $25k (3+ person)
 - **Backend port:** 8000 (run_local.py), 8080 (gunicorn)
 - **Frontend port:** 5173
-- **Cohort org placeholder:** `[COHORT-ORG]` used in clone URLs. Appears in: `STUDENT_ONBOARDING_PLAN.md` (Constraints + Setup scaffold), `docs/guides/01-environment-setup.md`, `templates/CONTRIBUTING.md`
+- **Cohort org placeholder:** `[COHORT-ORG]` used in clone URLs. Appears in: `STUDENT_ONBOARDING_PLAN.md` (Constraints + Setup scaffold), `docs/guides/01-environment-setup.md`, `templates/CONTRIBUTING.md`, `docs/assignments/week-1-assignment.md` (deliverables)
+- **Instructor email placeholder:** `[INSTRUCTOR-EMAIL]` used in assignment header. Appears in: `docs/assignments/week-1-assignment.md`. Replace per cohort alongside `[COHORT-ORG]`.
 - **Repo branches:** `minimum_viable_product` (backend), `Brown-County-Frontend` (frontend)
 - **CRS:** households EPSG:4326, stores EPSG:3857
 - **Entry points:** run_local.py (correct), api_server.py (legacy), server.py (legacy)
@@ -65,18 +66,19 @@ These specific values appear in both the curriculum and slides. If any change, b
 
 ## Week 2
 
-**Slide deck:** `slides/week-2/index.html` (28 slides, labels 01-28)
+**Slide deck:** `slides/week-2/index.html` (29 slides, labels 01-28 plus 02b insert)
 
 | Curriculum section (line) | Slide(s) | Shared facts to keep in sync |
 |---|---|---|
-| Week 1 recap | 01 Title, 02 Week 1 recap | Session structure, Week 1 deliverables |
-| **Review pipeline** (L630-642) | 03 Section, 04 Three layers, 05 CI in practice, 06 Peer review, 07 PR template | Three-layer pipeline (CI/peer/LLM), PR template sections (summary, changes, test plan, tradeoffs, checklist), PR size limit (~200 lines) |
-| **Git workflow for teams** (L644-716) | 08 Section, 09 Branch strategy, 10 PR lifecycle, 11 Commit conventions, 12 Daily git rhythm | Branch strategy (main/dev/feature), branch naming convention (feature/issue-NUMBER-desc), commit conventions (imperative mood, issue refs), PR lifecycle steps, daily git rhythm |
-| **Edge case brainstorming** (L718-722) | 13 Section, 14 Interview first, 15 Edge case example | Interview-first pattern, has_resources() edge cases, income thresholds |
-| **Writing code with AI tools** (L724-740) | 16 Section, 17 Five steps, 18 Vibe vs agentic, 19 Plan preview | Five-step iterative pattern, vibe coding vs agentic engineering, structured planning preview |
-| **ADRs** (L742-746) | 20 Section, 21 ADR template, 22 ADR example | ADR template fields (title+status, context, decision, alternatives), E501 example |
-| **Project context file review** (L748-750) | 23 Section, 24 Project context file review | Review checklist |
-| **Assigned work** (L752-878) | 25 Section, 26 Assigned issues, 27 Solo work | Issue #24 (linting), Issues #18/#19/#20 (type hints), first tests (household.py pure functions), solo work deliverables |
+| Week 1 recap | 01 Title, 02 Week 1 recap | Session structure, Week 1 deliverables (5 cards: environment, trace, vision plan, issues, context file) |
+| Plan Comparison prep (L592) | 02b Assignment digest | Pre-populated from LLM digest (instructor fills before session). Reference: `docs/instructor-guides/week-2-prep.md` |
+| **Review pipeline** (L632-644) | 03 Section, 04 Three layers, 05 CI in practice, 06 Peer review, 07 PR template | Three-layer pipeline (CI/peer/LLM), PR template sections (summary, changes, test plan, tradeoffs, checklist), PR size limit (~200 lines) |
+| **Git workflow for teams** (L646-718) | 08 Section, 09 Branch strategy, 10 PR lifecycle, 11 Commit conventions, 12 Daily git rhythm | Branch strategy (main/dev/feature), branch naming convention (feature/issue-NUMBER-desc), commit conventions (imperative mood, issue refs), PR lifecycle steps, daily git rhythm |
+| **Edge case brainstorming** (L720-724) | 13 Section, 14 Interview first, 15 Edge case example | Interview-first pattern, has_resources() edge cases, income thresholds |
+| **Writing code with AI tools** (L726-742) | 16 Section, 17 Five steps, 18 Vibe vs agentic, 19 Plan preview | Five-step iterative pattern, vibe coding vs agentic engineering, structured planning preview |
+| **ADRs** (L744-748) | 20 Section, 21 ADR template, 22 ADR example | ADR template fields (title+status, context, decision, alternatives), E501 example |
+| **Project context file review** (L750-752) | 23 Section, 24 Project context file review | Review checklist |
+| **Assigned work** (L754-880) | 25 Section, 26 Assigned issues, 27 Solo work | Issue #24 (linting), Issues #18/#19/#20 (type hints), first tests (household.py pure functions), solo work deliverables |
 | -- | 28 Recap | Structural slide, no curriculum counterpart |
 
 ### Key shared values (Week 2)
@@ -89,12 +91,14 @@ These specific values appear in both the curriculum and slides. If any change, b
 - **PR size limit:** ~200 lines of changed code (non-test). Appears in: STUDENT_ONBOARDING_PLAN.md (L1380 and Week 2 scaffold), Week 2 slides (10)
 - **Review pipeline layers:** CI checks (Week 2), peer review (Week 2), LLM adversarial review (Week 3). Appears in: Week 1 shared values, Week 2 slides (04)
 - **ADR template fields:** Title+Status, Context, Decision, Alternatives. Appears in: templates/adr-template.md, Week 2 slides (21)
+- **Week 1 deliverables (recap):** Environment, endpoint trace, vision plan, issues filed, context file. Appears in: Week 2 slides (02, 5 cards), `docs/assignments/week-1-assignment.md` (Deliverables section)
+- **Instructor prep workflow:** `docs/instructor-guides/week-2-prep.md`. Referenced by: STUDENT_ONBOARDING_PLAN.md (L594, instructor prep note before Plan Comparison Activity), Week 2 slides (02b footer)
 
 ## Weeks 3-6
 
 Slide decks for these weeks do not exist yet. When created, add mappings here following the Week 1/Week 2 format.
 
-| Week | Curriculum topics (post-DEC-004/DEC-005 restructuring) | Slide deck | Status |
+| Week | Curriculum topics (post-DEC-004/005/006 restructuring) | Slide deck | Status |
 |---|---|---|---|
 | 3 | LLM adversarial review rotation (completing 3-layer pipeline), specs before code, structured planning for feature specs, ADR-format specs | `slides/week-3/index.html` | Not started |
 | 4 | Manual vs. auto-generated artifacts, ADR generation from diffs, single-feature vs. multi-issue planning vs. branch-level review, roadmap maintenance, project context file check-in | `slides/week-4/index.html` | Not started |

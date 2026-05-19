@@ -591,6 +591,8 @@ the backlog your team works from in later weeks.
 
 ### Plan Comparison Activity (Week 2 opener, ~15 min)
 
+> **Instructor prep:** Before this session, run the LLM digest workflow (`docs/instructor-guides/week-2-prep.md`) to pre-digest student vision plans. This gives you a pre-populated convergence board to validate during the round-robin and discussion seeds for when the conversation stalls.
+
 **Before the session:** Each student's vision plan PR should be open.
 
 **Step 1: Silent read (5 min).** Each student reads one other student's plan (pre-assigned pairings). Mark: (a) something you also identified, (b) something you missed, (c) something you would sequence differently.

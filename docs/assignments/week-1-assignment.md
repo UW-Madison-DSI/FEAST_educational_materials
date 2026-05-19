@@ -8,6 +8,8 @@ title: "Week 1 Assignment"
 **Due before:** Week 2 session
 **Team:** Senior developers
 **Tools:** Claude Code (when accounts are active). You can start the endpoint traces and exploration without it.
+**Time estimate:** ~8-12 hours total. This is a best estimate and hasn't been tested yet. Please track your time so we can calibrate for future cohorts.
+**Questions?** Email `[INSTRUCTOR-EMAIL]`.
 
 ## What to do
 
@@ -39,7 +41,7 @@ These don't need to be technical yet. "I had no idea what the colors meant until
 - What additional data or visualizations would make the simulation results more actionable?
 - Are there entirely new features (comparison views, reporting, scenario saving, different agent types) that would change who uses this and how?
 
-Jot down 3-5 ideas. They don't need to be scoped or feasible yet. The point is to form your own opinion about the product direction before you dive into the code. You'll revisit these ideas in your Vision Plan (step 5).
+Jot down 3-5 ideas. They don't need to be scoped or feasible yet. The point is to form your own opinion about the product direction before you dive into the code. You'll use these observations as starting material for your Vision Plan (step 5).
 
 ### 2. Trace one endpoint through the full stack
 
@@ -63,7 +65,7 @@ Write your trace as a markdown file. Put it in `docs/traces/` in the FEAST backe
 
 ### 3. Explore the codebase
 
-Now that you've traced one endpoint, explore the parts you didn't cover. Keep notes on what seems wrong, confusing, or inconsistent. You will use these notes for the Vision Plan (step 4).
+Now that you've traced one endpoint, explore the parts you didn't cover. Keep notes on what seems wrong, confusing, or inconsistent. You will use these notes for your Vision Plan (step 5).
 
 Focus areas for senior devs:
 - `food_access_model/abm/household.py`: read `get_mfai()` (line 218), `has_resources()` (line 169), and `step()` (line 259). What do the magic numbers mean (95, 55, 0.8, 10000/15000/25000)?
@@ -77,13 +79,15 @@ Focus areas for senior devs:
 
 Using the template at `FEAST_edu/templates/CLAUDE.md`, create a `CLAUDE.md` in the root of the FEAST backend repo. Customize it based on what you learned from the architecture overview and your exploration. Keep it under 50 lines. This file tells your agent how to work in the repo.
 
+The template includes Team Priorities and Issue Organization sections. Leave those as placeholders for now; you'll fill them in during the Week 2 Plan Comparison Activity.
+
 - [ ] CLAUDE.md created in FEAST backend repo root
 
 ### 5. Vision and Improvement Plan
 
 What should an improved version of FEAST look like? Not a redesign from scratch, but the same application built the way a professional team would build it today. Then work backwards: what are the biggest gaps, and in what order should a team close them?
 
-Copy `FEAST_edu/templates/vision-plan-template.md` into your FEAST repo (e.g., `docs/vision-plan-yourname.md`). Pick at least 3 investigation areas:
+Start from the observations you collected in steps 1B, 1C, and 3. Copy `FEAST_edu/templates/vision-plan-template.md` into your FEAST repo (e.g., `docs/vision-plan-yourname.md`). Pick at least 3 investigation areas:
 
 | Area | What to look at | Key files |
 |------|-----------------|-----------|
@@ -95,9 +99,9 @@ Copy `FEAST_edu/templates/vision-plan-template.md` into your FEAST repo (e.g., `
 | Data pipeline / geographic scope | What is hardcoded to Brown County? CRS inconsistency (4326 vs 3857) | preprocessing/get_data.py, constants.py |
 | Testing and reliability | No tests exist. Which functions are testable? What makes others hard? | tests/ (absent), household.py pure functions |
 
-For each area: describe the current state (specific files, lines, quotes), what it should look like, why it matters, and estimate the size (small/medium/large). Then sequence your improvements with rationale.
+> **Agent rule:** Use Claude to explain code and identify patterns. The vision and prioritization must be your own thinking. Test: if someone asks why you prioritized X over Y, can you answer from your own reasoning?
 
-**Agent rule:** Use Claude to explain code and identify patterns. The vision and prioritization must be your own thinking. Test: if someone asks why you prioritized X over Y, can you answer from your own reasoning?
+For each area: describe the current state (specific files, lines, quotes), what it should look like, why it matters, and estimate the size (small/medium/large). Then sequence your improvements with rationale.
 
 **Time guidance:** The plan should take 1-2 hours to write on top of exploration. Go deep: code quotes, trade-off reasoning, dependency-aware sequencing.
 
@@ -120,6 +124,8 @@ Turn everything you found into GitHub issues. For each issue:
 | **enhancement** | Something works but should be better | `print()` used instead of `logging` module in multiple files. Magic numbers in `household.py` (95, 55, 0.8, income thresholds) with no constants or docstrings. |
 | **refactor** | Code works but is poorly structured | Inconsistent imports (package-relative in one file, shorthand in another). Deprecated `on_event` pattern in `routes.py` (FastAPI moved to lifespan handlers). Raw DOM manipulation in `MapComponent.js` (526 lines, bypasses React). Bootstrap + Tailwind mixed in the same frontend. Python version drift (`pyproject.toml` says 3.11.11, Dockerfile says 3.12). |
 
+These are examples from the codebase, not a checklist. Your issues should come from your own exploration.
+
 **Area labels** (match your investigation areas): `area:frontend-state`, `area:frontend-consistency`, `area:backend-entry-points`, `area:database-access`, `area:simulation-core`, `area:data-pipeline`, `area:testing`
 
 After filing, go back to your vision plan and add the issue links in the "Connections to Issues" section.
@@ -133,11 +139,12 @@ If you found something small enough to fix in 30 minutes (the CORS hardcoding, a
 
 - [ ] (Optional) One small fix PR opened
 
-## Deliverables (PRs to open before Week 2)
+## Deliverables (before Week 2)
 
-1. **Endpoint trace** -- markdown file in `docs/traces/`
-2. **Project context file** -- `CLAUDE.md` in repo root
-3. **Vision and Improvement Plan** -- from the template, in `docs/`
-4. (Optional) Small fix PR linked to a filed issue
+1. **Endpoint trace** -- PR with markdown file in `docs/traces/`
+2. **Project context file** -- PR with `CLAUDE.md` in repo root
+3. **Vision and Improvement Plan** -- PR from the template, in `docs/`
+4. **At least 3 issues filed** -- in the `[COHORT-ORG]` repo with type + area labels
+5. (Optional) Small fix PR linked to a filed issue
 
 We will compare vision plans at the start of the Week 2 session.

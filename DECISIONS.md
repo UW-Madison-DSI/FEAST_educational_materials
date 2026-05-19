@@ -11,6 +11,52 @@ For the ADR template used in the FEAST application repos, see `templates/adr-tem
 
 ---
 
+## DEC-006: Vision Plans, Cohort Org Fork, Agent-Assisted Triage, and Plan Comparison Activity
+
+**Date:** 2026-05-19
+**Status:** Accepted
+
+**Context:** Four gaps were identified in the post-DEC-005 curriculum:
+
+1. **Explore-to-issues gap.** Students explore the codebase (solo work Part 1-2) and then file issues (Part 3), but there is no structured step in between where they synthesize what they found into a coherent assessment. The result is scattered issues without a connecting thread. Students also have variable time budgets (4-8 hours for J-tier, 20+ for S-tier), and a single "explore and file issues" assignment does not scale well across that range.
+
+2. **Issue overload risk.** Five students each filing 3+ issues creates a backlog of 15+ issues with no organizational structure. Without a way to group and prioritize, the team spends Week 2 sorting rather than working.
+
+3. **Upstream repo constraints.** The upstream FEAST repos (`ICICLE-ai/Food-Access-Model`, `fass-frontend`) have existing issues, branch history, and permission structures that do not match the onboarding workflow. Students need write access, a clean issue tracker, and the ability to create branches without affecting the upstream project.
+
+4. **Roadmap activity disconnect.** The original Week 2 opener was a "Roadmap Activity" where students contributed to a shared ROADMAP.md. But students do not have enough shared context at that point to build a roadmap collaboratively. They need to first discover what each person found individually, then converge on shared priorities.
+
+**Decision:** Four interconnected changes:
+
+**Vision and Improvement Plan homework.** Add a structured assignment between exploration and issue filing (Week 1 solo work Part 3). Students choose 3+ investigation areas from a provided table (frontend state, frontend consistency, backend entry points, database access, simulation core, data pipeline, testing), describe the current state with code quotes, propose what it should look like, estimate size, and sequence their improvements with rationale. A template (`templates/vision-plan-template.md`) scaffolds the work. The plan scales naturally across tiers: J students cover 3 areas with basic observations, S students go deeper with architecture reasoning and dependency-aware sequencing.
+
+**Cohort org fork.** Before the cohort starts, fork both FEAST repos into a cohort-specific GitHub organization (e.g., `FASS-2026-Summer`). Students clone from the cohort org. This gives the team a clean issue tracker, write access, and a fresh backlog built from their own vision plans. Clone URLs in the curriculum use `[COHORT-ORG]` as a placeholder that the instructor replaces when setting up the cohort.
+
+**Agent-assisted issue triage.** Add area labels (`area:frontend-state`, `area:frontend-consistency`, `area:backend-entry-points`, `area:database-access`, `area:simulation-core`, `area:data-pipeline`, `area:testing`) to the issue filing guidance. The CLAUDE.md template includes a "Team Priorities" section and "Issue Organization" section that encode the team's convergence board results and area label schema. Once encoded, agents can help organize and triage issues (e.g., `gh issue list --label "area:..."`) as the backlog grows.
+
+**Plan Comparison Activity.** Replace the Roadmap Activity at the Week 2 opener with a structured comparison of individual vision plans. Steps: (1) silent read of another student's plan, (2) round-robin sharing, (3) convergence board ("Everyone noticed" / "Multiple" / "One person"), (4) encode priorities in CLAUDE.md. An instructor prep workflow (`docs/instructor-guides/week-2-prep.md`) uses an LLM to pre-digest student submissions and pre-populate the convergence board before the session.
+
+**Alternatives considered:**
+- *Keep a single "explore and file issues" assignment.* Simpler, but produces scattered issues without synthesis. Does not scale across tier time budgets.
+- *Use upstream repos directly.* Avoids forking logistics but gives students no write access, an existing issue tracker full of unrelated items, and no clean baseline for their backlog.
+- *Manual issue organization only.* Students group issues by hand during the session. Works for 5 students but does not teach them how to encode organizational knowledge for their tools.
+- *Keep Roadmap Activity.* Students lack enough shared context in Week 2 to build a roadmap. The Plan Comparison Activity builds that context first, and the roadmap emerges from it.
+- *Skip pre-session digest.* Instructor builds the convergence board live during the round-robin. Works but is slower and risks missing patterns across submissions. The LLM digest is insurance, not a replacement.
+
+**Consequences:**
+- (+) Vision plans bridge the gap between exploration and issue filing; students arrive at issue filing with a coherent assessment
+- (+) Variable-depth investigation areas scale naturally across J and S tiers
+- (+) Cohort org fork gives a clean issue tracker, write access, and a fresh backlog without affecting upstream
+- (+) Area labels create organizational structure from the start; agent-assisted triage keeps the backlog manageable as it grows
+- (+) Plan Comparison Activity produces shared team priorities grounded in individual analysis, not group brainstorming
+- (+) Instructor pre-digest workflow makes the Plan Comparison Activity more efficient and catches gaps in coverage
+- (-) Cohort org setup is a new instructor logistics step that must happen before Week 1
+- (-) `[COHORT-ORG]` placeholder requires replacement in curriculum and guides when setting up a cohort
+- (-) LLM digest workflow assumes instructor has access to Claude or equivalent; adds ~35 min of pre-session prep
+- (-) More structured homework (vision plan) may feel heavy for students with less time; mitigated by tier expectations (3 areas for J, 5+ for S)
+
+---
+
 ## DEC-005: Deployment Configuration, Claude Code Planning Workflows, and Agentic Engineering Framing
 
 **Date:** 2026-05-08
