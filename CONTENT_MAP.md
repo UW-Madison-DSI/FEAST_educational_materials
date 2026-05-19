@@ -46,7 +46,7 @@ These specific values appear in both the curriculum and slides. If any change, b
 - **Backend port:** 8000 (run_local.py), 8080 (gunicorn)
 - **Frontend port:** 5173
 - **Cohort org placeholder:** `[COHORT-ORG]` used in clone URLs. Appears in: `STUDENT_ONBOARDING_PLAN.md` (Constraints + Setup scaffold), `docs/guides/01-environment-setup.md`, `templates/CONTRIBUTING.md`, `docs/assignments/week-1-assignment.md` (deliverables)
-- **Instructor email placeholder:** `[INSTRUCTOR-EMAIL]` used in assignment header. Appears in: `docs/assignments/week-1-assignment.md`. Replace per cohort alongside `[COHORT-ORG]`.
+
 - **Repo branches:** `minimum_viable_product` (backend), `Brown-County-Frontend` (frontend)
 - **CRS:** households EPSG:4326, stores EPSG:3857
 - **Entry points:** run_local.py (correct), api_server.py (legacy), server.py (legacy)

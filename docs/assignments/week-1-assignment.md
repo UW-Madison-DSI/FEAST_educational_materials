@@ -9,7 +9,7 @@ title: "Week 1 Assignment"
 **Team:** Senior developers
 **Tools:** Claude Code (when accounts are active). You can start the endpoint traces and exploration without it.
 **Time estimate:** ~8-12 hours total. This is a best estimate and hasn't been tested yet. Please track your time so we can calibrate for future cohorts.
-**Questions?** Email `[INSTRUCTOR-EMAIL]`.
+**Questions?** Email me.
 
 ## What to do
 
