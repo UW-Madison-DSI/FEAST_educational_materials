@@ -323,7 +323,7 @@
 </style>
 
 <script type="application/json" id="speaker-notes">
-["Welcome back. Week 1 was about understanding what FEAST is and getting set up. This week we start writing real code and shipping real PRs. By the end of today, you'll understand how every PR gets reviewed, how git branching works for a team, and how to use LLM tools iteratively instead of just accepting the first output.", "Quick recap. Last week you cloned the repos, traced an endpoint through the stack, wrote a vision plan analyzing the codebase, filed issues with area labels, and set up your project context file. Those issues become the work for this week and beyond. Today we build on that foundation.", "Before we get into new material, let's hear from each of you. Quick round: one sentence for each column. What surprised you in the code or the app? What still confuses you after a week of exploration? And what are you most excited to work on? No wrong answers. This is about surfacing the range of experiences across the team.", "Now let's look at what came out of your vision plans. I used an LLM to pre-digest everyone's submissions and pull out common themes. Note the common findings, the areas nobody covered, and where you disagreed on sequencing. See how these compare to what you just shared.", "Now let's compare vision plans more formally. You each got assigned someone else's plan to read. Take five minutes to read it silently. Mark three things: something you also identified, something you missed that they caught, and something you would sequence differently. Then we'll go around the room. About ninety seconds each: your number one priority, one thing from their plan you missed, and one sequencing disagreement. I'll fill the convergence board as you talk.", "The convergence board captures what the team collectively knows. 'Everyone noticed' items are your strongest signal for what to fix first. But the board only helps if it's accessible to your tools, not just in your head or on a whiteboard. Add a Team Priorities section to your project context file with the board results and the area labels. Once that's in place, your agent can help you organize and triage issues. You can start this now and finish during solo time.", "Part one: the review pipeline. From this week on, every PR goes through a structured review process before it can merge. We start with two layers and add a third next week.", "Three layers, added incrementally. Layer one is automated CI. A GitHub Actions workflow runs flake8 on every PR. If it fails, the PR cannot merge. The student working on issue 24 sets this up first so everyone else benefits. Layer two is human peer review. Every PR gets reviewed by one other student. You check: does the code match the stated intent? Are there obvious errors? Is the description clear? Post at least one substantive comment. Not just LGTM. Layer three comes in Week 3: LLM adversarial review, where a student runs a structured adversarial review and posts findings as PR comments.", "Here's what CI looks like in practice. When you push a commit or open a PR, GitHub Actions automatically runs the flake8 workflow. Green check means it passed. Red X means it failed. Click into the details to see which lines have issues. Fix them, push again, and the check reruns. You cannot merge with a red X.", "As a reviewer, your job is to actually read the code. Check the diff, not just the description. Does the code do what the PR says it does? Are there edge cases the author missed? Is the naming clear? Could you maintain this code six months from now? Leave at least one comment that shows you read it. If something is confusing, say so. If something is good, say that too. Bigger picture: you're learning to give and receive critical feedback clearly and constructively. This skill — finding problems, articulating them specifically, suggesting improvements — appears in every professional role. Code review is practice for the hardest version of it.", "The PR template has five sections. Summary: one or two sentences on what this PR does and why. Changes: bullet list of what you actually changed. Test plan: how you verified it works. Tradeoffs: what alternatives you considered and why you chose this approach. Checklist: CI passes, reviewer assigned, issue linked. Fill in every section. The template exists because 'see diff' is not a useful PR description.", "Part two: git workflow for teams. Last week you learned clone, commit, push. This week: branches, pull requests, and the team workflow.", "Three levels of branches. Main is the stable, deployed version. You never push directly to main. Dev is the integration branch. Your feature branches merge into dev. Feature branches are where you do your work. Always create them from an up-to-date dev. The naming convention is feature slash issue dash number dash short dash description. This makes it obvious what each branch is for when you look at the list on GitHub.", "The PR lifecycle, step by step. First, file an issue describing what you're going to do. Then create a feature branch from dev. Write your code, making commits as you go. Push to GitHub. Open a PR using the template. Link it to the issue with Closes hash number. Request a reviewer. Respond to feedback, push fixes. Once approved and CI is green, merge to dev.", "Commit messages matter. Good messages use imperative mood, like giving a command. Add flake8 configuration. Fix store count bug. Not added, not fixed, not stuff. Reference the issue number so there's a trail. And keep each commit to one logical change. If you did two things, make two commits. Think of it this way: a commit message is a micro-conversation with people you may never meet, who will read it without context. The discipline of writing clearly for an absent audience transfers to emails, documentation, and any situation where your reasoning needs to outlast the conversation.", "Here is your daily git rhythm. Tape this to your monitor until it becomes muscle memory. Starting work: checkout dev, pull, create or switch to your feature branch. While working: git status to check where you are, git add specific files, git commit with a descriptive message. Sharing work: git push, then open a PR on GitHub. When in doubt at any point: git status.", "Part three: using LLMs to find edge cases. One of the most valuable things an LLM can do is help you think about what could go wrong before it goes wrong.", "The interview-first pattern. Instead of asking the tool to write tests, describe what the function does and ask: what edge cases should I test? The tool is good at generating scenarios you haven't thought of. You still write the tests yourself. The tool helps you think more completely about the problem space.", "Concrete example. Take the has_resources function in household.py. It checks income against a threshold that varies by household size. Ask the tool: what edge cases should I consider? It might suggest: household size of zero, negative income, income exactly at the threshold boundary, very large household sizes, missing data fields. Some of those are real risks. Some are not possible given the data model. Your job is to evaluate which ones matter and write tests for those.", "Part four: writing code with AI tools. Starting this week, you write real code. The key principle: the tool's output is a first draft, not a final answer.", "Five steps. First, start with intent. Describe what you need and why, not step-by-step instructions. Second, read the output critically. Does the naming make sense? Are there magic numbers? Third, ask for best practices. The tool knows conventions you might not. Fourth, ask about complexity. Is this the simplest way? What could you remove? Fifth, verify readability. Would someone reading this six months from now understand it without context?", "This is the distinction in practice. Vibe coding: prompt, accept, move on. You skipped the engineering. No spec, no review, no decision record. Agentic engineering: you do the engineering, the agent does the typing. You spec the work, shape the output, review critically, document the decision. Remember the focus shift slide from Week 1? Everything you learned today — review pipelines, git workflow, ADRs, iterative shaping — is in the engineering column. Those are the skills that matter when the agent handles syntax for you.", "Preview: structured planning. Many CLI agents have built-in planning features that create a structured plan before making changes. Same principle as the iterative pattern: start with intent, get a plan, review it critically, then execute. We will use structured planning hands-on in Week 3. For now, just know the capability exists.", "Part five: Architecture Decision Records. When you make a choice that someone else might question later, write a short ADR documenting what you decided and why.", "The ADR template has four fields. Title: a short description of the decision. Status: proposed, accepted, or superseded. Context: what prompted the decision. Decision: what you chose and why. Alternatives: what else you considered and why you rejected it. This week, the linting student writes an ADR for their flake8 configuration choices. By Week 4, everyone will have written at least one.", "Example: We chose to ignore E501 because the project convention allows long lines. Alternative: enforce 120-character limit. Rejected because the existing codebase has many long lines and reformatting them all would create noisy diffs during onboarding. That is an ADR. Short, specific, and it answers the question future you will have.", "Part six: context file check-in. Quick round. Each student shows their project context file from last week. Are you capturing useful information? Is anything missing? One to two minutes per student.", "Part seven: this week's work. Issues from the backlog, paired J with S where possible.", "Issue 24: incorporate linting. One student. Add flake8 to dev dependencies. Create a flake8 config ignoring E501, max complexity 10. Add a GitHub Actions workflow that runs flake8 on PRs. Get CI running first so everyone else's PRs benefit. Write an ADR for your configuration choices. Then fix the linting errors in priority files.", "Three tracks this week. Priority: the linting student ships CI first so everyone else benefits from automated checks on their PRs. In parallel: three students each take a module for type hints. Start from function signatures and work inward. First PR should be small and focused. Third track: one S student sets up pytest and writes tests for the pure functions in household.py. This connects directly to the edge case brainstorming from earlier in the session. Test has_resources() boundary values, get_monthly_trip_count() paths, and get_color() output. Run mutation testing with mutmut if time allows.", "Solo work this week. Update your project context file with patterns you learned this week. File at least two more issues for things you discover while working. Review at least one teammate's PR with a substantive comment. Stretch: start on your assigned issue if you haven't already.", "Recap. Four engineering skills you practiced today. Code review: CI plus peer review, evaluating correctness and design, not just syntax. Coordination: branches, commits, PRs — the workflow that keeps a team in sync. Iterative shaping: the agent drafts, you refine. Decision records: ADRs, documenting not just what you chose but why. All four of these are in the engineering column from Week 1's focus shift. The agent handles the typing; you handle these. Next week we add adversarial review and structured planning."]
+["Welcome back. Week 1 was about understanding what FEAST is and getting set up. This week we start writing real code and shipping real PRs. By the end of today, you'll understand how every PR gets reviewed, how git branching works for a team, and how to use LLM tools iteratively instead of just accepting the first output.", "Quick recap. Last week you cloned the repos, traced an endpoint through the stack, wrote a vision plan analyzing the codebase, filed issues with area labels, and set up your project context file. Those issues become the work for this week and beyond. Today we build on that foundation.", "Before we get into new material, let's hear from each of you. Quick round: one sentence for each column. What surprised you in the code or the app? What still confuses you after a week of exploration? And what are you most excited to work on? No wrong answers. This is about surfacing the range of experiences across the team.", "Now let's look at what came out of your vision plans. I used an LLM to pre-digest everyone's submissions and pull out common themes. Note the common findings, the areas nobody covered, and where you disagreed on sequencing. See how these compare to what you just shared.", "Now let's compare vision plans more formally. You each got assigned someone else's plan to read. Take five minutes to read it silently. Mark three things: something you also identified, something you missed that they caught, and something you would sequence differently. Then we'll go around the room. About ninety seconds each: your number one priority, one thing from their plan you missed, and one sequencing disagreement. I'll fill the convergence board as you talk.", "The convergence board captures what the team collectively knows. 'Everyone noticed' items are your strongest signal for what to fix first. But the board only helps if it's accessible to your tools, not just in your head or on a whiteboard. Add a Team Priorities section to your project context file with the board results and the area labels. Once that's in place, your agent can help you organize and triage issues. You can start this now and finish during solo time.", "Part one: git workflow for teams. Last week you learned clone, commit, push. This week: branches, pull requests, and the team workflow. You need to understand how code moves through the system before we talk about the quality gates on that code.", "Three levels of branches. Main is the stable, deployed version. You never push directly to main. Dev is the integration branch. Your feature branches merge into dev. Feature branches are where you do your work. Always create them from an up-to-date dev. The naming convention is feature slash issue dash number dash short dash description. This makes it obvious what each branch is for when you look at the list on GitHub.", "The PR lifecycle, step by step. First, file an issue describing what you're going to do. Then create a feature branch from dev. Write your code, making commits as you go. Push to GitHub. Open a PR using the template. Link it to the issue with Closes hash number. Request a reviewer. Respond to feedback, push fixes. Once approved and CI is green, merge to dev.", "Commit messages matter. Good messages use imperative mood, like giving a command. Add flake8 configuration. Fix store count bug. Not added, not fixed, not stuff. Reference the issue number so there's a trail. And keep each commit to one logical change. If you did two things, make two commits. Think of it this way: a commit message is a micro-conversation with people you may never meet, who will read it without context. The discipline of writing clearly for an absent audience transfers to emails, documentation, and any situation where your reasoning needs to outlast the conversation.", "Here is your daily git rhythm. Tape this to your monitor until it becomes muscle memory. Starting work: checkout dev, pull, create or switch to your feature branch. While working: git status to check where you are, git add specific files, git commit with a descriptive message. Sharing work: git push, then open a PR on GitHub. When in doubt at any point: git status.", "Part two: the review pipeline. Now that you understand how code moves from your branch to dev via pull requests, let's talk about the quality gates every PR goes through. We start with two layers this week and add a third next week.", "Three layers, added incrementally. Layer one is automated CI. A GitHub Actions workflow runs flake8 on every PR. If it fails, the PR cannot merge. The student working on issue 24 sets this up first so everyone else benefits. Layer two is human peer review. Every PR gets reviewed by one other student. You check: does the code match the stated intent? Are there obvious errors? Is the description clear? Post at least one substantive comment. Not just LGTM. Layer three comes in Week 3: LLM adversarial review, where a student runs a structured adversarial review and posts findings as PR comments.", "Here's what CI looks like in practice. When you push a commit or open a PR, GitHub Actions automatically runs the flake8 workflow. Green check means it passed. Red X means it failed. Click into the details to see which lines have issues. Fix them, push again, and the check reruns. You cannot merge with a red X.", "As a reviewer, your job is to actually read the code. Check the diff, not just the description. Does the code do what the PR says it does? Are there edge cases the author missed? Is the naming clear? Could you maintain this code six months from now? Leave at least one comment that shows you read it. If something is confusing, say so. If something is good, say that too. Bigger picture: you're learning to give and receive critical feedback clearly and constructively. This skill — finding problems, articulating them specifically, suggesting improvements — appears in every professional role. Code review is practice for the hardest version of it.", "The PR template has five sections. Summary: one or two sentences on what this PR does and why. Changes: bullet list of what you actually changed. Test plan: how you verified it works. Tradeoffs: what alternatives you considered and why you chose this approach. Checklist: CI passes, reviewer assigned, issue linked. Fill in every section. The template exists because 'see diff' is not a useful PR description.", "Part three: using LLMs to find edge cases. One of the most valuable things an LLM can do is help you think about what could go wrong before it goes wrong.", "The interview-first pattern. Instead of asking the tool to write tests, describe what the function does and ask: what edge cases should I test? The tool is good at generating scenarios you haven't thought of. You still write the tests yourself. The tool helps you think more completely about the problem space.", "Concrete example. Take the has_resources function in household.py. It checks income against a threshold that varies by household size. Ask the tool: what edge cases should I consider? It might suggest: household size of zero, negative income, income exactly at the threshold boundary, very large household sizes, missing data fields. Some of those are real risks. Some are not possible given the data model. Your job is to evaluate which ones matter and write tests for those.", "Part four: writing code with AI tools. Starting this week, you write real code. The key principle: the tool's output is a first draft, not a final answer.", "Five steps. First, start with intent. Describe what you need and why, not step-by-step instructions. Second, read the output critically. Does the naming make sense? Are there magic numbers? Third, ask for best practices. The tool knows conventions you might not. Fourth, ask about complexity. Is this the simplest way? What could you remove? Fifth, verify readability. Would someone reading this six months from now understand it without context?", "This is the distinction in practice. Vibe coding: prompt, accept, move on. You skipped the engineering. No spec, no review, no decision record. Agentic engineering: you do the engineering, the agent does the typing. You spec the work, shape the output, review critically, document the decision. Remember the focus shift slide from Week 1? Everything you learned today — review pipelines, git workflow, ADRs, iterative shaping — is in the engineering column. Those are the skills that matter when the agent handles syntax for you.", "Preview: structured planning. Many CLI agents have built-in planning features that create a structured plan before making changes. Same principle as the iterative pattern: start with intent, get a plan, review it critically, then execute. We will use structured planning hands-on in Week 3. For now, just know the capability exists.", "Part five: Architecture Decision Records. When you make a choice that someone else might question later, write a short ADR documenting what you decided and why.", "The ADR template has four fields. Title: a short description of the decision. Status: proposed, accepted, or superseded. Context: what prompted the decision. Decision: what you chose and why. Alternatives: what else you considered and why you rejected it. This week, the linting student writes an ADR for their flake8 configuration choices. By Week 4, everyone will have written at least one.", "Example: We chose to ignore E501 because the project convention allows long lines. Alternative: enforce 120-character limit. Rejected because the existing codebase has many long lines and reformatting them all would create noisy diffs during onboarding. That is an ADR. Short, specific, and it answers the question future you will have.", "Part six: context file check-in. Quick round. Each student shows their project context file from last week. Are you capturing useful information? Is anything missing? One to two minutes per student.", "Part seven: this week's work. Issues from the backlog, paired J with S where possible.", "Issue 24: incorporate linting. One student. Add flake8 to dev dependencies. Create a flake8 config ignoring E501, max complexity 10. Add a GitHub Actions workflow that runs flake8 on PRs. Get CI running first so everyone else's PRs benefit. Write an ADR for your configuration choices. Then fix the linting errors in priority files.", "Three tracks this week. Priority: the linting student ships CI first so everyone else benefits from automated checks on their PRs. In parallel: three students each take a module for type hints. Start from function signatures and work inward. First PR should be small and focused. Third track: one S student sets up pytest and writes tests for the pure functions in household.py. This connects directly to the edge case brainstorming from earlier in the session. Test has_resources() boundary values, get_monthly_trip_count() paths, and get_color() output. Run mutation testing with mutmut if time allows.", "Solo work this week. Update your project context file with patterns you learned this week. File at least two more issues for things you discover while working. Review at least one teammate's PR with a substantive comment. Stretch: start on your assigned issue if you haven't already.", "Recap. Four engineering skills you practiced today. Code review: CI plus peer review, evaluating correctness and design, not just syntax. Coordination: branches, commits, PRs — the workflow that keeps a team in sync. Iterative shaping: the agent drafts, you refine. Decision records: ADRs, documenting not just what you chose but why. All four of these are in the engineering column from Week 1's focus shift. The agent handles the typing; you handle these. Next week we add adversarial review and structured planning."]
 </script>
 </head>
 
@@ -537,178 +537,12 @@ area:simulation-core
   </section>
 
   <!-- ============================================================
-       03 — SECTION DIVIDER · Review Pipeline
+       03 — SECTION DIVIDER · Git Workflow
        ============================================================ -->
-  <section class="section-divider dark" data-screen-label="03 Section · Review pipeline">
+  <section class="section-divider dark" data-screen-label="03 Section · Git workflow">
     <div class="pattern-bg on-dark"></div>
     <div style="position: relative;">
       <div class="part-label">Part one</div>
-      <h2 class="part-title">
-        The review<br/>
-        <span class="accent">pipeline.</span>
-      </h2>
-      <div class="part-meta">15 minutes · every PR from now on</div>
-    </div>
-  </section>
-
-  <!-- ============================================================
-       04 — Three layers
-       ============================================================ -->
-  <section data-screen-label="04 Three layers">
-    <div class="pattern-bg"></div>
-    <div style="position: relative;">
-      <div class="eyebrow-slide">Quality gates</div>
-      <h2 class="slide-title">Every PR (pull request) goes through three layers.</h2>
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
-        <div class="card" style="padding: 32px; border-top: 6px solid var(--badger-red);">
-          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Layer 1 · This week</div>
-          <h3>Automated CI <span style="font-weight: 400; font-size: 18px; color: var(--fg-2);">(continuous integration)</span></h3>
-          <p>GitHub Actions runs flake8 on every pull request. Red X means it cannot merge. The linting student (#24) sets this up first.</p>
-        </div>
-        <div class="card" style="padding: 32px; border-top: 6px solid var(--slate);">
-          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--slate); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Layer 2 · This week</div>
-          <h3>Human peer review</h3>
-          <p>One student reviews every PR. Check: does the code match the stated intent? Post at least one substantive comment.</p>
-        </div>
-        <div class="card" style="padding: 32px; border-top: 6px solid var(--fg-3);">
-          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--fg-3); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Layer 3 · Week 3</div>
-          <h3>LLM adversarial review</h3>
-          <p>A student runs a structured adversarial review in a fresh LLM session and posts findings as PR comments.</p>
-        </div>
-      </div>
-      <div class="deck-footer">
-        <span>Week 2 · Review pipeline</span>
-        <span><span class="dot">●</span> Three layers</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================================================
-       05 — CI in practice
-       ============================================================ -->
-  <section data-screen-label="05 CI in practice">
-    <div class="pattern-bg"></div>
-    <div style="position: relative;">
-      <div class="eyebrow-slide">Layer 1</div>
-      <h2 class="slide-title">CI: green check or red X.</h2>
-      <div class="two-col">
-        <div class="col">
-          <h3>How it works</h3>
-          <ul>
-            <li>Push a commit or open a PR</li>
-            <li>GitHub Actions runs the flake8 workflow automatically</li>
-            <li>Green check = passed, Red X = failed</li>
-            <li>Click into details to see which lines have issues</li>
-            <li>Fix, push again, check reruns</li>
-          </ul>
-        </div>
-        <div class="col">
-          <h3>Rules</h3>
-          <ul>
-            <li>You cannot merge with a red X</li>
-            <li>CI failures are your responsibility to fix</li>
-            <li>Run <span class="code-chip">flake8</span> locally before pushing to avoid surprises</li>
-            <li>If CI is broken for everyone, that is the top priority</li>
-          </ul>
-        </div>
-      </div>
-      <div class="deck-footer">
-        <span>Week 2 · Review pipeline</span>
-        <span><span class="dot">●</span> CI checks</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================================================
-       06 — Peer review
-       ============================================================ -->
-  <section data-screen-label="06 Peer review">
-    <div class="pattern-bg"></div>
-    <div style="position: relative;">
-      <div class="eyebrow-slide">Layer 2</div>
-      <h2 class="slide-title">Reviewing code: what to look for.</h2>
-      <ul class="num-list" style="max-width: 1400px;">
-        <li>
-          <div class="num">1</div>
-          <div><div class="label">Read the diff, not just the description.</div>
-          <div class="desc">Does the code actually do what the PR says it does? Check line by line.</div></div>
-        </li>
-        <li>
-          <div class="num">2</div>
-          <div><div class="label">Look for edge cases.</div>
-          <div class="desc">What inputs would break this? What happens if the data is missing or unexpected?</div></div>
-        </li>
-        <li>
-          <div class="num">3</div>
-          <div><div class="label">Check naming and clarity.</div>
-          <div class="desc">Could you maintain this code six months from now without the PR description?</div></div>
-        </li>
-        <li>
-          <div class="num">4</div>
-          <div><div class="label">Leave at least one real comment.</div>
-          <div class="desc">Show that you read it. If something is confusing, say so. If something is good, say that too.</div></div>
-        </li>
-      </ul>
-      <div style="margin-top: 20px; padding: 16px 24px; background: var(--cream); border-left: 4px solid var(--badger-red); border-radius: 0 10px 10px 0; font-size: 19px; color: var(--fg-2); line-height: 1.45; max-width: 1400px;">
-        <strong style="color: var(--ink);">Beyond this project:</strong> You're learning to give and receive critical feedback clearly and constructively. This skill appears in every professional role. Code review is practice for the hardest version of it.
-      </div>
-      <div class="deck-footer">
-        <span>Week 2 · Review pipeline</span>
-        <span><span class="dot">●</span> Peer review</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================================================
-       07 — PR template
-       ============================================================ -->
-  <section data-screen-label="07 PR template">
-    <div class="pattern-bg"></div>
-    <div style="position: relative;">
-      <div class="eyebrow-slide">Every PR</div>
-      <h2 class="slide-title">The PR template: fill in every section.</h2>
-      <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;">
-        <div class="card" style="padding: 24px;">
-          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Section 1</div>
-          <h3 style="font-size: 24px;">Summary</h3>
-          <p style="font-size: 18px;">One or two sentences. What does this PR do and why.</p>
-        </div>
-        <div class="card" style="padding: 24px;">
-          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Section 2</div>
-          <h3 style="font-size: 24px;">Changes</h3>
-          <p style="font-size: 18px;">Bullet list of what you actually changed.</p>
-        </div>
-        <div class="card" style="padding: 24px;">
-          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Section 3</div>
-          <h3 style="font-size: 24px;">Test plan</h3>
-          <p style="font-size: 18px;">How you verified it works.</p>
-        </div>
-        <div class="card" style="padding: 24px;">
-          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Section 4</div>
-          <h3 style="font-size: 24px;">Tradeoffs</h3>
-          <p style="font-size: 18px;">Alternatives you considered and why you chose this.</p>
-        </div>
-        <div class="card" style="padding: 24px;">
-          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Section 5</div>
-          <h3 style="font-size: 24px;">Checklist</h3>
-          <p style="font-size: 18px;">CI passes, reviewer assigned, issue linked.</p>
-        </div>
-      </div>
-      <p class="body-text muted" style="margin-top: 30px; font-size: 22px;">"See diff" is not a useful PR description. The template exists for a reason.</p>
-      <div class="deck-footer">
-        <span>Week 2 · Review pipeline</span>
-        <span><span class="dot">●</span> PR template</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================================================
-       08 — SECTION DIVIDER · Git Workflow
-       ============================================================ -->
-  <section class="section-divider dark" data-screen-label="08 Section · Git workflow">
-    <div class="pattern-bg on-dark"></div>
-    <div style="position: relative;">
-      <div class="part-label">Part two</div>
       <h2 class="part-title">
         Git workflow<br/>
         for <span class="accent">teams.</span>
@@ -718,9 +552,9 @@ area:simulation-core
   </section>
 
   <!-- ============================================================
-       09 — Branch strategy
+       04 — Branch strategy
        ============================================================ -->
-  <section data-screen-label="09 Branch strategy">
+  <section data-screen-label="04 Branch strategy">
     <div class="pattern-bg"></div>
     <div style="position: relative;">
       <div class="eyebrow-slide">Three levels</div>
@@ -753,9 +587,9 @@ area:simulation-core
   </section>
 
   <!-- ============================================================
-       10 — PR lifecycle
+       05 — PR lifecycle
        ============================================================ -->
-  <section data-screen-label="10 PR lifecycle">
+  <section data-screen-label="05 PR lifecycle">
     <div class="pattern-bg"></div>
     <div style="position: relative;">
       <div class="eyebrow-slide">The full cycle</div>
@@ -806,9 +640,9 @@ area:simulation-core
   </section>
 
   <!-- ============================================================
-       11 — Commit conventions
+       06 — Commit conventions
        ============================================================ -->
-  <section data-screen-label="11 Commit conventions">
+  <section data-screen-label="06 Commit conventions">
     <div class="pattern-bg"></div>
     <div style="position: relative;">
       <div class="eyebrow-slide">Messages that help</div>
@@ -844,9 +678,9 @@ area:simulation-core
   </section>
 
   <!-- ============================================================
-       12 — Daily git rhythm
+       07 — Daily git rhythm
        ============================================================ -->
-  <section data-screen-label="12 Daily git rhythm">
+  <section data-screen-label="07 Daily git rhythm">
     <div class="pattern-bg"></div>
     <div style="position: relative;">
       <div class="eyebrow-slide">Muscle memory</div>
@@ -881,6 +715,172 @@ area:simulation-core
       <div class="deck-footer">
         <span>Week 2 · Git workflow</span>
         <span><span class="dot">●</span> Daily rhythm</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       08 — SECTION DIVIDER · Review Pipeline
+       ============================================================ -->
+  <section class="section-divider dark" data-screen-label="08 Section · Review pipeline">
+    <div class="pattern-bg on-dark"></div>
+    <div style="position: relative;">
+      <div class="part-label">Part two</div>
+      <h2 class="part-title">
+        The review<br/>
+        <span class="accent">pipeline.</span>
+      </h2>
+      <div class="part-meta">15 minutes · every PR from now on</div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       09 — Three layers
+       ============================================================ -->
+  <section data-screen-label="09 Three layers">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Quality gates</div>
+      <h2 class="slide-title">Every PR (pull request) goes through three layers.</h2>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
+        <div class="card" style="padding: 32px; border-top: 6px solid var(--badger-red);">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Layer 1 · This week</div>
+          <h3>Automated CI <span style="font-weight: 400; font-size: 18px; color: var(--fg-2);">(continuous integration)</span></h3>
+          <p>GitHub Actions runs flake8 on every pull request. Red X means it cannot merge. The linting student (#24) sets this up first.</p>
+        </div>
+        <div class="card" style="padding: 32px; border-top: 6px solid var(--slate);">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--slate); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Layer 2 · This week</div>
+          <h3>Human peer review</h3>
+          <p>One student reviews every PR. Check: does the code match the stated intent? Post at least one substantive comment.</p>
+        </div>
+        <div class="card" style="padding: 32px; border-top: 6px solid var(--fg-3);">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--fg-3); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Layer 3 · Week 3</div>
+          <h3>LLM adversarial review</h3>
+          <p>A student runs a structured adversarial review in a fresh LLM session and posts findings as PR comments.</p>
+        </div>
+      </div>
+      <div class="deck-footer">
+        <span>Week 2 · Review pipeline</span>
+        <span><span class="dot">●</span> Three layers</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       10 — CI in practice
+       ============================================================ -->
+  <section data-screen-label="10 CI in practice">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Layer 1</div>
+      <h2 class="slide-title">CI: green check or red X.</h2>
+      <div class="two-col">
+        <div class="col">
+          <h3>How it works</h3>
+          <ul>
+            <li>Push a commit or open a PR</li>
+            <li>GitHub Actions runs the flake8 workflow automatically</li>
+            <li>Green check = passed, Red X = failed</li>
+            <li>Click into details to see which lines have issues</li>
+            <li>Fix, push again, check reruns</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>Rules</h3>
+          <ul>
+            <li>You cannot merge with a red X</li>
+            <li>CI failures are your responsibility to fix</li>
+            <li>Run <span class="code-chip">flake8</span> locally before pushing to avoid surprises</li>
+            <li>If CI is broken for everyone, that is the top priority</li>
+          </ul>
+        </div>
+      </div>
+      <div class="deck-footer">
+        <span>Week 2 · Review pipeline</span>
+        <span><span class="dot">●</span> CI checks</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       11 — Peer review
+       ============================================================ -->
+  <section data-screen-label="11 Peer review">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Layer 2</div>
+      <h2 class="slide-title">Reviewing code: what to look for.</h2>
+      <ul class="num-list" style="max-width: 1400px;">
+        <li>
+          <div class="num">1</div>
+          <div><div class="label">Read the diff, not just the description.</div>
+          <div class="desc">Does the code actually do what the PR says it does? Check line by line.</div></div>
+        </li>
+        <li>
+          <div class="num">2</div>
+          <div><div class="label">Look for edge cases.</div>
+          <div class="desc">What inputs would break this? What happens if the data is missing or unexpected?</div></div>
+        </li>
+        <li>
+          <div class="num">3</div>
+          <div><div class="label">Check naming and clarity.</div>
+          <div class="desc">Could you maintain this code six months from now without the PR description?</div></div>
+        </li>
+        <li>
+          <div class="num">4</div>
+          <div><div class="label">Leave at least one real comment.</div>
+          <div class="desc">Show that you read it. If something is confusing, say so. If something is good, say that too.</div></div>
+        </li>
+      </ul>
+      <div style="margin-top: 20px; padding: 16px 24px; background: var(--cream); border-left: 4px solid var(--badger-red); border-radius: 0 10px 10px 0; font-size: 19px; color: var(--fg-2); line-height: 1.45; max-width: 1400px;">
+        <strong style="color: var(--ink);">Beyond this project:</strong> You're learning to give and receive critical feedback clearly and constructively. This skill appears in every professional role. Code review is practice for the hardest version of it.
+      </div>
+      <div class="deck-footer">
+        <span>Week 2 · Review pipeline</span>
+        <span><span class="dot">●</span> Peer review</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       12 — PR template
+       ============================================================ -->
+  <section data-screen-label="12 PR template">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Every PR</div>
+      <h2 class="slide-title">The PR template: fill in every section.</h2>
+      <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;">
+        <div class="card" style="padding: 24px;">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Section 1</div>
+          <h3 style="font-size: 24px;">Summary</h3>
+          <p style="font-size: 18px;">One or two sentences. What does this PR do and why.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Section 2</div>
+          <h3 style="font-size: 24px;">Changes</h3>
+          <p style="font-size: 18px;">Bullet list of what you actually changed.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Section 3</div>
+          <h3 style="font-size: 24px;">Test plan</h3>
+          <p style="font-size: 18px;">How you verified it works.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Section 4</div>
+          <h3 style="font-size: 24px;">Tradeoffs</h3>
+          <p style="font-size: 18px;">Alternatives you considered and why you chose this.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <div style="font-family: var(--font-mono); font-size: 14px; color: var(--badger-red); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">Section 5</div>
+          <h3 style="font-size: 24px;">Checklist</h3>
+          <p style="font-size: 18px;">CI passes, reviewer assigned, issue linked.</p>
+        </div>
+      </div>
+      <p class="body-text muted" style="margin-top: 30px; font-size: 22px;">"See diff" is not a useful PR description. The template exists for a reason.</p>
+      <div class="deck-footer">
+        <span>Week 2 · Review pipeline</span>
+        <span><span class="dot">●</span> PR template</span>
       </div>
     </div>
   </section>
