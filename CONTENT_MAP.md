@@ -78,7 +78,7 @@ These specific values appear in both the curriculum and slides. If any change, b
 | **Writing code with AI tools** (L726-742) | 16 Section, 17 Five steps, 18 Vibe vs agentic, 19 Plan preview | Five-step iterative pattern, vibe coding vs agentic engineering, structured planning preview |
 | **ADRs** (L744-748) | 20 Section, 21 ADR template, 22 ADR example | ADR template fields (title+status, context, decision, alternatives), E501 example |
 | **Project context file review** (L750-752) | 23 Section, 24 Project context file review | Review checklist |
-| **Assigned work** (L754-880) | 25 Section, 26 Assigned issues, 27 Solo work | Issue #24 (linting), Issues #18/#19/#20 (type hints), first tests (household.py pure functions), solo work deliverables. Slide 26 references guides 03/04/05 and the assignment doc. |
+| **Assigned work** (L754-880) | 25 Section, 26 Assigned issues, 27 Solo work | Issue #4 (linting), Issues #1/#2/#3 (type hints), first tests (household.py pure functions), solo work deliverables. Slide 26 references guides 03/04/05 and the assignment doc. |
 | -- | 28 Recap | Structural slide, no curriculum counterpart |
 
 **Assignment document:** `docs/assignments/week-2-assignment.md` -- per-track instructions, LLM usage rules, deliverables checklist, quality signals, guide references.

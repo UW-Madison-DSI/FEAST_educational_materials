@@ -17,7 +17,7 @@ This week you ship your first real PR. Each student has an assigned issue that m
 
 ## Your assigned track
 
-### Track A: Linting and CI (1 student, Issue #24)
+### Track A: Linting and CI (1 student, Issue #4)
 
 **Priority:** Ship CI first so everyone else's PRs get automated checks.
 
@@ -32,7 +32,7 @@ This week you ship your first real PR. Each student has an assigned issue that m
 
 **LLM usage:** Ask the LLM to explain what each flake8 error code means if you encounter one you don't recognize. Don't ask it to fix the code for you.
 
-### Track B: Type hints (2-3 students, Issues #18, #19, #20)
+### Track B: Type hints (2-3 students, Issues #1, #2, #3)
 
 **Guide:** `docs/guides/03-type-hints.md`
 
@@ -40,9 +40,9 @@ Each student takes one module area:
 
 | Issue | Files | Student level |
 |-------|-------|---------------|
-| #18 | `household.py`, `store.py`, `geo_model.py` (ABM files) | J student |
-| #19 | `routes.py`, `helpers.py`, `api_server.py` (API files) | J student |
-| #20 | `get_data.py`, `household_constants.py` (preprocessing) | S student |
+| #1 | `household.py`, `store.py`, `geo_model.py` (ABM files) | J student |
+| #2 | `routes.py`, `helpers.py`, `api_server.py` (API files) | J student |
+| #3 | `get_data.py`, `household_constants.py` (preprocessing) | S student |
 
 For each function in your assigned files:
 1. Read the function. Understand what it takes and returns.
@@ -89,10 +89,10 @@ After finishing your assigned issue, extend the same skill to new territory:
 
 | If your assigned work was... | Your solo hunting ground is... |
 |------------------------------|-------------------------------|
-| Type hints (#18 ABM files) | Add type hints to `repository/db_repository.py`, `model_multi_processing/batch_running.py` |
-| Type hints (#19 API files) | Add type hints to `api/helpers.py`, clean up the duplicate entry points (`api_server.py`, `server.py`) |
-| Type hints (#20 preprocessing) | Add type hints to root-level `constants.py`, `parallel_scheduler.py`, `insert_stores.py` |
-| Linting (#24) | Fix flake8 warnings in files you excluded in your first pass |
+| Type hints (#1 ABM files) | Add type hints to `repository/db_repository.py`, `model_multi_processing/batch_running.py` |
+| Type hints (#2 API files) | Add type hints to `api/helpers.py`, clean up the duplicate entry points (`api_server.py`, `server.py`) |
+| Type hints (#3 preprocessing) | Add type hints to root-level `constants.py`, `parallel_scheduler.py`, `insert_stores.py` |
+| Linting (#4) | Fix flake8 warnings in files you excluded in your first pass |
 | Tests (household.py) | Write tests for `Store` class, `convert_centroid_to_polygon` in `api/helpers.py` |
 
 File issues for anything you can't fix but notice along the way. Keep building the backlog.
@@ -115,7 +115,7 @@ File issues for anything you can't fix but notice along the way. Keep building t
 
 ## Deliverables
 
-- [ ] **PR for assigned issue** -- passing CI (once #24 merges) + at least one peer review before merge
+- [ ] **PR for assigned issue** -- passing CI (once #4 merges) + at least one peer review before merge
 - [ ] **At least 2 new issues filed** -- things you discover while working; type + area labels
 - [ ] **1 PR reviewed** -- read the diff, post at least one substantive comment
 - [ ] **Updated project context file** -- add Team Priorities section with convergence board results and area labels (in the shared repo file, not just your personal one)

@@ -654,13 +654,13 @@ Name your branch after the issue you're working on: `feature/issue-24-linting`, 
 
 Rules:
 1. Use imperative mood (like giving a command): "Add flake8 configuration" not "Added flake8" or "flake8 stuff"
-2. Reference issue numbers: "Fix store count bug (#47)"
+2. Reference issue numbers: "Fix store count bug (#6)"
 3. One logical change per commit. If you did two things, make two commits.
 
 Good examples:
-- `Add flake8 configuration and pre-commit hook (#24)`
-- `Fix duplicate store count in household step (#47)`
-- `Add type hints to simulation endpoint (#18)`
+- `Add flake8 configuration and pre-commit hook (#4)`
+- `Fix duplicate store count in household step (#6)`
+- `Add type hints to simulation endpoint (#1)`
 
 Bad examples:
 - `fixed stuff`
@@ -708,7 +708,7 @@ Sharing work:
 
 Now that you understand how code moves from your branch to dev via pull requests, here are the quality gates every PR goes through. This week starts with two layers; Week 3 adds a third.
 
-**Layer 1: Automated CI checks.** A GitHub Actions workflow runs flake8 (and later, tests) on every PR. If CI fails, the PR doesn't merge. The linting student (#24) sets this up as their first priority this week, so it's available for everyone else's PRs.
+**Layer 1: Automated CI checks.** A GitHub Actions workflow runs flake8 (and later, tests) on every PR. If CI fails, the PR doesn't merge. The linting student (#4) sets this up as their first priority this week, so it's available for everyone else's PRs.
 
 **Layer 2: Human peer review.** Every PR gets reviewed by one other student before merge. The reviewer checks: Does the code match the stated intent? Are there obvious errors? Is the PR description clear? Post at least one substantive comment (not just "LGTM").
 
@@ -756,7 +756,7 @@ Quick group check-in: each student shows their project context file from last we
 
 The following issues map directly to the backlog. Pair J students with S students where possible.
 
-#### Issue #24: Incorporate linting (1 student, J or S)
+#### Issue #4: Incorporate linting (1 student, J or S)
 
 [SCAFFOLD: Linting Setup Guide]
 ```
@@ -785,15 +785,15 @@ LLM usage: Ask the LLM to explain what each flake8 error code means
    if you encounter one you don't recognize. Don't ask it to fix the code.
 ```
 
-#### Issues #18, #19, #20: Add Docstrings and Type Hints (2-3 students, mix of J and S)
+#### Issues #1, #2, #3: Add Docstrings and Type Hints (2-3 students, mix of J and S)
 
 Split by module. Each student takes one area:
 
 | Student | Module | Files | Issue |
 |---------|--------|-------|-------|
-| J student | ABM files | `household.py`, `store.py`, `geo_model.py` | #18 |
-| J student | API files | `routes.py`, `helpers.py`, `api_server.py` | #19 |
-| S student | Preprocessing | `get_data.py`, `household_constants.py` | #20 |
+| J student | ABM files | `household.py`, `store.py`, `geo_model.py` | #1 |
+| J student | API files | `routes.py`, `helpers.py`, `api_server.py` | #2 |
+| S student | Preprocessing | `get_data.py`, `household_constants.py` | #3 |
 
 [SCAFFOLD: Type Hints Guide]
 ```
@@ -868,10 +868,10 @@ You now know how to add type hints, write tests, or set up linting. Apply that s
 
 | If your assigned work was... | Your solo hunting ground is... |
 |------------------------------|-------------------------------|
-| Type hints (#18 ABM files) | Add type hints to `repository/db_repository.py`, `model_multi_processing/batch_running.py` |
-| Type hints (#19 API files) | Add type hints to `api/helpers.py`, clean up the duplicate entry points (`api_server.py`, `server.py`) |
-| Type hints (#20 preprocessing) | Add type hints to root-level `constants.py`, `parallel_scheduler.py`, `insert_stores.py` |
-| Linting (#24) | Fix flake8 warnings in files you excluded in your first pass |
+| Type hints (#1 ABM files) | Add type hints to `repository/db_repository.py`, `model_multi_processing/batch_running.py` |
+| Type hints (#2 API files) | Add type hints to `api/helpers.py`, clean up the duplicate entry points (`api_server.py`, `server.py`) |
+| Type hints (#3 preprocessing) | Add type hints to root-level `constants.py`, `parallel_scheduler.py`, `insert_stores.py` |
+| Linting (#4) | Fix flake8 warnings in files you excluded in your first pass |
 | Tests (household.py) | Write tests for `Store` class, `convert_centroid_to_polygon` in `api/helpers.py` |
 
 **File issues for anything you can't fix in this session** but that you notice along the way. Keep building the backlog.
@@ -907,11 +907,11 @@ Demo the "spec first" pattern: before implementing, write a short specification 
 
 > **Beyond this project:** The spec-first habit separates junior from senior professionals in any field. Writing down what you plan to do before doing it protects you from building the wrong thing, gives others a chance to catch problems early, and creates a record of your reasoning.
 
-Show an example: the optimization student (#74) should write an ADR; the bug fix student (#47) should write a diagnosis paragraph.
+Show an example: the optimization student (#7) should write an ADR; the bug fix student (#6) should write a diagnosis paragraph.
 
 ##### Using structured planning tools
 
-After showing hand-written specs, demo your CLI agent's planning capability. (In Claude Code this is the `/plan` command; other agents have similar features, or you can simply prompt the agent to "create a plan before making changes.") Take one of this week's assigned issues (e.g., #74 optimization) and show the workflow:
+After showing hand-written specs, demo your CLI agent's planning capability. (In Claude Code this is the `/plan` command; other agents have similar features, or you can simply prompt the agent to "create a plan before making changes.") Take one of this week's assigned issues (e.g., #7 optimization) and show the workflow:
 
 1. **Ask the agent to plan** what you want to accomplish: "I want to optimize the household step function to iterate over stores once instead of four times. The relevant code is in `food_access_model/abm/household.py`. Create a plan before making any changes."
 2. **The agent explores the codebase** and produces a structured plan: which files to change, in what order, what tests to write, how to verify the refactor didn't change behavior.
@@ -930,7 +930,7 @@ Remember the focus shift from Week 1: when agents handle syntax and boilerplate,
 
 ### Assigned Work
 
-#### Issue #47: Check 'Stores within 1 Mile' logic (1 student, S)
+#### Issue #6: Check 'Stores within 1 Mile' logic (1 student, S)
 
 This is a reported bug: after running a simulation step, all houses appear to have the same number of stores within 1 mile.
 
@@ -973,7 +973,7 @@ LLM planning: After writing your diagnosis, ask your CLI agent to
    replacement for your own thinking.
 ```
 
-#### Issue #74: Optimize step function (1 student, S)
+#### Issue #7: Optimize step function (1 student, S)
 
 The step function iterates all stores multiple times per household: once in `calculate_distances()`, once in `get_closest_cspm()`, once in `get_closest_spm()`, once in `stores_with_1_miles()`.
 
@@ -1104,7 +1104,7 @@ If you get stuck, file a comment describing where you're stuck
 and move on. Someone else (or you next week) can pick it up.
 
 Good candidates for solo work this week:
-- Any remaining flake8 fixes from #24
+- Any remaining flake8 fixes from #4
 - print() -> logging conversions (related to #50)
 - Documenting magic numbers in household.py
 - Small issues you filed in week 1
@@ -1561,8 +1561,8 @@ This is the team's final output beyond the code itself. Write a `docs/ROADMAP.md
 | Week | Assigned Issues (group session) | Solo Work Focus | Tool/Process Pattern | Roadmap Activity |
 |------|-------------------------------|----------------|---------------------|-----------------|
 | 1 | (orientation, codebase traces) | File issues + create project context file | Agentic tools installed, LLM as explainer only, project mgmt artifacts introduced, deployment configuration mental model | Seed the backlog |
-| 2 | #24, #18, #19, #20 + first tests | Apply same skill to adjacent files | CI pipeline + peer review start, ADRs introduced, edge case brainstorming, structured planning previewed | Triage + prioritize backlog |
-| 3 | #47, #74, #27, #50 | Pick an issue from backlog, work it | LLM adversarial review rotation starts (full 3-layer pipeline), ADR-format specs, agent planning for feature specs | Nominate priorities for weeks 4-5 |
+| 2 | #4, #1, #2, #3 + first tests | Apply same skill to adjacent files | CI pipeline + peer review start, ADRs introduced, edge case brainstorming, structured planning previewed | Triage + prioritize backlog |
+| 3 | #6, #7, #27, #50 | Pick an issue from backlog, work it | LLM adversarial review rotation starts (full 3-layer pipeline), ADR-format specs, agent planning for feature specs | Nominate priorities for weeks 4-5 |
 | 4 | #91, #67, #94/#36 (reporting), #79 | File new issues + pick from backlog | Manual vs. auto-generated ADRs, single vs. multi-issue planning, LLM as design partner, context file check-in | Roadmap check: what's realistic? |
 | 5 | #63 + security + frontend #10 + integration | Full autonomy: ship highest-impact work | Review pipeline retrospective, deployment config audit, branch-level review, security scanning, context file audit | Tag issues for next cohort |
 | 6 | Documentation + roadmap handoff | Final push: close or reassign everything | Tool config handoff, process retrospective, reflection on tool usage | Write ROADMAP.md for next cohort |
@@ -1575,11 +1575,11 @@ With 5 students of varying experience, assign based on challenge level:
 
 | Role | Experience | Weeks 2-3 Focus | Weeks 4-5 Focus |
 |------|-----------|-----------------|-----------------|
-| Student A (J) | Freshman/sophomore | #18 (type hints, ABM) | Frontend #36 (reporting view, paired with C) |
-| Student B (J) | Freshman/sophomore | #24 (linting + CI) | #63 (unit conversions) + security checklist + frontend #10 (env var) |
-| Student C (J/S) | Mid-level | #19 (type hints, API) + #50 (logging) | #94 (reporting API, paired with A) + #79 (backend metrics) |
-| Student D (S) | Junior/senior | First tests + #47 (bug fix) | #91 (MFAI algorithm improvement) |
-| Student E (S) | Junior/senior | #20 (preprocessing) + #27 (redundancy) | #67 (spatial refactor) + #74 (optimization) |
+| Student A (J) | Freshman/sophomore | #1 (type hints, ABM) | Frontend #36 (reporting view, paired with C) |
+| Student B (J) | Freshman/sophomore | #4 (linting + CI) | #63 (unit conversions) + security checklist + frontend #10 (env var) |
+| Student C (J/S) | Mid-level | #2 (type hints, API) + #50 (logging) | #94 (reporting API, paired with A) + #79 (backend metrics) |
+| Student D (S) | Junior/senior | First tests + #6 (bug fix) | #91 (MFAI algorithm improvement) |
+| Student E (S) | Junior/senior | #3 (preprocessing) + #27 (redundancy) | #67 (spatial refactor) + #7 (optimization) |
 
 Pair J and S students on cross-cutting work (e.g., #94 backend + #79 frontend).
 
@@ -1639,11 +1639,11 @@ The tooling progression runs in parallel: tools are set up early (Week 1), proce
 ## What Success Looks Like After 6 Weeks
 
 **For the tool:**
-- Linting and CI in place (#24)
-- Type hints across the codebase (#18, #19, #20)
+- Linting and CI in place (#4)
+- Type hints across the codebase (#1, #2, #3)
 - First test suite (household pure functions + API endpoints)
-- Bug fix for store counting (#47)
-- Optimized step function (#74)
+- Bug fix for store counting (#6)
+- Optimized step function (#7)
 - Improved MFAI algorithm (#91)
 - Reporting API + metrics display (backend #94, frontend #36, backend #79)
 - Cleaner logging (#50)
