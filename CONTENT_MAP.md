@@ -66,20 +66,21 @@ These specific values appear in both the curriculum and slides. If any change, b
 
 ## Week 2
 
-**Slide deck:** `slides/week-2/index.html` (33 slides, labels 01-28 plus 02b/02c/02d/02e/02f inserts)
+**Slide deck:** `slides/week-2/index.html` (29 slides)
 
 | Curriculum section (line) | Slide(s) | Shared facts to keep in sync |
 |---|---|---|
 | Week 1 recap | 01 Title, 02 Week 1 recap | Session structure, Week 1 deliverables (5 cards: environment, trace, vision plan, issues, context file) |
-| Plan Comparison Activity (L592-626) | 02b Your experience, 02c Assignment digest, 02d Vision plans, 02e Plan comparison, 02f Encode priorities | Experience discussion (surprised/confused/excited), then LLM digest themes (instructor fills before session), then vision plan intro + project refresh framing, then silent read + round-robin + convergence board, then encode in shared project context file with area labels (shared vs individual context files distinguished). Reference: `docs/instructor-guides/week-2-prep.md` |
+| Plan Comparison Activity (L592-626) | 02b Your experience, 02c Assignment digest, 02d Vision plans, 02e Plan comparison, 02f Encode priorities | Experience discussion (surprised/confused/excited), then live discussion prompts, then vision plan intro + project refresh framing, then silent read + round-robin + convergence board, then encode in shared project context file with area labels (shared vs individual context files distinguished). Reference: `docs/instructor-guides/week-2-prep.md` |
 | **Git workflow for teams** (L632-719) | 03 Section, 04 Branch strategy, 05 PR lifecycle, 06 Commit conventions, 07 Daily git rhythm | Branch strategy (main/staging/dev/feature), branch naming convention (feature/issue-NUMBER-desc), commit conventions (imperative mood, issue refs), PR lifecycle steps, small frequent digestible PRs (~200 lines), daily git rhythm |
 | **Review pipeline** (L721-745) | 08 Section, 09 Three layers, 10 CI in practice, 11 Peer review, 12 PR template | Three-layer pipeline (CI/peer/LLM), PR template sections (summary, changes, test plan, tradeoffs, checklist) |
+| **Assigned work** (L754-880) | 12b Your track | Track assignments + hands-on branch creation. Placed after review pipeline so students know their track before remaining skills sections. Issue #4 (linting), Issues #1/#2/#3 (type hints), #5 (tests). References guides 03/04/05 and assignment doc. |
 | **Edge case brainstorming** (L720-724) | 13 Section, 14 Interview first, 15 Edge case example | Interview-first pattern, has_resources() edge cases, income thresholds |
-| **Writing code with AI tools** (L726-742) | 16 Section, 17 Five steps, 18 Vibe vs agentic, 19 Plan preview | Five-step iterative pattern, vibe coding vs agentic engineering, structured planning preview |
+| **Writing code with AI tools** (L726-742) | 16 Section, 17 Five steps | Five-step iterative pattern. Vibe vs agentic and planning preview content moved to recap slide and Week 3. |
+| **Project context file review** (L750-752) | 24 Context file review | Review checklist. Placed before ADRs to alternate active/passive energy. |
 | **ADRs** (L744-748) | 20 Section, 21 ADR template, 22 ADR example | ADR template fields (title+status, context, decision, alternatives), E501 example |
-| **Project context file review** (L750-752) | 23 Section, 24 Project context file review | Review checklist |
-| **Assigned work** (L754-880) | 25 Section, 26 Assigned issues, 27 Solo work | Issue #4 (linting), Issues #1/#2/#3 (type hints), first tests (household.py pure functions), solo work deliverables. Slide 26 references guides 03/04/05 and the assignment doc. |
-| -- | 28 Recap | Structural slide, no curriculum counterpart |
+| **Solo work** (L863-880) | 27 Solo work | Async deliverables: context file update, file issues, review a PR, start assigned issue |
+| -- | 28 Recap | Four engineering skills + next week pointer. Absorbs vibe vs agentic key insight. |
 
 **Assignment document:** `docs/assignments/week-2-assignment.md` -- per-track instructions, LLM usage rules, deliverables checklist, quality signals, guide references.
 
