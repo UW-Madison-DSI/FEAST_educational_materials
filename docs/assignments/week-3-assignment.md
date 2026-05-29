@@ -17,7 +17,7 @@ This week you write specs before code, complete the three-layer review pipeline 
 
 ## Your assigned issue
 
-### Issue #6: Check "Stores within 1 Mile" logic (1 S student)
+### Issue #6: Check "Stores within 1 Mile" logic (1 student)
 
 **Type:** Bug investigation + fix
 
@@ -32,7 +32,7 @@ After running a simulation step, all households appear to have the same number o
 
 **LLM usage:** Describe the bug and your hypothesis. Ask "What else could cause all households to report the same store count?" See if it suggests causes you missed.
 
-### Issue #7: Optimize step function (1 S student)
+### Issue #7: Optimize step function (1 student)
 
 **Type:** Performance refactor
 
@@ -47,7 +47,7 @@ The step function iterates all stores multiple times per household: `calculate_d
 
 **LLM usage:** After writing your spec, ask the LLM to interview you: "I want to optimize a function that iterates stores 4 times per household. Ask me questions about my approach."
 
-### Issue #8: Clean up redundant functions (1 J+S pair)
+### Issue #8: Clean up redundant functions (1-2 students)
 
 **Type:** Codebase cleanup
 
@@ -61,7 +61,7 @@ The step function iterates all stores multiple times per household: `calculate_d
 
 **LLM usage:** Ask the LLM to help trace callers: "Where is `get_households()` from `db_repository.py` called?" Verify by grepping yourself.
 
-### Issue #9: Improve logging (1 J student)
+### Issue #9: Improve logging (1 student)
 
 **Type:** Infrastructure
 
@@ -84,7 +84,7 @@ Every PR gets all three layers:
 2. **Peer review** by one teammate (substantive comments)
 3. **LLM adversarial review** by a different student (fresh session, skeptical prompt, findings posted as PR comments marked "Valid" or "False positive (because...)")
 
-The adversarial reviewer rotation is assigned at the start of the week. You are responsible for completing your adversarial review within 48 hours of the PR being opened.
+The adversarial reviewer rotation: each person reviews the next person in the list (A reviews B, B reviews C, C reviews D, D reviews A). The adversarial reviewer is always different from the peer reviewer. You are responsible for completing your adversarial review within 48 hours of the PR being opened.
 
 ## Solo work: your first feature
 

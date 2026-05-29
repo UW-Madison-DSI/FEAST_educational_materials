@@ -756,7 +756,7 @@ Quick group check-in: each student shows their project context file from last we
 
 The following issues map directly to the backlog. Pair J students with S students where possible.
 
-#### Issue #4: Incorporate linting (1 student, J or S)
+#### Issue #4: Incorporate linting (1 student)
 
 [SCAFFOLD: Linting Setup Guide]
 ```
@@ -822,7 +822,7 @@ LLM usage: You can ask the LLM "What type does this function return?"
    Do NOT ask the LLM to add all the type hints for you.
 ```
 
-#### First tests: `household.py` pure functions (1 S student)
+#### First tests: `household.py` pure functions (1 student)
 
 [SCAFFOLD: Testing Guide]
 ```
@@ -930,7 +930,7 @@ Remember the focus shift from Week 1: when agents handle syntax and boilerplate,
 
 ### Assigned Work
 
-#### Issue #6: Check 'Stores within 1 Mile' logic (1 student, S)
+#### Issue #6: Check 'Stores within 1 Mile' logic (1 student)
 
 This is a reported bug: after running a simulation step, all houses appear to have the same number of stores within 1 mile.
 
@@ -973,7 +973,7 @@ LLM planning: After writing your diagnosis, ask your CLI agent to
    replacement for your own thinking.
 ```
 
-#### Issue #7: Optimize step function (1 student, S)
+#### Issue #7: Optimize step function (1 student)
 
 The step function iterates all stores multiple times per household: once in `calculate_distances()`, once in `get_closest_cspm()`, once in `get_closest_spm()`, once in `stores_with_1_miles()`.
 
@@ -1016,7 +1016,7 @@ LLM planning: After your spec is reviewed, ask your CLI agent to
    missed? Did it suggest a different decomposition?
 ```
 
-#### Issue #8: Clean up redundant functions (1 student, J+S pair)
+#### Issue #8: Clean up redundant functions (1-2 students)
 
 [SCAFFOLD: Redundancy Audit]
 ```
@@ -1046,7 +1046,7 @@ LLM usage: Ask the LLM to help you trace callers:
    Verify by grepping the codebase yourself.
 ```
 
-#### Issue #9: Improve logging (1 student, J)
+#### Issue #9: Improve logging (1 student)
 
 [SCAFFOLD: Logging Guide]
 ```
@@ -1100,14 +1100,14 @@ This is the first week students build something new. Their vision plans identifi
 
 Feature issues (from student vision plans):
 
-Backend:
-- Profile and optimize simulation step performance (medium, profiling + multiprocessing)
-- Speed up simulation instance creation (small, SQL experience)
+Backend ([COHORT-ORG]/FEAST-backend):
+- #19: Profile and optimize simulation step performance (medium, profiling + multiprocessing)
+- #20: Speed up simulation instance creation (small, SQL experience)
 
-Frontend:
-- Export simulation results as CSV download / map screenshot (medium, UI + data)
-- Household details on hover with MFAI, income, store count (small, Leaflet tooltips)
-- Improve instance management UX with guidance (small, mostly HTML/text)
+Frontend ([COHORT-ORG]/FEAST-frontend):
+- #1: Export simulation results as CSV download / map screenshot (medium, UI + data)
+- #3: Household details on hover with MFAI, income, store count (small, Leaflet tooltips)
+- #4: Improve instance management UX with guidance (small, mostly HTML/text)
 
 Still good candidates from the maintenance backlog:
 - Any remaining flake8 fixes from #4
@@ -1138,7 +1138,7 @@ Students have been writing ADRs by hand since Week 2. This session goes deeper i
 
 #### Manual vs. auto-generated ADRs (~15 min)
 
-Demo: Take issue #91 (multiple stores for scoring) as the example. First, show a hand-written ADR for it (or write one live). Then, show your CLI agent generating an ADR from the issue description and relevant diff. Compare the two:
+Demo: Take issue #30 (multiple stores for scoring) as the example. First, show a hand-written ADR for it (or write one live). Then, show your CLI agent generating an ADR from the issue description and relevant diff. Compare the two:
 - What did the auto-generated version get right?
 - What did it miss? (Usually: the reasoning behind rejected alternatives, unstated constraints, stakeholder concerns)
 - When is each approach appropriate?
@@ -1200,7 +1200,7 @@ Quick round: each student opens their project context file. Has it been updated 
 
 ### Assigned Work
 
-#### Issue #91: Calculate food access scores using multiple stores (1-2 students, S)
+#### Issue #30: Calculate food access scores using multiple stores (1-2 students)
 
 This is the highest-impact algorithmic change in the backlog.
 
@@ -1235,7 +1235,7 @@ LLM usage: Use the LLM to discuss algorithm tradeoffs:
    design discussion where the LLM adds value.
 ```
 
-#### Issue #67: Refactor spatial data handling (1 student, S)
+#### Issue #67: Refactor spatial data handling (1 student)
 
 [SCAFFOLD: Spatial Refactor Guide]
 ```
@@ -1269,7 +1269,7 @@ LLM usage: Ask the LLM to explain the difference between EPSG:4326
    domain knowledge question where LLMs are genuinely helpful.
 ```
 
-#### Issue #94: Reporting API + Issue #79: Show metrics + Frontend #36: Reporting View (2-3 students, J+S pair)
+#### Issue #94: Reporting API + Issue #79: Show metrics + Frontend #36: Reporting View (2-3 students)
 
 These issues are related: the backend needs a reporting API (#94), the backend needs to serve richer metrics (#79), and the frontend needs a view to display them (frontend #36).
 
@@ -1454,7 +1454,7 @@ Use the LLM adversarial review to scan for issues you missed:
 - Fix CI if anything is broken
 - Clean up stale branches (the repo has 30+)
 
-#### Issue #63: Unit conversion consistency (1 student, J or S)
+#### Issue #63: Unit conversion consistency (1 student)
 
 ```
 Audit all distance calculations in the codebase.
@@ -1541,7 +1541,7 @@ This is the team's final output beyond the code itself. Write a `docs/ROADMAP.md
 | High | #67: Spatial data handling refactor | CRS inconsistency (households 4326, stores 3857) causes confusion. bc_pantries branch has a partial approach. |
 | Medium | #43: Census block aggregation layer | Requires PostGIS, frontend map layer. Depends on #67 finishing. |
 | Medium | #51: Simulation runtime improvements | Architecture-level. Benchmarking suite needed first. Multiprocessing helps but may not scale to very large counties. |
-| Medium | #91: Multi-store MFAI scoring | Algorithmic change. Current impl uses only closest SPM + closest CSPM. Paper suggests considering multiple. ADR needed. |
+| Medium | #30: Multi-store MFAI scoring | Algorithmic change. Current impl uses only closest SPM + closest CSPM. Paper suggests considering multiple. ADR needed. |
 | (add rows) | (student-filed issues) | (context from the students who filed them) |
 
 4. **Tool configuration handoff**: Document the team's development infrastructure for the next cohort:
@@ -1573,11 +1573,11 @@ This is the team's final output beyond the code itself. Write a `docs/ROADMAP.md
 | 1 | (orientation, codebase traces) | File issues + create project context file | Agentic tools installed, LLM as explainer only, project mgmt artifacts introduced, deployment configuration mental model | Seed the backlog |
 | 2 | #4, #1, #2, #3 + first tests | Apply same skill to adjacent files | CI pipeline + peer review start, ADRs introduced, edge case brainstorming, structured planning previewed | Triage + prioritize backlog |
 | 3 | #6, #7, #8, #9 | Pick an issue from backlog, work it | LLM adversarial review rotation starts (full 3-layer pipeline), ADR-format specs, agent planning for feature specs | Nominate priorities for weeks 4-5 |
-| 4 | #91, #67, #94/#36 (reporting), #79 | File new issues + pick from backlog | Manual vs. auto-generated ADRs, single vs. multi-issue planning, LLM as design partner, context file check-in | Roadmap check: what's realistic? |
+| 4 | #30, #67, #94/#36 (reporting), #79 | File new issues + pick from backlog | Manual vs. auto-generated ADRs, single vs. multi-issue planning, LLM as design partner, context file check-in | Roadmap check: what's realistic? |
 | 5 | #63 + security + frontend #10 + integration | Full autonomy: ship highest-impact work | Review pipeline retrospective, deployment config audit, branch-level review, security scanning, context file audit | Tag issues for next cohort |
 | 6 | Documentation + roadmap handoff | Final push: close or reassign everything | Tool config handoff, process retrospective, reflection on tool usage | Write ROADMAP.md for next cohort |
 
-Note: Issues #1-#9 are in `FoodAccessSimulator/FEAST-backend`. Higher numbers (#36, #63, #67, #79, #91, #94) are from the original `ICICLE-ai/Food-Access-Model` repo and have not yet been migrated. Frontend issues are from `ICICLE-ai/FASS-Frontend`.
+Note: Issues #1-#9 and #19-#24 and #30 are in `FoodAccessSimulator/FEAST-backend`. Frontend issues #1-#4 are in `FoodAccessSimulator/FEAST-frontend`. Higher numbers (#36, #63, #67, #79, #94) are from the original `ICICLE-ai/Food-Access-Model` repo and have not yet been migrated.
 
 ## Student Assignment Strategy
 
@@ -1585,13 +1585,13 @@ With 5 students of varying experience, assign based on challenge level:
 
 | Role | Experience | Weeks 2-3 Focus | Weeks 4-5 Focus |
 |------|-----------|-----------------|-----------------|
-| Student A (J) | Freshman/sophomore | #1 (type hints, ABM) | Frontend #36 (reporting view, paired with C) |
-| Student B (J) | Freshman/sophomore | #4 (linting + CI) | #63 (unit conversions) + security checklist + frontend #10 (env var) |
-| Student C (J/S) | Mid-level | #2 (type hints, API) + #9 (logging) | #94 (reporting API, paired with A) + #79 (backend metrics) |
-| Student D (S) | Junior/senior | First tests + #6 (bug fix) | #91 (MFAI algorithm improvement) |
-| Student E (S) | Junior/senior | #3 (preprocessing) + #8 (redundancy) | #67 (spatial refactor) + #7 (optimization) |
+| Student A | Freshman/sophomore | #1 (type hints, ABM) | Frontend #36 (reporting view, paired with C) |
+| Student B | Freshman/sophomore | #4 (linting + CI) | #63 (unit conversions) + security checklist + frontend #10 (env var) |
+| Student C | Mid-level | #2 (type hints, API) + #9 (logging) | #94 (reporting API, paired with A) + #79 (backend metrics) |
+| Student D | Junior/senior | First tests + #6 (bug fix) | #30 (MFAI algorithm improvement) |
+| Student E | Junior/senior | #3 (preprocessing) + #8 (redundancy) | #67 (spatial refactor) + #7 (optimization) |
 
-Pair J and S students on cross-cutting work (e.g., #94 backend + #79 frontend).
+Pair students of different experience levels on cross-cutting work (e.g., #94 backend + #79 frontend).
 
 ---
 
@@ -1654,7 +1654,7 @@ The tooling progression runs in parallel: tools are set up early (Week 1), proce
 - First test suite (household pure functions + API endpoints)
 - Bug fix for store counting (#6)
 - Optimized step function (#7)
-- Improved MFAI algorithm (#91)
+- Improved MFAI algorithm (#30)
 - Reporting API + metrics display (backend #94, frontend #36, backend #79)
 - Cleaner logging (#9)
 - Security basics (input validation, configurable CORS, consolidated entry point)
