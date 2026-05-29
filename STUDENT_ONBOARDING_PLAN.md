@@ -1083,31 +1083,41 @@ For each PR:
 
 ### Solo Work (later in the week)
 
-**Pick an issue from the backlog and work it yourself.**
+**Your first feature: pick an issue and ship it.**
 
-By now the team has a mix of pre-existing issues and student-filed issues from weeks 1-2. This is the first week students choose their own work.
+This is the first week students build something new. Their vision plans identified real problems with FEAST; those plans have been synthesized into feature issues across both repos. Students pick one and ship it, with all three review layers required.
 
-[SCAFFOLD: Self-Directed Work Guide]
+[SCAFFOLD: Feature Development Guide]
 ```
-1. Go to the GitHub project board.
-2. Pick an issue that:
-   - Is labeled "should-fix" or "nice-to-have"
-   - Matches your comfort level
-   - Isn't already claimed by someone else
+1. Browse the issues labeled `phase:week-3` in both repos:
+   - [COHORT-ORG]/FEAST-backend issues
+   - [COHORT-ORG]/FEAST-frontend issues
+2. Pick one that matches your comfort level and interest.
 3. Comment on the issue: "I'm picking this up."
-4. Before coding, write a one-paragraph plan in the issue comment:
+4. Write a one-paragraph plan in the issue comment before coding:
    what you'll change, what files you'll touch, how you'll test it.
-5. Implement it. Open a PR.
+5. Implement it. Open a PR (all three review layers apply).
 
-If you finish early, pick another one or extend your work.
-If you get stuck, file a comment describing where you're stuck
-and move on. Someone else (or you next week) can pick it up.
+Feature issues (from student vision plans):
 
-Good candidates for solo work this week:
+Backend:
+- Profile and optimize simulation step performance (medium, profiling + multiprocessing)
+- Speed up simulation instance creation (small, SQL experience)
+
+Frontend:
+- Export simulation results as CSV download / map screenshot (medium, UI + data)
+- Household details on hover with MFAI, income, store count (small, Leaflet tooltips)
+- Improve instance management UX with guidance (small, mostly HTML/text)
+
+Still good candidates from the maintenance backlog:
 - Any remaining flake8 fixes from #4
 - print() -> logging conversions (related to #9)
 - Documenting magic numbers in household.py
 - Small issues you filed in week 1
+
+If you finish early, pick another one or extend your work.
+If you get stuck, file a comment describing where you're stuck
+and move on. Someone else (or you next week) can pick it up.
 ```
 
 **LLM usage unlock**: You can now use the LLM to help you write a spec for your chosen issue (use the "interview first" pattern from the group session). You can also use it for adversarial review of your own PR in a fresh session before requesting peer review.
