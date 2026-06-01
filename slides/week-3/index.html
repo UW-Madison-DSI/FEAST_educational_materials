@@ -399,6 +399,7 @@
 [
   {"slide": "01 Title", "notes": "Welcome to Week 3. Weeks 1 and 2 were about understanding the codebase and learning the team workflow. This week we level up: you complete the review pipeline, learn to write specs before code, and start using your agent's planning tools. By the end of today, every PR gets all three review layers, and you have a spec-first habit."},
   {"slide": "02 Week 2 recap", "notes": "Quick check-in. Last week you created feature branches, opened PRs, set up CI, practiced peer review, used the iterative coding pattern, and wrote your first ADR. Some of those are still in progress, and that is fine. This week builds directly on that foundation."},
+  {"slide": "02a PR template", "notes": "One thing I want to reinforce from Week 2: the PR template. Every PR you open should use it. Not because it is a checklist to rush through, but because each section forces you to think about something specific. The summary makes you articulate what and why. The test plan makes you think about verification before you ask someone to review. The tradeoffs section is where you show you considered alternatives, which is the same skill as writing an ADR. The checklist is your final self-check: can I explain every line without looking at my chat history? Here is the connection to context files: if you add the PR template sections to your CLAUDE.md, the agent will use that structure when it helps you draft PRs. That means every PR starts with the right sections already in place. One student should add this to the merged CLAUDE.md we are about to build."},
   {"slide": "02b Three proposals", "notes": "Before we get into new material, let us look at something you all produced: your CLAUDE.md files. Three of you wrote context files for the FEAST backend. I have anonymized them so we can focus on the content, not who wrote what. Take a minute to read the three summaries on screen. Notice the different emphases: one goes deep on architecture and data flow. One focuses on process awareness and guardrails. One covers operational standards and deployment. Each found things the others missed."},
   {"slide": "02c What each brings", "notes": "What stands out is how much all three agree on: the entry point, the git workflow, type hint conventions, the review pipeline. That consensus is a strong signal. But look at the right column: things one person noticed that everyone benefits from. A table of dead files, a tricky global variable, a Python version mismatch, platform-specific gotchas. This is exactly why we compare and merge."},
   {"slide": "02d Ideal context file", "notes": "So what does a complete context file actually need? Six sections. Think of two audiences: you coming back to this project in six months, and an agent starting a fresh session with zero context. What is this project: one paragraph so the agent is oriented. How do I run it: the literal commands. How does it fit together: the architecture, what calls what. What are the rules: code standards and conventions. What should I avoid: dead code, legacy patterns, traps. How should the agent behave: workflow rules and guardrails. Look at the grid. All three covered the first two well. But notice the gaps and the stars. Nobody had all six covered fully. Proposal A was strongest on architecture and pitfalls but did not write agent behavior rules. Proposal B was strongest on agent guardrails but only partially mapped the architecture. Proposal C was strongest on code standards but did not inventory the dead code. No single file covered everything, and that is the whole point of this exercise."},
@@ -488,6 +489,49 @@
       <div class="deck-footer">
         <span>Week 3 &middot; Recap</span>
         <span><span class="dot">&bull;</span> Week 2 review</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       02a — PR template as quality standard
+       ============================================================ -->
+  <section data-screen-label="02a PR template">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Week 2 follow-up</div>
+      <h2 class="slide-title">Use the PR template. Every time.</h2>
+      <p class="body-text" style="margin-bottom: 24px;">The template is not paperwork. It is a thinking tool that catches problems before review starts.</p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <div>
+          <div class="prompt-box" style="font-size: 19px; line-height: 1.7;">
+            <div class="prompt-label">PR template sections</div>
+            <strong style="color: var(--badger-red);">Summary</strong> &mdash; What and why? Closes #N<br/>
+            <strong style="color: var(--badger-red);">Changes</strong> &mdash; Bullet list of what changed<br/>
+            <strong style="color: var(--badger-red);">Test plan</strong> &mdash; How tested? Edge cases?<br/>
+            <strong style="color: var(--badger-red);">Tradeoffs</strong> &mdash; Alternatives considered?<br/>
+            <strong style="color: var(--badger-red);">Checklist</strong> &mdash; Explain every line, tests pass, flake8 clean, type hints, tests written
+          </div>
+        </div>
+        <div>
+          <div class="card" style="border-top: 4px solid var(--badger-red);">
+            <h3 style="font-size: 24px;">Why this matters</h3>
+            <ul style="font-size: 20px; line-height: 1.6; color: var(--fg-2); padding-left: 20px; margin: 12px 0 0;">
+              <li><strong>For your reviewer:</strong> they know what to look at and what to verify</li>
+              <li><strong>For future you:</strong> git blame leads here, and the context is preserved</li>
+              <li><strong>For the agent:</strong> a filled-in template is structured context it can reason about</li>
+            </ul>
+          </div>
+          <div class="assign-callout" style="margin-top: 16px;">
+            <strong>Action:</strong> Add the PR template sections to your CLAUDE.md so the agent fills them in automatically when creating PRs.
+          </div>
+        </div>
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 3 &middot; Recap</span>
+        <span><span class="dot">&bull;</span> PR template</span>
       </div>
     </div>
   </section>

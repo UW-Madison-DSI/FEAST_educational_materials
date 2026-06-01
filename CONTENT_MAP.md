@@ -99,11 +99,12 @@ These specific values appear in both the curriculum and slides. If any change, b
 
 ## Week 3
 
-**Slide deck:** `slides/week-3/index.html` (18 slides)
+**Slide deck:** `slides/week-3/index.html` (19 slides)
 
 | Curriculum section (line) | Slide(s) | Shared facts to keep in sync |
 |---|---|---|
 | Week 2 recap | 01 Title, 02 Week 2 recap | Week 2 deliverables (6 cards: branches+PRs, CI, peer review, iterative pattern, ADRs, assigned issues) |
+| **PR template** (Week 2 follow-up) | 02a PR template | Five PR template sections (Summary, Changes, Test Plan, Tradeoffs, Checklist). Action: add template sections to CLAUDE.md so agent uses them. Appears in: `.github/pull_request_template.md`, Week 2 slides (07) |
 | **Context file review** (student PRs #10, #14, #15) | 02b Three proposals, 02c What each brings, 02d Ideal context file, 02e Building the shared file | Anonymous comparison of three student CLAUDE.md proposals. Slide 02d maps six ideal sections (what is it, how to run, architecture, rules, what to avoid, agent behavior) against proposals A/B/C. Convergence points, unique contributions, shared vs individual context file distinction. Merged template: `templates/CLAUDE-backend-merged.md` |
 | **LLM adversarial review** (L894-902) | 03 Section, 04 Adversarial review, 05 Live demo, 06 Three layers complete | Adversarial review prompt, rotation protocol, three-layer pipeline diagram (CI/peer/LLM), "Valid" vs "False positive (because...)" labeling |
 | **Specs before code** (L904-923) | 07 Section, 08 Why specs first, 09 Planning tools, 10 Hand vs agent plans | Spec-first pattern (ADR for decisions, diagnosis paragraph for fixes), /plan workflow (4 steps), hand-written vs agent plan comparison, best workflow |
