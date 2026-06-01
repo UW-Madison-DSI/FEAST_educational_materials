@@ -68,6 +68,10 @@
       panel.style.display = visible ? 'block' : 'none';
       e.preventDefault();
     }
+    if (e.key === 'p' || e.key === 'P') {
+      window.open('presenter.html', '_blank');
+      e.preventDefault();
+    }
   });
 
   update(0);
