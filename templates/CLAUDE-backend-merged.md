@@ -20,33 +20,16 @@ Funded by the NSF AI institute ICICLE (OAC 2112606).
 - **gunicorn + uvicorn workers** in production
 - **uv** for dependency management (`pyproject.toml` + `uv.lock`)
 
-## Project Structure
+## Key Entry Points
 
-```
-food_access_model/
-  main.py                      # Primary FastAPI app (CORS, router mount) - USE THIS
-  api/
-    routes.py                  # All /api endpoints + DB query helpers (~880 lines)
-    helpers.py                 # StoreInput pydantic model, geometry helpers
-  abm/
-    geo_model.py               # GeoModel: mesa-geo model that ties agents together
-    household.py               # Household GeoAgent (food-access behavior per step)
-    store.py                   # Store GeoAgent (passive, holds geometry)
-  model_multi_processing/
-    batch_running.py           # Parallel batch runner (modified from mesa-geo)
-  preprocessing/
-    get_data.py                # Source-data ingestion (Census, OSM) - not called at runtime
-    household_constants.py     # Constants for household generation
-  repository/
-    db_repository.py           # Old singleton DB access - NOT used in current call path
+Do not duplicate the project's directory structure here. The filesystem is the source of truth; run `ls` or `find` to explore. Instead, document what is *not obvious from the file names alone*:
 
-run_local.py                   # Local dev entry: uvicorn --reload :8000
-entrypoint.sh                  # Production entry: gunicorn :8080
-api_server.py                  # LEGACY entry - do NOT use
-server.py                      # LEGACY Mesa browser visualization
-pyproject.toml / uv.lock       # Authoritative dependency files
-compose.yaml / Dockerfile      # Container config
-```
+- **App entry point:** `food_access_model/main.py` creates the FastAPI app. Use `run_local.py` to start it locally. Do not use `api_server.py` or `server.py` (both are legacy).
+- **All API logic:** `food_access_model/api/routes.py` (~880 lines). Every endpoint, plus DB query helpers.
+- **Simulation core:** `food_access_model/abm/household.py` (the step function, MFAI scoring, distance calculations).
+- **Parallelization:** `food_access_model/model_multi_processing/batch_running.py` (modified mesa-geo batch runner, default 25 processes).
+- **Preprocessing:** `food_access_model/preprocessing/get_data.py` seeds the database from Census + OSM. Not called at runtime.
+- **Dependencies:** `pyproject.toml` + `uv.lock` are authoritative. `requirements.txt` is stale and incomplete.
 
 ## Running Locally
 
