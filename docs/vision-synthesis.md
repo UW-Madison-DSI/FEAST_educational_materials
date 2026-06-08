@@ -172,17 +172,55 @@ Each track needs its own milestones. A milestone is a point where the work so fa
 
 ---
 
+## Sprint structure
+
+While we plan the longer-term roadmap, we need to keep shipping. Issues in both repos are now tagged with sprint labels so you can filter and focus. Each sprint is sized for 4 developers at roughly 10 hours each.
+
+### Sprint: Anxious Aardvark (start here)
+
+**Label:** `sprint:anxious-aardvark` in both repos
+**Focus:** Cleanup and quick fixes. Input validation bugs, error handling, environment fixes.
+
+| Issue | Repo | What |
+|---|---|---|
+| [BE #31](https://github.com/FoodAccessSimulator/FEAST-backend/issues/31) | backend | UUID validation: 7 endpoints return 500 instead of 400 |
+| [BE #32](https://github.com/FoodAccessSimulator/FEAST-backend/issues/32) | backend | POST /api/stores accepts bad lat/lon, returns 500 |
+| [BE #33](https://github.com/FoodAccessSimulator/FEAST-backend/issues/33) | backend | Negative household_limit crashes with 500 |
+| [BE #34](https://github.com/FoodAccessSimulator/FEAST-backend/issues/34) | backend | DELETE /stores 500 on bad store_id |
+| [BE #35](https://github.com/FoodAccessSimulator/FEAST-backend/issues/35) | backend | simulation_step overflow returns 500 |
+| [BE #36](https://github.com/FoodAccessSimulator/FEAST-backend/issues/36) | backend | "Description" field silently ignored |
+| [BE #18](https://github.com/FoodAccessSimulator/FEAST-backend/issues/18) | backend | Env variable mismatch in geo_model.py |
+| [FE #5](https://github.com/FoodAccessSimulator/FEAST-frontend/issues/5) | frontend | Remove Store with no selection sends NaN, silent 500 |
+| [FE #6](https://github.com/FoodAccessSimulator/FEAST-frontend/issues/6) | frontend | API failures silent, spinner stuck on screen |
+
+**Why this first:** Every issue has clear repro steps and a concrete fix. You practice the full pipeline (spec, plan, build, test, review) on issues small enough to finish in one sitting. Pick one, claim it in the comments, and ship it.
+
+### Coming next
+
+These sprints are queued up. We will adjust based on what we learn from Anxious Aardvark and your roadmap feedback.
+
+**Bold Bison** (`sprint:bold-bison`) -- Infrastructure: logging, entry point consolidation, CI, documentation.
+
+**Curious Capybara** (`sprint:curious-capybara`) -- User-facing: household hover, export, instance UX, title page. Aligns with Tracks A and B.
+
+**Daring Dolphin** (`sprint:daring-dolphin`) -- Performance: step optimization, profiling, instance creation speed, geocoding. Aligns with Track C.
+
+Filter by sprint label in either repo to see the full list for each phase.
+
+---
+
 ## Deliverables
 
 - [ ] **Written responses to questions 1-6** (shared doc or issue comment)
 - [ ] **Draft milestone list for at least one track** (questions 7-12). Use the format: "Milestone 1: ..., Milestone 2: ..., Done when: ..."
 - [ ] **First milestone proposal** (question 13) -- the team's first collective target
-- [ ] **Continue work on your current issues** -- the pipeline doesn't pause while we plan
+- [ ] **Pick an Anxious Aardvark issue and start working it** -- claim it in the comments, follow the full pipeline (spec, plan, build, test, review)
 
 ## What happens next
 
-1. **You respond** to the questions above
-2. **We aggregate** your responses into a collective roadmap with milestones, dependencies, and ownership
-3. **We start building** against that roadmap with the full pipeline you've learned
+1. **You respond** to the roadmap questions above
+2. **You ship Anxious Aardvark issues** using the pipeline you have learned
+3. **We aggregate** your roadmap responses into a collective plan with milestones, dependencies, and ownership
+4. **We adjust the sprint queue** based on what we learn
 
 The roadmap is yours to shape. This document is a proposal, not a decision.
