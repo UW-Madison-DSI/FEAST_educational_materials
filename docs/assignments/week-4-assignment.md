@@ -195,6 +195,17 @@ While we plan the longer-term roadmap, we need to keep shipping. Issues in both 
 
 **Why this first:** Every issue has clear repro steps and a concrete fix. You practice the full pipeline (spec, plan, build, test, review) on issues small enough to finish in one sitting. Pick one, claim it in the comments, and ship it.
 
+### Review process
+
+Every PR goes through a structured review before merge. This is not optional.
+
+1. **LLM review (Claude)** -- primary adversarial review. Findings posted as inline PR comments, each marked `Valid` or `False positive (because...)`
+2. **LLM review (secondary, optional)** -- a second model or fresh session for an independent perspective
+3. **Human reviewer 1 (full review)** -- substantive code review covering correctness, design, and style. Not just "LGTM"
+4. **Human reviewer 2 (discussion review)** -- reads the PR conversation and confirms all raised concerns are addressed
+
+Use the [Reviewer Spinner](https://github.com/FoodAccessSimulator/FEAST-backend/blob/dev/docs/reviewer-spinner.html) to assign your human reviewers. The PR template in the repo has the full checklist.
+
 ### Coming next
 
 These sprints are queued up. We will adjust based on what we learn from Anxious Aardvark and your roadmap feedback.
