@@ -19,39 +19,39 @@ Four people looked at the same codebase from different angles. Here is what emer
 
 Multiple people flagged that FEAST doesn't explain itself to users.
 
-- **What is a "step"?** There is no in-app explanation that a step simulates one month of food accessibility at the household level using disaggregated census data. A user clicking "step" has no idea what just happened or what the numbers mean. (Edric, James, ICICLE notes)
-- **Why do all households look the same?** The simulation generates individual household characteristics from census aggregates, but the UI doesn't surface this. A user sees identical-looking dots and reasonably concludes nothing interesting is happening. (Edric)
-- **What does "adding a store" actually do?** The interaction is clunky and doesn't convey what the simulation recalculates or why scores change. (James)
-- **Seeded information isn't visible.** Household-level details (income, vehicle access, proximity to stores) exist in the model but aren't accessible in the UI. (James)
+- **What is a "step"?** There is no in-app explanation that a step simulates one month of food accessibility at the household level using disaggregated census data. A user clicking "step" has no idea what just happened or what the numbers mean.
+- **Why do all households look the same?** The simulation generates individual household characteristics from census aggregates, but the UI doesn't surface this. A user sees identical-looking dots and reasonably concludes nothing interesting is happening.
+- **What does "adding a store" actually do?** The interaction is clunky and doesn't convey what the simulation recalculates or why scores change.
+- **Seeded information isn't visible.** Household-level details (income, vehicle access, proximity to stores) exist in the model but aren't accessible in the UI.
 
 ### Theme 2: The UI needs to show more and show it better
 
 Everyone had observations about the interface.
 
-- **Map needs more real estate.** The current layout constrains the map. Metadata and controls could be reorganized to give the map prominence. (Abanish)
-- **Metadata should be visible inline.** Hovering over a household or store should show relevant details (MFAI score, income, store type, distance). This information exists in the model but requires navigating away from the map. (Abanish, Shrivas)
-- **Visual polish and consistency.** The app mixes Bootstrap and Tailwind. Styling is inconsistent. It feels like "beta 0.1." (Shrivas, James)
-- **Embedded documentation.** Info hovers, tooltips, or an interactive tutorial so users can learn the tool without external docs. (Shrivas)
-- **Structured guidance for instances.** New users don't understand the difference between individual and shared instances, or how to use them effectively. (James)
+- **Map needs more real estate.** The current layout constrains the map. Metadata and controls could be reorganized to give the map prominence.
+- **Metadata should be visible inline.** Hovering over a household or store should show relevant details (MFAI score, income, store type, distance). This information exists in the model but requires navigating away from the map.
+- **Visual polish and consistency.** The app mixes Bootstrap and Tailwind. Styling is inconsistent. It feels like "beta 0.1."
+- **Embedded documentation.** Info hovers, tooltips, or an interactive tutorial so users can learn the tool without external docs.
+- **Structured guidance for instances.** New users don't understand the difference between individual and shared instances, or how to use them effectively.
 
 ### Theme 3: Users can't take results with them
 
-- **No export.** Users can't download simulation results, save a map view, or generate a summary. (Abanish)
-- **No local copy.** If the server goes down, results are gone. Users should be able to save a snapshot: map image, stats, household-level data as CSV. (Abanish)
-- **No summary view.** There is no way to get a high-level "here is what this simulation found" output that could go into a report or presentation. (Abanish)
+- **No export.** Users can't download simulation results, save a map view, or generate a summary.
+- **No local copy.** If the server goes down, results are gone. Users should be able to save a snapshot: map image, stats, household-level data as CSV.
+- **No summary view.** There is no way to get a high-level "here is what this simulation found" output that could go into a report or presentation.
 
 ### Theme 4: It's slow
 
-- **Simulation performance.** Running steps takes noticeably long, especially at scale. (James, Shrivas)
-- **Pre-processing.** Data loading and initialization have low-hanging optimization opportunities. (Shrivas)
-- **The slowness compounds the opacity problem.** When a user waits 30 seconds for a step and then can't tell what changed, the tool feels broken. (James)
+- **Simulation performance.** Running steps takes noticeably long, especially at scale.
+- **Pre-processing.** Data loading and initialization have low-hanging optimization opportunities.
+- **The slowness compounds the opacity problem.** When a user waits 30 seconds for a step and then can't tell what changed, the tool feels broken.
 
 ### Theme 5: The codebase needs cleanup
 
-- **Dead code.** Multiple unused files and functions. Makes navigation harder for new contributors. (Shrivas)
-- **File structure.** The backend organization is not intuitive. New developers spend time figuring out where things live. (Abanish)
-- **Ecosystem mapping.** Understanding how functions and files interact requires tracing by hand. No documentation of the call graph or data flow. (Abanish)
-- **Mixed patterns.** Three entry points, two database access patterns, inconsistent coordinate systems. (Multiple, from codebase exploration)
+- **Dead code.** Multiple unused files and functions. Makes navigation harder for new contributors.
+- **File structure.** The backend organization is not intuitive. New developers spend time figuring out where things live.
+- **Ecosystem mapping.** Understanding how functions and files interact requires tracing by hand. No documentation of the call graph or data flow.
+- **Mixed patterns.** Three entry points, two database access patterns, inconsistent coordinate systems.
 
 ---
 
@@ -74,12 +74,12 @@ The work groups into three tracks that can run in parallel. Each track has a con
 **Done when:** A new user can open FEAST, run a simulation, and understand what happened without external help.
 
 Concrete targets:
-- **Step explanation modal.** Before or after running a step, the user sees a plain-language description: "This simulated one month of food access for N households. Each household's food accessibility score was recalculated based on proximity to stores, income, and vehicle access." (ICICLE request)
-- **Household detail on hover/click.** Hovering over a household dot shows: MFAI score, income bracket, vehicle access, nearest store distance, store count within 1 mile. This data already exists in the model. (Edric, Abanish, Shrivas)
-- **Score differentiation.** Color-code or size-code household dots by MFAI score so the map visually communicates the distribution. Users should immediately see which areas have low food access. (Edric)
-- **Store interaction improvement.** Adding a store should preview the impact zone and show before/after score changes for affected households. (James)
-- **Remove polygons.** The hexagon/triangle store markers require explanation and add no analytical value. Use standard markers. (ICICLE request)
-- **Link to ICICLE training catalog.** Help menu or about page connects to https://icicle-ai.github.io/training-catalog/docs/FEAST for deeper context. (ICICLE request)
+- **Step explanation modal.** Before or after running a step, the user sees a plain-language description: "This simulated one month of food access for N households. Each household's food accessibility score was recalculated based on proximity to stores, income, and vehicle access."
+- **Household detail on hover/click.** Hovering over a household dot shows: MFAI score, income bracket, vehicle access, nearest store distance, store count within 1 mile. This data already exists in the model.
+- **Score differentiation.** Color-code or size-code household dots by MFAI score so the map visually communicates the distribution. Users should immediately see which areas have low food access.
+- **Store interaction improvement.** Adding a store should preview the impact zone and show before/after score changes for affected households.
+- **Remove polygons.** The hexagon/triangle store markers require explanation and add no analytical value. Use standard markers.
+- **Link to ICICLE training catalog.** Help menu or about page connects to https://icicle-ai.github.io/training-catalog/docs/FEAST for deeper context.
 
 #### Track B: Make results exportable and shareable
 
@@ -96,10 +96,10 @@ Concrete targets:
 **Done when:** A new developer can clone the repo, understand the architecture, and make a change without asking someone.
 
 Concrete targets:
-- **Dead code removal.** Audit and remove unused files and functions. (Shrivas, already partially tracked in existing issues)
-- **Entry point consolidation.** Three entry points (`run_local.py`, `api_server.py`, `server.py`) should become one. (Already identified in backlog)
-- **CRS standardization.** Store everything as EPSG:4326, convert to 3857 only for distance math. (Issue #67)
-- **Performance profiling.** Benchmark simulation step time. Identify whether the bottleneck is DB queries, distance calculations, or multiprocessing overhead. Publish results so optimization work is data-driven, not guesswork. (Shrivas, James)
+- **Dead code removal.** Audit and remove unused files and functions. Already partially tracked in existing issues.
+- **Entry point consolidation.** Three entry points (`run_local.py`, `api_server.py`, `server.py`) should become one. Already identified in backlog.
+- **CRS standardization.** Store everything as EPSG:4326, convert to 3857 only for distance math.
+- **Performance profiling.** Benchmark simulation step time. Identify whether the bottleneck is DB queries, distance calculations, or multiprocessing overhead. Publish results so optimization work is data-driven, not guesswork.
 - **Architecture documentation.** The merged CLAUDE.md captures the call graph and data flow. Keep it current as the codebase changes.
 
 ---
@@ -108,7 +108,7 @@ Concrete targets:
 
 Some ideas from the vision plans are valuable but too large or too uncertain for the current scope. Naming them here so they're not lost:
 
-- **Walking distances / routing integration.** Edric's observation about distance realism is correct, but integrating a routing API (e.g., OSRM, Google Directions) is a significant scope expansion. Worth exploring after the core simulation is understandable and exportable.
+- **Walking distances / routing integration.** The observation about distance realism is correct, but integrating a routing API (e.g., OSRM, Google Directions) is a significant scope expansion. Worth exploring after the core simulation is understandable and exportable.
 - **Geography-based instance management.** Assigning instances to a geography rather than having separate pages per geography is a good UX direction, but depends on first supporting multiple geographies (currently hardcoded to Brown County, tracked as #42).
 - **Interactive tutorial / onboarding flow.** Valuable, but depends on the UI stabilizing first. Build the features, then build the tutorial that explains them.
 - **Pre-processing pipeline optimization.** Important for scaling to new geographies, but not blocking current users. Profile first (Track C), then optimize with data.
