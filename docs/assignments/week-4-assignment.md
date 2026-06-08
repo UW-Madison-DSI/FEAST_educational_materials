@@ -204,7 +204,7 @@ Every PR goes through a structured review before merge. This is not optional.
 3. **Human reviewer 1 (full review)** -- substantive code review covering correctness, design, and style. Not just "LGTM"
 4. **Human reviewer 2 (discussion review)** -- reads the PR conversation and confirms all raised concerns are addressed
 
-Use the [Reviewer Spinner](https://github.com/FoodAccessSimulator/FEAST-backend/blob/dev/docs/reviewer-spinner.html) to assign your human reviewers. The PR template in the repo has the full checklist.
+Use the [Reviewer Spinner]({{ site.baseurl }}/docs/reviewer-spinner.html) to assign your human reviewers. The PR template in the repo has the full checklist.
 
 ### Coming next
 
