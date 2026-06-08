@@ -406,7 +406,7 @@
   {"slide": "02e Building the shared file", "notes": "Now let us build the merged version. Discussion: looking at the rubric, what should go in from each proposal? Take a few minutes to discuss. After we align on the structure, here is a draft I prepared that takes the best of all three. Look it over. From Proposal A: the data flow call graph and the dead code table. From Proposal B: the process guardrails, the current-state caveats, and the How to Work With Me section. From Proposal C: the deployment configuration, logging standards, and architecture constraints. Notice what the draft does not include: a directory tree. Proposal A had one, but the draft replaces it with a key entry points section that only documents what is not obvious from the filenames. The filesystem changes; the context file should capture judgments about the filesystem, not duplicate it. What else stays out: platform-specific notes like Windows versus Mac, personal workflow preferences, and anything that changes per person rather than per project. If you want to change anything in the draft, that is the point. One student opens the PR with the version the team agrees on, everyone reviews it."},
   {"slide": "03 Section: Review pipeline", "notes": "Part one. Your review pipeline has had two layers: automated CI and human peer review. Today we add the third and final layer: LLM adversarial review. After this, every PR goes through all three gates before it can merge."},
   {"slide": "04 LLM adversarial review", "notes": "Here is how adversarial review works. You open a fresh session with your CLI agent, with no prior context about the PR. You paste the diff and a skeptical reviewer prompt. The prompt on screen works well. The tool returns findings: potential bugs, performance issues, maintainability concerns. Your job is to evaluate each finding. Some will be valid catches. Some will be false positives. For each one, post a PR comment marking it Valid or False positive with your reasoning. This is a skill: learning to filter signal from noise in LLM output. The rotation is simple: each person reviews the next person in the list. If Alice, Bob, Carol, and Dana have PRs, Alice reviews Bob, Bob reviews Carol, Carol reviews Dana, Dana reviews Alice. The adversarial reviewer is always different from the peer reviewer."},
-  {"slide": "05 Live adversarial review", "notes": "Let us do this live. We will pick one of your open PRs from last week and run adversarial review on it right now. I will walk through the full workflow: paste the diff, read the findings, decide which are real, and post comments. Watch how many findings are actually useful versus how many are noise. That ratio teaches you something important about working with these tools."},
+  {"slide": "05 Live adversarial review", "notes": "We are going to do this live on PR #37, the merged CLAUDE.md. Everyone does this at the same time. Step one: each of you writes your own adversarial review prompt. Paste it into the shared Google Doc so we can compare. Step two: open a fresh CLI session with no context about this PR. Step three: paste the diff and your prompt, run the review, then paste the full results into the Google Doc under your prompt. Step four: we compare across the group. Different prompts will surface different findings from the same diff. Some will find structural issues, some will flag content gaps, some will generate false positives. That variation is the lesson: prompt wording matters, and learning to craft good review prompts is a skill you will use on every PR going forward."},
   {"slide": "06 Three layers complete", "notes": "The pipeline is now complete. Layer one, CI: automated, runs on every push, catches style and syntax issues. You set this up in Week 2. Layer two, peer review: human, one reviewer per PR, catches logic and design issues. Also started in Week 2. Layer three, adversarial LLM review: a different student runs a structured review and posts findings. Starts today. The rotation assigns one adversarial reviewer per PR, separate from the peer reviewer. Every PR from here on gets all three."},
   {"slide": "07 Section: Specs before code", "notes": "Part two. So far you have been jumping straight from issue to code. This week we add a step: write a spec before you implement. For design decisions, write a short ADR. For straightforward fixes, a diagnosis paragraph in the issue comment is enough."},
   {"slide": "08 Why specs first", "notes": "Why write before you code? Three reasons. First, it forces you to think through the approach before you are tangled in implementation details. Second, it gives the team a chance to catch flawed assumptions before you spend hours coding the wrong thing. Third, it creates a record of reasoning that future readers, including future you, can use to understand not just what changed but why. The habit of planning on paper before planning in code separates junior from senior professionals in any field."},
@@ -828,35 +828,35 @@
     <div style="position: relative;">
       <div class="eyebrow-slide">Live demo</div>
       <h2 class="slide-title">Let's review a real PR.</h2>
-      <p class="body-text" style="margin-bottom: 32px;">We will pick one of your open PRs from last week and run adversarial review on it right now.</p>
+      <p class="body-text" style="margin-bottom: 32px;">We will run adversarial review on <strong>PR #37</strong> (the merged CLAUDE.md) together, right now.</p>
 
       <div class="workflow-grid" style="grid-template-columns: repeat(4, 1fr);">
         <div class="wf-step">
           <div class="wf-num">1</div>
-          <h4>Pick a PR</h4>
-          <p>Choose a recent PR with a meaningful diff.</p>
+          <h4>Craft the prompt</h4>
+          <p>Write a skeptical reviewer prompt for the CLAUDE.md diff. Paste your prompt into the shared Google Doc.</p>
         </div>
         <div class="wf-step">
           <div class="wf-num">2</div>
           <h4>Fresh session</h4>
-          <p>Open CLI agent with no prior context.</p>
+          <p>Open a CLI agent with no prior context about this PR.</p>
         </div>
         <div class="wf-step">
           <div class="wf-num">3</div>
-          <h4>Paste + prompt</h4>
-          <p>Feed the diff with the skeptical reviewer prompt.</p>
+          <h4>Run the review</h4>
+          <p>Feed the diff + your prompt. Paste the full results into the Google Doc.</p>
         </div>
         <div class="wf-step">
           <div class="wf-num">4</div>
-          <h4>Evaluate findings</h4>
-          <p>Valid or false positive? Post as comments.</p>
+          <h4>Evaluate together</h4>
+          <p>Compare results across prompts. Which findings are valid? Which are noise?</p>
         </div>
       </div>
 
-      <p class="body-text muted" style="margin-top: 36px; font-size: 26px;">Watch how many findings are useful versus noise. That ratio teaches you something important about working with these tools.</p>
+      <p class="body-text muted" style="margin-top: 36px; font-size: 26px;">Everyone runs the same PR with their own prompt. Comparing results shows how prompt wording changes what the tool catches.</p>
 
       <div class="assign-callout">
-        <strong>After the demo:</strong> The PR we reviewed still needs a real peer review. The adversarial review is additive, not a replacement.
+        <strong>Shared Google Doc:</strong> Paste your prompt, then your results. We will compare across the group. Different prompts surface different findings from the same diff.
       </div>
 
       <div class="deck-footer">

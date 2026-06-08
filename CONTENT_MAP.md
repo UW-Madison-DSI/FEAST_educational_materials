@@ -123,12 +123,68 @@ These specific values appear in both the curriculum and slides. If any change, b
 - **Week 3 assigned issues:** #6 (stores-within-1-mile bug), #7 (step optimization), #8 (redundant functions), #9 (logging). Appears in: STUDENT_ONBOARDING_PLAN.md (L933-1075), Week 3 slides (12), `docs/assignments/week-3-assignment.md`
 - **household.py line refs:** has_resources():180, get_mfai():229, step():278, calculate_distances():257, stores_with_1_miles():142. Appears in: STUDENT_ONBOARDING_PLAN.md, Week 3 assignment doc, CONTENT_MAP.md Week 1 shared values
 
-## Weeks 4-6
+## Week 4
 
-Slide decks for these weeks do not exist yet. When created, add mappings here following the Week 1/2/3 format.
+**Slide deck:** `slides/week-4/index.html` (21 slides)
 
-| Week | Curriculum topics (post-DEC-004/005/006 restructuring) | Slide deck | Status |
+| Curriculum section (line) | Slide(s) | Shared facts to keep in sync |
+|---|---|---|
+| Week 3 recap | 01 Title, 02 Week 3 recap | Week 3 deliverables (6 cards: three-layer review, spec-first planning, agent planning, merged CLAUDE.md, named skills, first feature work) |
+| **Pipeline check-in** (new, not in curriculum) | 03 Section, 04 The full cycle, 05 Pipeline health, 06 Common bottlenecks, 07 Discussion | Full issue-to-merge cycle (6 steps: file issue, write spec, plan, build+test, review, merge), pipeline health audit, common bottleneck patterns |
+| **Manual vs. auto-generated artifacts** (L1139-1158) | 08 Section, 09 Auto-generated ADRs, 10 Hand vs auto, 11 Roadmaps vs changelogs | ADR generation from diff demo, hand-written vs auto-generated comparison, roadmap vs changelog distinction |
+| **Planning at different scales** (L1162-1181) | 12 Section, 13 Multi-issue planning, 14 Planning comparison | Reporting feature cluster (#94/#79/#36), multi-issue planning prompt, planning comparison table (single-feature / multi-issue / branch-level / hand-written) |
+| **Recognizing agentic design patterns** (L1183-1196) | 15 Section, 16 Patterns you know | Five patterns: Reflection (Week 3), Planning (Weeks 3-4), Human-in-the-loop (every week), Tool use (every week), Evaluation (Weeks 2-4). Reference: Guide 12 |
+| **Project context file check-in** (L1197-1199) | 17 Context file check-in | Three checks: current, useful, honest |
+| **Assigned work** (L1201-1316) | 18 Your track | Three issue groups: #30 (multi-store scoring), #67 (spatial refactor), #94/#79/#36 (reporting feature) |
+| **Solo work** (L1318-1331) | 19 Solo work | File 1 new issue, ship 1 from backlog. S students: systemic patterns. J students: pairing or small wins. |
+| **Roadmap activity** (L1333-1338) | 20 Roadmap activity | Weeks 5-6 planning preview, "your one thing" |
+| -- | 21 Recap | Four skills: pipeline check-in, artifact evaluation, multi-issue planning, design patterns. Next week pointer. |
+
+**Assignment document:** `docs/assignments/week-4-assignment.md` -- per-issue instructions (including multi-issue coordination for reporting feature), full pipeline checklist, LLM usage rules, deliverables.
+
+### Key shared values (Week 4)
+
+- **Full pipeline steps:** File issue, write spec, plan, build+test, review (3 layers), merge. Appears in: STUDENT_ONBOARDING_PLAN.md (throughout Week 4), Week 4 slides (04), `docs/assignments/week-4-assignment.md` (The full pipeline section)
+- **Week 4 assigned issues:** #30 (multi-store scoring, 1-2 students), #67 (spatial data refactor, 1 student), #94+#79+#36 (reporting feature, 2-3 students). Appears in: STUDENT_ONBOARDING_PLAN.md (L1201-1316), Week 4 slides (18), `docs/assignments/week-4-assignment.md`
+- **Planning comparison table:** Single-feature planning / Multi-issue planning / Branch-level review / Hand-written spec. Appears in: STUDENT_ONBOARDING_PLAN.md (L1174-1179), Week 4 slides (14)
+- **Agentic design patterns named:** Reflection, Planning, Human-in-the-Loop, Tool Use, Evaluation. Appears in: STUDENT_ONBOARDING_PLAN.md (L1185-1193), Week 4 slides (16), `docs/guides/12-agentic-engineering-concepts.md`
+- **household.py line refs:** get_mfai():229. Appears in: STUDENT_ONBOARDING_PLAN.md, Week 4 assignment doc, CONTENT_MAP.md Week 1 and Week 3 shared values
+- **CRS values:** households EPSG:4326, stores EPSG:3857. Appears in: CONTENT_MAP.md Week 1 shared values, Week 4 assignment doc (#67 scaffold)
+- **Reporting API:** get_household_stats (routes.py:463). Appears in: STUDENT_ONBOARDING_PLAN.md (L1280), Week 4 assignment doc
+
+## Week 5
+
+**Slide deck:** `slides/week-5/index.html` (22 slides)
+
+| Curriculum section (line) | Slide(s) | Shared facts to keep in sync |
+|---|---|---|
+| Week 4 recap | 01 Title, 02 Week 4 recap | Week 4 deliverables (6 cards: #30 multi-store, #67 spatial, #94/#79/#36 reporting, auto vs hand-written, multi-issue planning, design patterns) |
+| **Progress review** (new, not in curriculum) | 03 Section, 04 The scoreboard, 05 The big issues | Full-program throughput audit (PRs merged, issues closed, specs written), deep dive on each Week 4 issue (approach, planning, surprises, review findings) |
+| **Process probe** (new, not in curriculum) | 06 Section, 07 Walk me through a PR, 08 Where did you skip steps, 09 What surprised you, 10 The extra issues | PR walkthrough (~3 min/person: issue, spec, build, review), shortcut evaluation (did skipping matter?), estimation calibration, vision plan issue evaluation (pickup rate, scoping accuracy, backlog health) |
+| **Security review demo** (L1346-1348) | 11 Section, 12 Security scan | OWASP adversarial scan prompt, known issues (raw SQL, CORS, no validation, no auth), real risk vs theoretical discussion, threat model context |
+| **Deployment configuration audit** (L1350-1359) | 13 Deployment audit | Three configuration levers (client.js baseURL, .env DB_HOST, CORS origins), trace actual values, new environment deployment checklist |
+| **Review pipeline retrospective** (L1361-1370) | 14 Review pipeline retro | Three-layer pipeline evaluation (CI/peer/adversarial), process improvement, branch-level review option |
+| **The complete agentic workflow** (L1372-1412) | 15 Section, 16 Spec Plan Execute Verify, 17 Match workflow to task, 18 Context file encoding | Core loop (5 steps: spec, plan, execute, verify, document), workflow-to-task-size table (quick fix / single feature / cross-cutting / exploratory), context file encoding example, Guide 13 reference |
+| **Assigned work** (L1418-1477) | 19 Your track | Security hardening (1 student, OWASP checklist), #63 unit conversions (1 student), PR cleanup (everyone) |
+| **Solo work** (L1479-1500) | 20 Solo work | Full autonomy, high-value target list |
+| **Roadmap activity / Week 6 prep** (L1502-1503) | 21 Handoff prep | Tag 2-3 issues for next cohort, pick demo, start retro reflection |
+| -- | 22 Recap | Four things: progress review, process probe, security+deployment, complete workflow. Next week pointer. |
+
+**Assignment document:** `docs/assignments/week-5-assignment.md` -- security hardening checklist, #63 unit conversion audit, PR cleanup, context file audit, solo work, Week 6 preparation.
+
+### Key shared values (Week 5)
+
+- **Core workflow loop:** Spec, Plan, Execute, Verify, Document. Appears in: STUDENT_ONBOARDING_PLAN.md (L1376-1387), Week 5 slides (16), `docs/guides/13-agentic-workflow-best-practices.md`
+- **Workflow-to-task-size table:** Quick fix / Single feature / Cross-cutting / Exploratory. Appears in: STUDENT_ONBOARDING_PLAN.md (L1403-1409), Week 5 slides (17)
+- **Security checklist items:** Input validation (routes.py:191, 308, 352), CORS consolidation, SQL injection audit, rate limiting (routes.py:155), env vars, auth, deployment config. Appears in: STUDENT_ONBOARDING_PLAN.md (L1423-1448), `docs/assignments/week-5-assignment.md`
+- **Three configuration levers:** client.js baseURL, .env DB_HOST, CORS origins. Appears in: CONTENT_MAP.md Week 1 shared values, Week 5 slides (13), `docs/guides/10-deployment-configuration.md`
+- **Week 5 assigned issues:** Security hardening (1 student), #63 unit conversions (1 student), PR cleanup (all). Appears in: STUDENT_ONBOARDING_PLAN.md (L1418-1455), Week 5 slides (19), `docs/assignments/week-5-assignment.md`
+- **distance-related line refs:** calculate_distances():246, stores_with_1_miles():131, SEARCHRADIUS:500 (constants.py). Appears in: STUDENT_ONBOARDING_PLAN.md (L1460-1470), `docs/assignments/week-5-assignment.md`
+
+## Week 6
+
+Slide deck does not exist yet. May be discussion-driven with slides optional per the curriculum.
+
+| Week | Curriculum topics | Slide deck | Status |
 |---|---|---|---|
-| 4 | Manual vs. auto-generated artifacts, ADR generation from diffs, single-feature vs. multi-issue planning vs. branch-level review, roadmap maintenance, project context file check-in | `slides/week-4/index.html` | Not started |
-| 5 | Security review, deployment configuration audit, branch-level review evaluation, review pipeline retrospective, **complete agentic workflow** (spec-plan-execute-verify loop, workflow selection by task size, context file encoding), project context file audit. Reference: Guide 13 | `slides/week-5/index.html` | Not started |
 | 6 | Retrospective (tools + process), demo, handoff (may be discussion-driven, slides optional) | `slides/week-6/index.html` | Not started |

@@ -1,0 +1,1283 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>FEAST Week 4 — Artifacts, Planning, and the Full Pipeline</title>
+<link rel="stylesheet" href="colors_and_type.css"/>
+<style>
+  /* =========================================================
+     Type & spacing scale (deck-wide)
+     ========================================================= */
+  :root {
+    --type-display: 120px;
+    --type-title: 64px;
+    --type-subtitle: 44px;
+    --type-body: 34px;
+    --type-small: 28px;
+    --type-eyebrow: 24px;
+    --pad-top: 96px;
+    --pad-bottom: 130px;
+    --pad-x: 100px;
+    --gap-title: 48px;
+    --gap-item: 28px;
+  }
+
+  body { background: #1a1816; margin: 0; }
+
+  /* Slide chrome */
+  deck-stage section {
+    background: var(--bone);
+    position: relative;
+    overflow: hidden;
+    padding: var(--pad-top) var(--pad-x) var(--pad-bottom);
+    display: flex;
+    flex-direction: column;
+    color: var(--ink);
+    font-family: var(--font-body);
+  }
+
+  /* ---- Reusable elements ---- */
+  .pattern-bg {
+    position: absolute; inset: 0;
+    opacity: 0.05;
+    background-image: radial-gradient(circle, var(--ink) 1.5px, transparent 1.5px);
+    background-size: 28px 28px;
+    pointer-events: none;
+  }
+  .pattern-bg.on-dark {
+    opacity: 0.08;
+    background-image: radial-gradient(circle, #fff 1.5px, transparent 1.5px);
+  }
+  .red-bar { width: 80px; height: 8px; background: var(--badger-red); border-radius: 4px; }
+
+  .eyebrow-slide {
+    font-family: var(--font-display);
+    font-size: var(--type-eyebrow);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--fg-2);
+  }
+  .eyebrow-slide.on-dark { color: var(--mist); }
+
+  .slide-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--type-title);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: 16px 0 var(--gap-title);
+    color: var(--ink);
+    max-width: 1500px;
+  }
+
+  .slide-sub {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: var(--type-subtitle);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--fg-2);
+    margin: 0 0 var(--gap-title);
+    max-width: 1500px;
+  }
+
+  .body-text {
+    font-size: var(--type-body);
+    line-height: 1.5;
+    color: var(--ink);
+    max-width: 1500px;
+  }
+  .body-text.muted { color: var(--fg-2); }
+
+  /* Footer chip on content slides */
+  deck-stage section > div:not(.pattern-bg):not(.deck-footer) {
+    padding-bottom: 80px;
+  }
+  .deck-footer {
+    position: absolute;
+    bottom: 40px; left: var(--pad-x); right: var(--pad-x);
+    font-size: 16px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--font-mono);
+    font-size: 16px;
+    color: var(--fg-3);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .deck-footer .dot { color: var(--badger-red); margin: 0 10px; }
+  section.dark .deck-footer { color: var(--mist); }
+
+  /* Cards used across slides */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+  }
+  .card .tag {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: #FBE5E5;
+    color: #9B0000;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .card .tag.slate { background: #E5ECEF; color: #2E4756; }
+  .card .tag.moss  { background: #E4EBDB; color: #3F5E2A; }
+  .card .tag.wheat { background: #F4E9C9; color: #7A5F00; }
+  .card .tag.ink   { background: #E5E2DC; color: #1C1A19; }
+
+  .card h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 30px;
+    margin: 18px 0 10px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .card p {
+    font-size: 22px;
+    line-height: 1.45;
+    color: var(--fg-2);
+    margin: 0;
+  }
+
+  /* Numbered list (steps, factors) */
+  .num-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 28px; }
+  .num-list li { display: grid; grid-template-columns: 80px 1fr; align-items: start; gap: 24px; }
+  .num-list .num {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 56px;
+    line-height: 1;
+    color: var(--badger-red);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+  .num-list .label {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .num-list .desc {
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--fg-2);
+    margin-top: 6px;
+  }
+
+  /* Section divider */
+  section.section-divider {
+    background: var(--ink);
+    color: var(--bone);
+    justify-content: center;
+  }
+  section.section-divider .part-label {
+    font-family: var(--font-display);
+    font-size: var(--type-eyebrow);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--mist);
+  }
+  section.section-divider .part-title {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 144px;
+    line-height: 0.96;
+    margin: 28px 0 0;
+    letter-spacing: -0.03em;
+    color: var(--bone);
+    max-width: 1600px;
+  }
+  section.section-divider .part-title .accent { color: var(--badger-red); }
+  section.section-divider .part-meta {
+    font-family: var(--font-mono);
+    font-size: 24px;
+    color: var(--mist);
+    margin-top: 56px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  /* Title slide */
+  section.title-slide { padding-top: 0; padding-bottom: 0; justify-content: center; }
+  section.title-slide .title-block { position: relative; }
+  section.title-slide h1 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 116px;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin: 0;
+    max-width: 1600px;
+    color: var(--ink);
+  }
+  section.title-slide .accent { color: var(--badger-red); }
+  section.title-slide .meta {
+    margin-top: 56px;
+    font-family: var(--font-display);
+    font-size: 24px;
+    color: var(--fg-2);
+    display: flex;
+    gap: 28px;
+    align-items: center;
+  }
+  section.title-slide .meta .pipe { color: var(--mist); }
+  .slide-version { font-family: var(--font-mono); font-size: 18px; opacity: 0.5; }
+
+  /* Code chip */
+  .code-chip {
+    font-family: var(--font-mono);
+    background: var(--cream);
+    border: 1px solid var(--border);
+    color: var(--ink);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.92em;
+  }
+
+  /* Assignment callout */
+  .assign-callout {
+    margin-top: 20px;
+    padding: 12px 20px;
+    background: #E4EBDB;
+    border-left: 4px solid #3F5E2A;
+    border-radius: 0 8px 8px 0;
+    font-size: 19px;
+    color: #3F5E2A;
+    line-height: 1.4;
+    max-width: 1500px;
+  }
+  .assign-callout strong { color: #2A4A1A; }
+
+  /* Pipeline diagram */
+  .pipeline-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 32px;
+  }
+  .pipeline-box {
+    background: var(--white);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    text-align: center;
+    position: relative;
+  }
+  .pipeline-box.active {
+    border-color: var(--badger-red);
+    box-shadow: 0 0 0 3px rgba(197, 5, 12, 0.12);
+  }
+  .pipeline-box .pipe-num {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 48px;
+    color: var(--badger-red);
+    line-height: 1;
+  }
+  .pipeline-box .pipe-label {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 28px;
+    margin: 12px 0 8px;
+    color: var(--ink);
+  }
+  .pipeline-box .pipe-desc {
+    font-size: 20px;
+    color: var(--fg-2);
+    line-height: 1.4;
+  }
+  .pipeline-box .pipe-when {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    color: var(--fg-3);
+    margin-top: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* Prompt box */
+  .prompt-box {
+    background: #1C1A19;
+    color: #E8E4DC;
+    border-radius: 12px;
+    padding: 28px 32px;
+    font-family: var(--font-mono);
+    font-size: 22px;
+    line-height: 1.6;
+    max-width: 1500px;
+    margin-top: 24px;
+  }
+  .prompt-box .prompt-label {
+    color: var(--badger-red);
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* Workflow steps */
+  .workflow-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .wf-step {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 20px;
+    position: relative;
+  }
+  .wf-step .wf-num {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 36px;
+    color: var(--badger-red);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+  .wf-step h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 24px;
+    color: var(--ink);
+    margin: 0 0 8px;
+  }
+  .wf-step p {
+    font-size: 19px;
+    line-height: 1.4;
+    color: var(--fg-2);
+    margin: 0;
+  }
+
+  /* Beyond-this-project callout */
+  .beyond-callout {
+    margin-top: 28px;
+    padding: 16px 24px;
+    background: #F4E9C9;
+    border-left: 4px solid #7A5F00;
+    border-radius: 0 8px 8px 0;
+    font-size: 21px;
+    color: #5A4500;
+    line-height: 1.5;
+    max-width: 1500px;
+  }
+  .beyond-callout strong { color: #3D2E00; }
+
+  /* Full-width pipeline flow (6 steps) */
+  .flow-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    margin-top: 24px;
+  }
+  .flow-step {
+    background: var(--white);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 16px;
+    text-align: center;
+    position: relative;
+  }
+  .flow-step.highlight {
+    border-color: var(--badger-red);
+    box-shadow: 0 0 0 3px rgba(197, 5, 12, 0.12);
+  }
+  .flow-step .flow-num {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 36px;
+    color: var(--badger-red);
+    line-height: 1;
+  }
+  .flow-step .flow-label {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 22px;
+    margin: 10px 0 6px;
+    color: var(--ink);
+  }
+  .flow-step .flow-desc {
+    font-size: 17px;
+    color: var(--fg-2);
+    line-height: 1.35;
+  }
+  .flow-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: var(--fg-3);
+  }
+
+  /* Comparison table */
+  .compare-table {
+    width: 100%;
+    max-width: 1500px;
+    border-collapse: collapse;
+    font-size: 22px;
+    margin-top: 24px;
+  }
+  .compare-table th {
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-align: left;
+    padding: 14px 16px;
+    border-bottom: 2px solid var(--ink);
+    color: var(--ink);
+  }
+  .compare-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--fg-2);
+    line-height: 1.4;
+  }
+  .compare-table td:first-child {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  /* Responsive mobile override */
+  @media (max-width: 768px) {
+    --pad-x: 80px;
+  }
+</style>
+
+<script type="application/json" id="speaker-notes">
+[
+  {"slide": "01 Title", "notes": "Welcome to Week 4. Halfway through the program. In Weeks 1 through 3, you built the full development pipeline piece by piece: environment setup, branching and PRs, CI, peer review, adversarial review, spec-first planning. This week we step back and look at how the whole pipeline is actually working in practice, then we tackle bigger planning challenges and the heaviest issues in the backlog."},
+  {"slide": "02 Week 3 recap", "notes": "Quick recap. Last week you completed the three-layer review pipeline with LLM adversarial review, learned spec-first planning, used agent planning tools, and named the engineering skills you have been practicing. You also picked your first self-directed feature work from the vision plan backlog."},
+  {"slide": "03 Section: Pipeline check-in", "notes": "Part one. Before we learn anything new, let us look at how the pipeline you have built is actually working. You have been through the full cycle now: filing issues, writing specs, planning, implementing, testing, reviewing, merging. The question is: where is it flowing and where is it stuck?"},
+  {"slide": "04 The full cycle", "notes": "Here is the pipeline you own. Six steps from identifying a problem to shipping the fix. File the issue, write the spec or diagnosis, plan the implementation, build and test, run through all three review layers, merge. By now you have done each of these steps at least once. Some of you have done the full cycle multiple times. Let us talk about how it is going."},
+  {"slide": "05 Pipeline health", "notes": "Let us do a quick audit. I am going to pull up the issue board and PR list. For each of you: how many issues have you filed? How many specs or ADRs have you written before coding? How many PRs are open right now? How many are merged? Where is the bottleneck for you personally? Maybe you are writing code fast but reviews are slow. Maybe you are getting stuck on specs and not starting implementation soon enough. Maybe the adversarial review rotation is falling behind. No judgment here. The point is to see the pattern so we can fix it."},
+  {"slide": "06 Common bottlenecks", "notes": "Here are the patterns I have seen across teams. First, reviews stack up. If you open a PR and nobody reviews it for three days, you are blocked. The fix: review others before asking for reviews yourself. It is a team resource, not a personal favor. Second, specs that never become code. Some of you wrote excellent specs and then got stuck on implementation. The spec is not the deliverable; the merged PR is. Third, skipping the spec. Some PRs went straight from issue to code with no written plan. That is fine for trivial changes, but the issues you are working on are not trivial. Fourth, the adversarial review rotation falling behind. If you owe a review, do it today."},
+  {"slide": "07 Discussion: your pipeline", "notes": "Open discussion. Pull up your own PRs and issues. Where are you in the cycle right now? What is blocking you? What would help? Let us go around the room. Each person: one thing that is working well in the pipeline, and one thing that is stuck or slow. We will spend about ten minutes on this. If we identify a systemic issue, like reviews taking too long, we will agree on a fix right now."},
+  {"slide": "08 Section: Artifacts", "notes": "Part two. You have been writing project management artifacts by hand since Week 2: ADRs, specs, roadmap nominations. This session goes deeper. We look at what happens when you let the agent generate these artifacts, and how to tell when hand-written is better."},
+  {"slide": "09 Auto-generated ADRs", "notes": "Demo time. I am going to take a real diff from one of your PRs and feed it to the agent with a prompt asking it to generate an ADR. Watch what comes out. The auto-generated version will get the facts right: what files changed, what the diff shows, what the behavior was before and after. But watch for what it misses. It almost never captures: why you rejected the alternatives, what constraints the team discussed, what stakeholder concern drove the decision. Those are the parts that matter most six months from now. The auto-generated ADR is a good starting draft. But it is a draft, not a finished artifact."},
+  {"slide": "10 Hand vs auto", "notes": "Here is the comparison. Auto-generated ADRs capture the what: facts from the diff, file changes, behavior changes. They are fast to produce and usually accurate about the mechanics. Hand-written ADRs capture the why: rejected alternatives, unstated constraints, team context, reasoning. They take more effort but they are what future readers actually need. The sweet spot is using auto-generation as a starting draft, then editing in the reasoning yourself. Same principle as code generation: the tool produces a first pass, you add the judgment."},
+  {"slide": "11 Roadmaps vs changelogs", "notes": "Same principle applies to roadmaps. Demo: I will ask the agent to generate a project summary from git log. It will produce a nice changelog: what shipped, when, in what order. Compare that to the ROADMAP.md in this repo. The changelog shows what happened. The roadmap shows what matters, what depends on what, what the critical path is, and what we decided not to do. Auto-generated changelogs are useful artifacts. But they are not roadmaps. Roadmaps require judgment about priorities and dependencies that the tool cannot infer from commit history."},
+  {"slide": "12 Section: Planning at scale", "notes": "Part three. In Week 3 you used planning tools for a single feature. This week we scale up: planning across multiple related issues, and reviewing an entire branch rather than a single PR."},
+  {"slide": "13 Multi-issue planning", "notes": "Demo: the reporting feature cluster. Issues #94, #79, and frontend #36 are interdependent. The backend needs a reporting API that serves metrics that the frontend displays. I am going to feed all three issue descriptions to the agent and ask it to plan across them. Watch what it produces: a dependency chain showing that the backend API contract must exist before the frontend can consume it, an implementation ordering, and file-level specifics for each piece. This is where planning tools really shine: finding dependencies across issues that you might miss when planning each one individually."},
+  {"slide": "14 Planning comparison", "notes": "Here is the comparison table for all the planning approaches you now know. Single-feature planning maps code changes for one task. Multi-issue planning sequences work and finds dependencies across a set of issues. Branch-level review catches cross-cutting issues across accumulated changes. Hand-written specs and ADRs capture the intent and reasoning. Each has a scope, an input, and a sweet spot. No single approach replaces the others. The question is always: what are you trying to learn? If you need implementation details, use the planning tool. If you need to capture reasoning, write it yourself."},
+  {"slide": "15 Section: Design patterns", "notes": "Part four. At this point you have been practicing several agentic design patterns without naming them. Now that you have four weeks of hands-on experience, it is worth naming the patterns so you have a vocabulary for evaluating tools and workflows."},
+  {"slide": "16 Patterns you know", "notes": "Five patterns. Reflection: the adversarial review rotation from Week 3. One agent evaluates another's output. Planning: structured planning since Week 3, multi-issue planning today. The agent explores and produces a plan before writing code. Human-in-the-loop: every workflow in this curriculum has you reviewing and approving. The agent never ships autonomously. Tool use: every time the agent reads a file, runs tests, or checks git, it is using tools. This is what separates agents from chatbots. Evaluation: the three-layer review pipeline. Multiple evaluators with different perspectives check the same output. These are not just things we do. They are recognized design patterns in agentic systems. When someone shows you a new AI tool, ask: what patterns does it use? If it has no human-in-the-loop, no planning, and no reflection, it is optimized for speed, not quality."},
+  {"slide": "17 Context file check-in", "notes": "Quick round. Open your project context file. Has it been updated since last week? Does it reflect what you have learned? Take two minutes to update it now. This is a maintenance habit, not a one-time task. If you have not touched it since Week 1, it is stale. The agent is only as good as the context you give it."},
+  {"slide": "18 Your track", "notes": "Here are this week's three assigned issues. These are the biggest issues in the backlog: the core algorithm, the spatial data refactor, and the reporting feature cluster. Each uses the full pipeline you have built: write a spec first, plan the implementation, build with tests, get all three review layers. The reporting feature requires coordination between backend and frontend students. That is intentional. You need to agree on an API contract before splitting up."},
+  {"slide": "19 Solo work", "notes": "By Week 4 you should be proposing issues, not just picking from the list. File at least one new issue based on something you discovered while working. Pick one existing issue from the backlog and ship it through the full pipeline. For senior students: if you see a systemic pattern, like the same type of hardcoding in five places, file a single issue that captures the systemic problem and propose a solution. That is how you move from contributor to maintainer."},
+  {"slide": "20 Roadmap activity", "notes": "Before we wrap up, spend a few minutes thinking about Weeks 5 and 6. What is realistic to finish? What should be documented and deferred? We will do formal roadmap planning at the start of Week 5, but start thinking about it now. Each of you should have a sense of the one thing you want to ship before the end of the program."},
+  {"slide": "21 Recap", "notes": "Recap. Four things from today. Pipeline check-in: you reviewed how the full cycle is working and identified where to improve. Artifact evaluation: you can now distinguish when auto-generation helps versus when hand-written reasoning is essential. Multi-issue planning: you can plan across related issues and find dependencies. Design patterns: you can name the patterns you have been practicing and use them to evaluate new tools. Next week: security review, deployment readiness, the complete agentic workflow, and process retrospective."}
+]
+</script>
+</head>
+
+<body>
+
+<deck-stage width="1920" height="1080">
+
+  <!-- ============================================================
+       01 — TITLE
+       ============================================================ -->
+  <section class="title-slide" data-screen-label="01 Title">
+    <div class="pattern-bg"></div>
+    <div class="title-block" style="position: relative;">
+      <div class="red-bar" style="margin-bottom: 56px;"></div>
+      <h1>Artifacts, Planning,<br/>and the Full <span class="accent">Pipeline.</span></h1>
+      <div class="meta">
+        <span>FEAST Academy</span>
+        <span class="pipe">|</span>
+        <span>Week 4</span>
+        <span class="pipe">|</span>
+        <span>Core Algorithm &amp; Data Improvements</span>
+      </div>
+      <div class="deck-footer">
+        <span>FEAST Academy &middot; Week 4</span>
+        <span class="slide-version">v1.0</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       02 — Week 3 recap
+       ============================================================ -->
+  <section data-screen-label="02 Week 3 recap">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Where we left off</div>
+      <h2 class="slide-title">Week 3: what you shipped.</h2>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+        <div class="card">
+          <span class="tag">pipeline</span>
+          <h3>Three-layer review</h3>
+          <p>CI + peer review + LLM adversarial review. Every PR, no exceptions.</p>
+        </div>
+        <div class="card">
+          <span class="tag slate">specs</span>
+          <h3>Spec-first planning</h3>
+          <p>ADRs for decisions, diagnosis paragraphs for fixes. Think before you code.</p>
+        </div>
+        <div class="card">
+          <span class="tag moss">tools</span>
+          <h3>Agent-assisted planning</h3>
+          <p><span class="code-chip">/plan</span> for mapping code changes after defining intent.</p>
+        </div>
+        <div class="card">
+          <span class="tag wheat">context</span>
+          <h3>Merged CLAUDE.md</h3>
+          <p>Combined three proposals into one shared context file for the backend.</p>
+        </div>
+        <div class="card">
+          <span class="tag ink">engineering</span>
+          <h3>Named the skills</h3>
+          <p>Decomposition, quality gates, review, decisions, planning, coordination.</p>
+        </div>
+        <div class="card">
+          <span class="tag">features</span>
+          <h3>First self-directed work</h3>
+          <p>Picked feature issues from the vision plan backlog and shipped them.</p>
+        </div>
+      </div>
+      <div class="deck-footer">
+        <span>Week 4 &middot; Recap</span>
+        <span><span class="dot">&bull;</span> Week 3 review</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       03 — Section: Pipeline check-in
+       ============================================================ -->
+  <section class="section-divider" data-screen-label="03 Section: Pipeline check-in">
+    <div class="pattern-bg on-dark"></div>
+    <div style="position: relative;">
+      <div class="part-label">Part one</div>
+      <div class="part-title">How is the<br/><span class="accent">pipeline</span> working?</div>
+      <div class="part-meta">Issue to merge: the full cycle</div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       04 — The full cycle
+       ============================================================ -->
+  <section data-screen-label="04 The full cycle">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">The pipeline you built</div>
+      <h2 class="slide-title">Issue to merge, six steps.</h2>
+      <p class="body-text muted" style="margin-bottom: 20px; font-size: 26px;">You own every step. This is the workflow you have been building since Week 1.</p>
+
+      <div class="flow-grid">
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <div class="flow-label">File issue</div>
+          <div class="flow-desc">Identify the problem. Describe it clearly. Label it.</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <div class="flow-label">Write spec</div>
+          <div class="flow-desc">ADR or diagnosis. What, why, how to verify.</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <div class="flow-label">Plan</div>
+          <div class="flow-desc">Hand-written + agent plan. Map the code changes.</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">4</div>
+          <div class="flow-label">Build + test</div>
+          <div class="flow-desc">Implement. Write tests alongside. Verify each step.</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">5</div>
+          <div class="flow-label">Review</div>
+          <div class="flow-desc">CI + peer + adversarial. All three layers.</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">6</div>
+          <div class="flow-label">Merge</div>
+          <div class="flow-desc">Ship it. Update the roadmap. Close the issue.</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 32px; padding: 20px 28px; background: var(--cream); border-radius: 12px; max-width: 1500px;">
+        <p style="font-size: 24px; color: var(--fg-2); margin: 0; line-height: 1.5;"><strong style="color: var(--ink);">The question today:</strong> How many of you have completed this full cycle, from filing the issue through merging the PR? Where did you get stuck?</p>
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 4 &middot; Pipeline check-in</span>
+        <span><span class="dot">&bull;</span> The full cycle</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       05 — Pipeline health check
+       ============================================================ -->
+  <section data-screen-label="05 Pipeline health">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Live audit</div>
+      <h2 class="slide-title">Let's look at the numbers.</h2>
+      <p class="body-text" style="margin-bottom: 24px;">Pull up the issue board and PR list. For each person:</p>
+
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;">
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="font-size: 26px;">Your throughput</h3>
+          <ul style="font-size: 22px; line-height: 1.7; color: var(--fg-2); padding-left: 24px; margin: 12px 0 0;">
+            <li>Issues filed?</li>
+            <li>Specs / ADRs written before coding?</li>
+            <li>PRs opened?</li>
+            <li>PRs merged?</li>
+            <li>Adversarial reviews completed?</li>
+          </ul>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="font-size: 26px;">Your bottleneck</h3>
+          <ul style="font-size: 22px; line-height: 1.7; color: var(--fg-2); padding-left: 24px; margin: 12px 0 0;">
+            <li>Waiting on reviews?</li>
+            <li>Getting stuck on specs?</li>
+            <li>Implementation taking longer than expected?</li>
+            <li>Adversarial rotation falling behind?</li>
+            <li>Something else entirely?</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="assign-callout">
+        <strong>No judgment.</strong> The point is to see the pattern so we can fix it. A bottleneck is a process problem, not a personal one.
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 4 &middot; Pipeline check-in</span>
+        <span><span class="dot">&bull;</span> Health check</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       06 — Common bottlenecks
+       ============================================================ -->
+  <section data-screen-label="06 Common bottlenecks">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">What to watch for</div>
+      <h2 class="slide-title">Patterns that slow teams down.</h2>
+
+      <ul class="num-list" style="margin-top: 12px;">
+        <li>
+          <span class="num">1</span>
+          <div><div class="label">Reviews stack up</div>
+          <div class="desc">PRs sit for days with no reviewer. <strong>Fix:</strong> Review others before asking for reviews. It is a team resource, not a favor.</div></div>
+        </li>
+        <li>
+          <span class="num">2</span>
+          <div><div class="label">Specs that never become code</div>
+          <div class="desc">Well-written specs, but no implementation. <strong>Fix:</strong> The spec is not the deliverable. The merged PR is. Time-box spec writing.</div></div>
+        </li>
+        <li>
+          <span class="num">3</span>
+          <div><div class="label">Skipping the spec</div>
+          <div class="desc">Jumping from issue to code with no plan. <strong>Fix:</strong> For anything beyond a trivial change, even two sentences in the issue comment is better than nothing.</div></div>
+        </li>
+        <li>
+          <span class="num">4</span>
+          <div><div class="label">Adversarial review debt</div>
+          <div class="desc">The rotation falls behind. <strong>Fix:</strong> If you owe a review, it is your top priority today.</div></div>
+        </li>
+      </ul>
+
+      <div class="deck-footer">
+        <span>Week 4 &middot; Pipeline check-in</span>
+        <span><span class="dot">&bull;</span> Bottlenecks</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       07 — Discussion: your pipeline
+       ============================================================ -->
+  <section data-screen-label="07 Discussion: your pipeline">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">10-minute discussion</div>
+      <h2 class="slide-title">What's working? What's stuck?</h2>
+      <p class="body-text" style="margin-bottom: 32px;">Go around the room. Each person:</p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <div class="card" style="border-top: 4px solid #3F5E2A;">
+          <h3 style="font-size: 28px; color: #3F5E2A;">One thing working well</h3>
+          <p style="font-size: 22px;">A step in the pipeline that feels smooth. A habit that is paying off. Something you have gotten faster at.</p>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="font-size: 28px; color: var(--badger-red);">One thing stuck or slow</h3>
+          <p style="font-size: 22px;">Where you are blocked. What takes longer than it should. A step you keep skipping or deferring.</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 32px; padding: 20px 28px; background: var(--cream); border-radius: 12px; max-width: 1500px;">
+        <p style="font-size: 24px; color: var(--fg-2); margin: 0; line-height: 1.5;"><strong style="color: var(--ink);">If we find a systemic issue,</strong> we agree on a fix now. Not next week. A process problem that everyone works around individually is still a process problem.</p>
+      </div>
+
+      <div class="beyond-callout" style="margin-top: 24px;">
+        <strong>Beyond this project:</strong> Process retrospectives are how professional teams improve. The pipeline is a tool the team owns. If it is not working, change it.
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 4 &middot; Pipeline check-in</span>
+        <span><span class="dot">&bull;</span> Discussion</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       08 — Section: Artifacts
+       ============================================================ -->
+  <section class="section-divider" data-screen-label="08 Section: Artifacts">
+    <div class="pattern-bg on-dark"></div>
+    <div style="position: relative;">
+      <div class="part-label">Part two</div>
+      <div class="part-title">Manual vs.<br/><span class="accent">auto-generated.</span></div>
+      <div class="part-meta">When to write, when to generate</div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       09 — Auto-generated ADRs (demo)
+       ============================================================ -->
+  <section data-screen-label="09 Auto-generated ADRs">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Live demo</div>
+      <h2 class="slide-title">Generating an ADR from a diff.</h2>
+      <p class="body-text" style="margin-bottom: 24px;">Feed a PR diff to the agent. Ask it to write an ADR. Watch what it gets right and what it misses.</p>
+
+      <div class="prompt-box">
+        <div class="prompt-label">Prompt</div>
+        Here is the diff for issue #30 (multi-store food access scoring).<br/>
+        Write an ADR documenting this decision. Use the template:<br/>
+        Title, Status, Context, Decision, Alternatives Considered,<br/>
+        Consequences.
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 28px;">
+        <div class="card" style="border-top: 4px solid #3F5E2A;">
+          <h3 style="font-size: 24px;">What it gets right</h3>
+          <ul style="font-size: 20px; line-height: 1.6; color: var(--fg-2); padding-left: 20px; margin: 12px 0 0;">
+            <li>Facts from the diff: what changed, where</li>
+            <li>Before/after behavior</li>
+            <li>File and function references</li>
+            <li>Technically accurate description</li>
+          </ul>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="font-size: 24px;">What it misses</h3>
+          <ul style="font-size: 20px; line-height: 1.6; color: var(--fg-2); padding-left: 20px; margin: 12px 0 0;">
+            <li>Why you rejected alternatives</li>
+            <li>Unstated constraints the team discussed</li>
+            <li>Stakeholder concerns that shaped the choice</li>
+            <li>The reasoning behind "why not X?"</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="assign-callout">
+        <strong>Takeaway:</strong> Auto-generated ADRs are good starting drafts. Feed the diff, the PR description, and the issue context. Then edit in the reasoning yourself.
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 4 &middot; Artifacts</span>
+        <span><span class="dot">&bull;</span> ADR generation</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       10 — Hand-written vs auto-generated
+       ============================================================ -->
+  <section data-screen-label="10 Hand vs auto">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Artifacts</div>
+      <h2 class="slide-title">When to write, when to generate.</h2>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 12px;">
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="margin-top: 8px;">Auto-generated</h3>
+          <ul style="font-size: 24px; line-height: 1.6; color: var(--fg-2); padding-left: 24px; margin: 16px 0 0;">
+            <li>Captures <strong>what happened</strong></li>
+            <li>Accurate about mechanics</li>
+            <li>Fast to produce</li>
+            <li>Good starting draft</li>
+          </ul>
+          <p style="margin-top: 16px; font-size: 20px; color: var(--fg-3);">Best for: initial ADR draft, changelogs, code documentation</p>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="margin-top: 8px;">Hand-written</h3>
+          <ul style="font-size: 24px; line-height: 1.6; color: var(--fg-2); padding-left: 24px; margin: 16px 0 0;">
+            <li>Captures <strong>why it matters</strong></li>
+            <li>Records rejected alternatives</li>
+            <li>Preserves team context</li>
+            <li>Explains "why not?"</li>
+          </ul>
+          <p style="margin-top: 16px; font-size: 20px; color: var(--fg-3);">Essential for: design tradeoffs, stakeholder constraints, priority decisions</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 28px; padding: 24px 32px; background: var(--cream); border-radius: 12px; max-width: 1500px;">
+        <p style="font-family: var(--font-display); font-weight: 700; font-size: 28px; color: var(--ink); margin: 0;">Same principle as code generation:</p>
+        <p style="font-size: 24px; color: var(--fg-2); margin: 12px 0 0; line-height: 1.5;">The tool produces a first pass. You add the judgment. The "explain every line" rule applies to prose too.</p>
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 4 &middot; Artifacts</span>
+        <span><span class="dot">&bull;</span> Comparison</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       11 — Roadmaps vs changelogs
+       ============================================================ -->
+  <section data-screen-label="11 Roadmaps vs changelogs">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Artifacts</div>
+      <h2 class="slide-title">Roadmaps are not changelogs.</h2>
+      <p class="body-text" style="margin-bottom: 24px;">Demo: generate a project summary from <span class="code-chip">git log</span>. Compare to the manually maintained <span class="code-chip">ROADMAP.md</span>.</p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <div class="card">
+          <span class="tag slate">auto-generated</span>
+          <h3 style="font-size: 24px;">Changelog from git log</h3>
+          <ul style="font-size: 20px; line-height: 1.6; color: var(--fg-2); padding-left: 20px; margin: 12px 0 0;">
+            <li>What shipped and when</li>
+            <li>Commit-level detail</li>
+            <li>Accurate about history</li>
+            <li>Missing: priorities, judgment, what not to do</li>
+          </ul>
+        </div>
+        <div class="card">
+          <span class="tag wheat">hand-maintained</span>
+          <h3 style="font-size: 24px;">ROADMAP.md</h3>
+          <ul style="font-size: 20px; line-height: 1.6; color: var(--fg-2); padding-left: 20px; margin: 12px 0 0;">
+            <li>What matters and in what order</li>
+            <li>Dependencies between milestones</li>
+            <li>Critical path to the next deliverable</li>
+            <li>Forward-looking decisions</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="margin-top: 28px; padding: 20px 28px; background: var(--cream); border-radius: 12px; max-width: 1500px;">
+        <p style="font-size: 22px; color: var(--fg-2); margin: 0; line-height: 1.5;"><strong style="color: var(--ink);">A roadmap stays useful because someone updates it after each milestone, not because it was written once.</strong> It tracks what the team decided matters. Git log tracks what happened.</p>
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 4 &middot; Artifacts</span>
+        <span><span class="dot">&bull;</span> Roadmaps</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       12 — Section: Planning at scale
+       ============================================================ -->
+  <section class="section-divider" data-screen-label="12 Section: Planning at scale">
+    <div class="pattern-bg on-dark"></div>
+    <div style="position: relative;">
+      <div class="part-label">Part three</div>
+      <div class="part-title">Planning at<br/><span class="accent">scale.</span></div>
+      <div class="part-meta">From single features to multi-issue coordination</div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       13 — Multi-issue planning
+       ============================================================ -->
+  <section data-screen-label="13 Multi-issue planning">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Live demo</div>
+      <h2 class="slide-title">Planning across related issues.</h2>
+      <p class="body-text" style="margin-bottom: 20px;">The reporting feature: three interdependent issues that require a coordinated plan.</p>
+
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <span class="tag">backend</span>
+          <h3 style="font-size: 22px;">#94: Reporting API</h3>
+          <p style="font-size: 19px;">Design and build the endpoint that serves simulation metrics.</p>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <span class="tag slate">backend</span>
+          <h3 style="font-size: 22px;">#79: Richer metrics</h3>
+          <p style="font-size: 19px;">Score distributions, income brackets, vehicle ownership breakdowns.</p>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <span class="tag moss">frontend</span>
+          <h3 style="font-size: 22px;">#36: Reporting view</h3>
+          <p style="font-size: 19px;">Display the metrics. Charts or tables, consuming the new API.</p>
+        </div>
+      </div>
+
+      <div class="prompt-box" style="margin-top: 24px;">
+        <div class="prompt-label">Prompt</div>
+        These three issues are interdependent. #94 provides the API, #79<br/>
+        defines the metrics, #36 consumes the data. Plan across all three:<br/>
+        what is the dependency chain? What is the implementation order?<br/>
+        What API contract do the backend and frontend students need to<br/>
+        agree on first?
+      </div>
+
+      <div class="assign-callout">
+        <strong>Key insight:</strong> The agent finds dependencies you might miss when planning each issue individually. But it cannot tell you which metrics matter most to your users. That is your judgment.
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 4 &middot; Planning at scale</span>
+        <span><span class="dot">&bull;</span> Multi-issue</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       14 — Planning comparison table
+       ============================================================ -->
+  <section data-screen-label="14 Planning comparison">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Approaches</div>
+      <h2 class="slide-title">Pick the tool that fits the question.</h2>
+
+      <table class="compare-table">
+        <tr>
+          <th>Approach</th>
+          <th>Scope</th>
+          <th>Input</th>
+          <th>Good for</th>
+        </tr>
+        <tr>
+          <td>Single-feature planning</td>
+          <td>One feature</td>
+          <td>Issue + codebase</td>
+          <td>Mapping code changes for one task</td>
+        </tr>
+        <tr>
+          <td>Multi-issue planning</td>
+          <td>Project phase</td>
+          <td>Set of issues + codebase</td>
+          <td>Sequencing work, finding dependencies</td>
+        </tr>
+        <tr>
+          <td>Branch-level review</td>
+          <td>Branch or PR set</td>
+          <td>Diff against base branch</td>
+          <td>Catching cross-cutting issues before merge</td>
+        </tr>
+        <tr>
+          <td>Hand-written spec / ADR</td>
+          <td>Any</td>
+          <td>Your reasoning</td>
+          <td>Capturing why and what, not just how</td>
+        </tr>
+      </table>
+
+      <div style="margin-top: 32px; padding: 20px 28px; background: var(--cream); border-radius: 12px; max-width: 1500px;">
+        <p style="font-size: 24px; color: var(--fg-2); margin: 0; line-height: 1.5;"><strong style="color: var(--ink);">No planning tool replaces human judgment about which goals matter.</strong> The tools map <em>how</em>. You decide <em>what</em> and <em>why</em>.</p>
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 4 &middot; Planning at scale</span>
+        <span><span class="dot">&bull;</span> Comparison</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       15 — Section: Design patterns
+       ============================================================ -->
+  <section class="section-divider" data-screen-label="15 Section: Design patterns">
+    <div class="pattern-bg on-dark"></div>
+    <div style="position: relative;">
+      <div class="part-label">Part four</div>
+      <div class="part-title">Naming the<br/><span class="accent">patterns.</span></div>
+      <div class="part-meta">Recognized agentic design patterns</div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       16 — Patterns you know
+       ============================================================ -->
+  <section data-screen-label="16 Patterns you know">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Agentic design patterns</div>
+      <h2 class="slide-title">You have been using these.</h2>
+      <p class="body-text muted" style="margin-bottom: 20px; font-size: 26px;">Five patterns, practiced over four weeks. Now you have a name for each.</p>
+
+      <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px;">
+        <div class="card" style="padding: 24px;">
+          <span class="tag">week 3</span>
+          <h3 style="font-size: 22px;">Reflection</h3>
+          <p style="font-size: 18px;">Adversarial review rotation. One agent evaluates another's output.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <span class="tag slate">weeks 3-4</span>
+          <h3 style="font-size: 22px;">Planning</h3>
+          <p style="font-size: 18px;">Structured plans before code. The agent explores, then proposes.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <span class="tag moss">every week</span>
+          <h3 style="font-size: 22px;">Human-in-the-loop</h3>
+          <p style="font-size: 18px;">You review, approve, redirect. The agent never ships alone.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <span class="tag wheat">every week</span>
+          <h3 style="font-size: 22px;">Tool use</h3>
+          <p style="font-size: 18px;">The agent reads files, runs tests, checks git. Not just a chatbot.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <span class="tag ink">weeks 2-4</span>
+          <h3 style="font-size: 22px;">Evaluation</h3>
+          <p style="font-size: 18px;">Three-layer pipeline. Multiple evaluators, different perspectives.</p>
+        </div>
+      </div>
+
+      <div class="beyond-callout" style="margin-top: 28px;">
+        <strong>Beyond this project:</strong> When someone shows you a new AI development tool, ask: what patterns does it use? If it has no human-in-the-loop, no planning step, and no reflection, it is optimized for speed, not quality. See <a href="../../docs/guides/12-agentic-engineering-concepts" style="color: #5A4500;">Guide 12</a> for full definitions.
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 4 &middot; Design patterns</span>
+        <span><span class="dot">&bull;</span> Five patterns</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       17 — Context file check-in
+       ============================================================ -->
+  <section data-screen-label="17 Context file check-in">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">2-minute activity</div>
+      <h2 class="slide-title">Update your context file.</h2>
+      <p class="body-text" style="margin-bottom: 28px;">Open your project context file right now. Quick check:</p>
+
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+        <div class="card">
+          <h3 style="font-size: 24px;">Is it current?</h3>
+          <p style="font-size: 20px;">Does it reflect what you have learned about the codebase since Week 1? If it still says "there are no tests" and you wrote tests in Week 3, update it.</p>
+        </div>
+        <div class="card">
+          <h3 style="font-size: 24px;">Is it useful?</h3>
+          <p style="font-size: 20px;">Start a fresh agent session. Does the context file give it enough to be helpful? What is it missing?</p>
+        </div>
+        <div class="card">
+          <h3 style="font-size: 24px;">Is it honest?</h3>
+          <p style="font-size: 20px;">Does it describe the codebase as it is, including rough edges? Or does it describe an idealized version?</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 28px; padding: 20px 28px; background: var(--cream); border-radius: 12px; max-width: 1500px;">
+        <p style="font-size: 22px; color: var(--fg-2); margin: 0; line-height: 1.5;"><strong style="color: var(--ink);">The agent is only as good as the context you give it.</strong> A stale context file is worse than no context file, because it gives the agent false confidence about the state of the code.</p>
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 4 &middot; Context files</span>
+        <span><span class="dot">&bull;</span> Check-in</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       18 — Your track this week
+       ============================================================ -->
+  <section data-screen-label="18 Your track">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Assigned work</div>
+      <h2 class="slide-title">This week's three issues.</h2>
+      <p class="body-text muted" style="margin-bottom: 20px; font-size: 24px;">The biggest issues in the backlog. Full pipeline on each: spec, plan, build, review, merge.</p>
+
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+        <div class="card">
+          <span class="tag">algorithm</span>
+          <h3 style="font-size: 22px;">#30: Multi-store scoring</h3>
+          <p style="font-size: 19px;">Highest-impact change. Read the paper first. Write an ADR on weighting approach. Tests before and after.</p>
+          <p style="font-size: 17px; color: var(--fg-3); margin-top: 12px;">1-2 students</p>
+        </div>
+        <div class="card">
+          <span class="tag slate">refactor</span>
+          <h3 style="font-size: 22px;">#67: Spatial data handling</h3>
+          <p style="font-size: 19px;">Cross-cutting CRS refactor. Touches backend + frontend. Open as draft PR early. Coordinate.</p>
+          <p style="font-size: 17px; color: var(--fg-3); margin-top: 12px;">1 student</p>
+        </div>
+        <div class="card">
+          <span class="tag moss">feature</span>
+          <h3 style="font-size: 22px;">#94 + #79 + #36: Reporting</h3>
+          <p style="font-size: 19px;">Backend API + metrics + frontend view. Agree on the API contract first. Use multi-issue planning.</p>
+          <p style="font-size: 17px; color: var(--fg-3); margin-top: 12px;">2-3 students</p>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+        <div class="assign-callout" style="margin-top: 0;">
+          <strong>Review protocol:</strong> Every PR gets all three layers. CI + peer + adversarial LLM review.
+        </div>
+        <div class="assign-callout" style="margin-top: 0;">
+          <strong>Coordination:</strong> #67 and #94/#79/#36 both touch multiple files and students. Communicate early. Draft PRs welcome.
+        </div>
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 4 &middot; Assigned work</span>
+        <span><span class="dot">&bull;</span> Your track</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       19 — Solo work
+       ============================================================ -->
+  <section data-screen-label="19 Solo work">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Self-directed work</div>
+      <h2 class="slide-title">Own the backlog.</h2>
+      <p class="body-text" style="margin-bottom: 24px;">By Week 4, you should be proposing issues, not just picking from a list.</p>
+
+      <ul class="num-list">
+        <li>
+          <span class="num">1</span>
+          <div><div class="label">File at least 1 new issue</div>
+          <div class="desc">Based on something you discovered while working on assigned issues this week. Bugs, enhancements, refactoring opportunities.</div></div>
+        </li>
+        <li>
+          <span class="num">2</span>
+          <div><div class="label">Pick and ship 1 issue from the backlog</div>
+          <div class="desc">Full pipeline: claim it, write a plan, implement, test, PR with all three review layers.</div></div>
+        </li>
+      </ul>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 28px;">
+        <div class="card">
+          <span class="tag wheat">S students</span>
+          <h3 style="font-size: 22px;">See the system</h3>
+          <p style="font-size: 19px;">If you see a pattern (e.g., "same hardcoding in five places"), file one issue capturing the systemic problem. Propose a solution. This is how you move from contributor to maintainer.</p>
+        </div>
+        <div class="card">
+          <span class="tag slate">J students</span>
+          <h3 style="font-size: 22px;">Build confidence</h3>
+          <p style="font-size: 19px;">Pair with an S student on their assigned work if solo feels too big. Or pick a small win: a missing type hint, a documentation gap, a test for an untested function.</p>
+        </div>
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 4 &middot; Solo work</span>
+        <span><span class="dot">&bull;</span> Own it</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       20 — Roadmap activity
+       ============================================================ -->
+  <section data-screen-label="20 Roadmap activity">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Looking ahead</div>
+      <h2 class="slide-title">Weeks 5 and 6: what's realistic?</h2>
+      <p class="body-text" style="margin-bottom: 28px;">Formal roadmap planning happens at the start of Week 5. Start thinking now.</p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+        <div class="card">
+          <h3 style="font-size: 24px;">What can you finish?</h3>
+          <p style="font-size: 20px;">Two weeks left. Be honest about pace. What is realistic to ship, test, and merge?</p>
+        </div>
+        <div class="card">
+          <h3 style="font-size: 24px;">What should be deferred?</h3>
+          <p style="font-size: 20px;">Document what the next cohort should pick up. A well-written issue is a deliverable too.</p>
+        </div>
+        <div class="card">
+          <h3 style="font-size: 24px;">Your one thing</h3>
+          <p style="font-size: 20px;">Each person picks the one thing they want to ship before the end. Name it.</p>
+        </div>
+      </div>
+
+      <div class="beyond-callout" style="margin-top: 28px;">
+        <strong>Beyond this project:</strong> Knowing what not to build is as important as knowing what to build. Every professional project has more work than time. The skill is prioritization, not just productivity.
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 4 &middot; Roadmap</span>
+        <span><span class="dot">&bull;</span> Looking ahead</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       21 — Recap
+       ============================================================ -->
+  <section style="background: var(--ink); color: var(--bone);" class="dark" data-screen-label="21 Recap">
+    <div class="pattern-bg on-dark"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide on-dark">Week 4 recap</div>
+      <h2 class="slide-title" style="color: var(--bone);">Four skills from today.</h2>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+        <div style="border-top: 4px solid var(--badger-red); padding-top: 24px;">
+          <h3 style="font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--bone); margin: 0 0 12px;">Pipeline check-in</h3>
+          <p style="font-size: 19px; color: var(--mist); line-height: 1.45;">Reviewed the full issue-to-merge cycle. Identified bottlenecks. Agreed on fixes.</p>
+        </div>
+        <div style="border-top: 4px solid var(--badger-red); padding-top: 24px;">
+          <h3 style="font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--bone); margin: 0 0 12px;">Artifact evaluation</h3>
+          <p style="font-size: 19px; color: var(--mist); line-height: 1.45;">Auto-generated vs. hand-written. The tool captures what. You capture why.</p>
+        </div>
+        <div style="border-top: 4px solid var(--badger-red); padding-top: 24px;">
+          <h3 style="font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--bone); margin: 0 0 12px;">Multi-issue planning</h3>
+          <p style="font-size: 19px; color: var(--mist); line-height: 1.45;">Planning across related issues. Finding dependencies. Coordinating work.</p>
+        </div>
+        <div style="border-top: 4px solid var(--badger-red); padding-top: 24px;">
+          <h3 style="font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--bone); margin: 0 0 12px;">Design patterns</h3>
+          <p style="font-size: 19px; color: var(--mist); line-height: 1.45;">Five named patterns: reflection, planning, human-in-the-loop, tool use, evaluation.</p>
+        </div>
+      </div>
+      <p style="margin-top: 36px; font-family: var(--font-display); font-size: 22px; color: var(--mist);">Next week: security review, deployment readiness, the complete agentic workflow, and process retrospective.</p>
+      <div class="deck-footer">
+        <span style="color: var(--mist);">FEAST Academy &middot; Week 4</span>
+        <span style="color: var(--mist);"><span class="dot">&bull;</span> End</span>
+      </div>
+    </div>
+  </section>
+
+</deck-stage>
+
+<!-- Tweaks panel -->
+<div id="tweaks-root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="tweaks-app.jsx"></script>
+
+<script src="deck-stage.js"></script>
+<script src="image-slot.js"></script>
+
+<!-- Speaker notes panel: press N to toggle -->
+<script src="notes-panel.js"></script>
+<!-- Presenter view sync: bridges BroadcastChannel to deck navigation -->
+<script src="presenter-sync.js"></script>
+</body>
+</html>

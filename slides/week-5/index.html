@@ -1,0 +1,1287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>FEAST Week 5 — Review, Harden, Assemble</title>
+<link rel="stylesheet" href="colors_and_type.css"/>
+<style>
+  /* =========================================================
+     Type & spacing scale (deck-wide)
+     ========================================================= */
+  :root {
+    --type-display: 120px;
+    --type-title: 64px;
+    --type-subtitle: 44px;
+    --type-body: 34px;
+    --type-small: 28px;
+    --type-eyebrow: 24px;
+    --pad-top: 96px;
+    --pad-bottom: 130px;
+    --pad-x: 100px;
+    --gap-title: 48px;
+    --gap-item: 28px;
+  }
+
+  body { background: #1a1816; margin: 0; }
+
+  /* Slide chrome */
+  deck-stage section {
+    background: var(--bone);
+    position: relative;
+    overflow: hidden;
+    padding: var(--pad-top) var(--pad-x) var(--pad-bottom);
+    display: flex;
+    flex-direction: column;
+    color: var(--ink);
+    font-family: var(--font-body);
+  }
+
+  /* ---- Reusable elements ---- */
+  .pattern-bg {
+    position: absolute; inset: 0;
+    opacity: 0.05;
+    background-image: radial-gradient(circle, var(--ink) 1.5px, transparent 1.5px);
+    background-size: 28px 28px;
+    pointer-events: none;
+  }
+  .pattern-bg.on-dark {
+    opacity: 0.08;
+    background-image: radial-gradient(circle, #fff 1.5px, transparent 1.5px);
+  }
+  .red-bar { width: 80px; height: 8px; background: var(--badger-red); border-radius: 4px; }
+
+  .eyebrow-slide {
+    font-family: var(--font-display);
+    font-size: var(--type-eyebrow);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--fg-2);
+  }
+  .eyebrow-slide.on-dark { color: var(--mist); }
+
+  .slide-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--type-title);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: 16px 0 var(--gap-title);
+    color: var(--ink);
+    max-width: 1500px;
+  }
+
+  .slide-sub {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: var(--type-subtitle);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--fg-2);
+    margin: 0 0 var(--gap-title);
+    max-width: 1500px;
+  }
+
+  .body-text {
+    font-size: var(--type-body);
+    line-height: 1.5;
+    color: var(--ink);
+    max-width: 1500px;
+  }
+  .body-text.muted { color: var(--fg-2); }
+
+  /* Footer chip on content slides */
+  deck-stage section > div:not(.pattern-bg):not(.deck-footer) {
+    padding-bottom: 80px;
+  }
+  .deck-footer {
+    position: absolute;
+    bottom: 40px; left: var(--pad-x); right: var(--pad-x);
+    font-size: 16px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--font-mono);
+    font-size: 16px;
+    color: var(--fg-3);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .deck-footer .dot { color: var(--badger-red); margin: 0 10px; }
+  section.dark .deck-footer { color: var(--mist); }
+
+  /* Cards used across slides */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+  }
+  .card .tag {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: #FBE5E5;
+    color: #9B0000;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .card .tag.slate { background: #E5ECEF; color: #2E4756; }
+  .card .tag.moss  { background: #E4EBDB; color: #3F5E2A; }
+  .card .tag.wheat { background: #F4E9C9; color: #7A5F00; }
+  .card .tag.ink   { background: #E5E2DC; color: #1C1A19; }
+
+  .card h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 30px;
+    margin: 18px 0 10px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .card p {
+    font-size: 22px;
+    line-height: 1.45;
+    color: var(--fg-2);
+    margin: 0;
+  }
+
+  /* Numbered list (steps, factors) */
+  .num-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 28px; }
+  .num-list li { display: grid; grid-template-columns: 80px 1fr; align-items: start; gap: 24px; }
+  .num-list .num {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 56px;
+    line-height: 1;
+    color: var(--badger-red);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+  .num-list .label {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .num-list .desc {
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--fg-2);
+    margin-top: 6px;
+  }
+
+  /* Section divider */
+  section.section-divider {
+    background: var(--ink);
+    color: var(--bone);
+    justify-content: center;
+  }
+  section.section-divider .part-label {
+    font-family: var(--font-display);
+    font-size: var(--type-eyebrow);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--mist);
+  }
+  section.section-divider .part-title {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 144px;
+    line-height: 0.96;
+    margin: 28px 0 0;
+    letter-spacing: -0.03em;
+    color: var(--bone);
+    max-width: 1600px;
+  }
+  section.section-divider .part-title .accent { color: var(--badger-red); }
+  section.section-divider .part-meta {
+    font-family: var(--font-mono);
+    font-size: 24px;
+    color: var(--mist);
+    margin-top: 56px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  /* Title slide */
+  section.title-slide { padding-top: 0; padding-bottom: 0; justify-content: center; }
+  section.title-slide .title-block { position: relative; }
+  section.title-slide h1 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 116px;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin: 0;
+    max-width: 1600px;
+    color: var(--ink);
+  }
+  section.title-slide .accent { color: var(--badger-red); }
+  section.title-slide .meta {
+    margin-top: 56px;
+    font-family: var(--font-display);
+    font-size: 24px;
+    color: var(--fg-2);
+    display: flex;
+    gap: 28px;
+    align-items: center;
+  }
+  section.title-slide .meta .pipe { color: var(--mist); }
+  .slide-version { font-family: var(--font-mono); font-size: 18px; opacity: 0.5; }
+
+  /* Code chip */
+  .code-chip {
+    font-family: var(--font-mono);
+    background: var(--cream);
+    border: 1px solid var(--border);
+    color: var(--ink);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.92em;
+  }
+
+  /* Assignment callout */
+  .assign-callout {
+    margin-top: 20px;
+    padding: 12px 20px;
+    background: #E4EBDB;
+    border-left: 4px solid #3F5E2A;
+    border-radius: 0 8px 8px 0;
+    font-size: 19px;
+    color: #3F5E2A;
+    line-height: 1.4;
+    max-width: 1500px;
+  }
+  .assign-callout strong { color: #2A4A1A; }
+
+  /* Pipeline diagram */
+  .pipeline-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 32px;
+  }
+  .pipeline-box {
+    background: var(--white);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    text-align: center;
+    position: relative;
+  }
+  .pipeline-box.active {
+    border-color: var(--badger-red);
+    box-shadow: 0 0 0 3px rgba(197, 5, 12, 0.12);
+  }
+  .pipeline-box .pipe-num {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 48px;
+    color: var(--badger-red);
+    line-height: 1;
+  }
+  .pipeline-box .pipe-label {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 28px;
+    margin: 12px 0 8px;
+    color: var(--ink);
+  }
+  .pipeline-box .pipe-desc {
+    font-size: 20px;
+    color: var(--fg-2);
+    line-height: 1.4;
+  }
+  .pipeline-box .pipe-when {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    color: var(--fg-3);
+    margin-top: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* Prompt box */
+  .prompt-box {
+    background: #1C1A19;
+    color: #E8E4DC;
+    border-radius: 12px;
+    padding: 28px 32px;
+    font-family: var(--font-mono);
+    font-size: 22px;
+    line-height: 1.6;
+    max-width: 1500px;
+    margin-top: 24px;
+  }
+  .prompt-box .prompt-label {
+    color: var(--badger-red);
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* Workflow steps */
+  .workflow-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .wf-step {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 20px;
+    position: relative;
+  }
+  .wf-step .wf-num {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 36px;
+    color: var(--badger-red);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+  .wf-step h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 24px;
+    color: var(--ink);
+    margin: 0 0 8px;
+  }
+  .wf-step p {
+    font-size: 19px;
+    line-height: 1.4;
+    color: var(--fg-2);
+    margin: 0;
+  }
+
+  /* Beyond-this-project callout */
+  .beyond-callout {
+    margin-top: 28px;
+    padding: 16px 24px;
+    background: #F4E9C9;
+    border-left: 4px solid #7A5F00;
+    border-radius: 0 8px 8px 0;
+    font-size: 21px;
+    color: #5A4500;
+    line-height: 1.5;
+    max-width: 1500px;
+  }
+  .beyond-callout strong { color: #3D2E00; }
+
+  /* Comparison table */
+  .compare-table {
+    width: 100%;
+    max-width: 1500px;
+    border-collapse: collapse;
+    font-size: 22px;
+    margin-top: 24px;
+  }
+  .compare-table th {
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-align: left;
+    padding: 14px 16px;
+    border-bottom: 2px solid var(--ink);
+    color: var(--ink);
+  }
+  .compare-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--fg-2);
+    line-height: 1.4;
+  }
+  .compare-table td:first-child {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  /* Probing question card */
+  .probe-card {
+    background: var(--white);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 32px;
+  }
+  .probe-card.hot {
+    border-color: var(--badger-red);
+  }
+  .probe-card .probe-q {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 26px;
+    color: var(--ink);
+    line-height: 1.2;
+    margin: 0 0 10px;
+  }
+  .probe-card .probe-why {
+    font-size: 20px;
+    color: var(--fg-2);
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  /* Responsive mobile override */
+  @media (max-width: 768px) {
+    --pad-x: 80px;
+  }
+</style>
+
+<script type="application/json" id="speaker-notes">
+[
+  {"slide": "01 Title", "notes": "Week 5. One week left after this. Today is about taking stock: what you shipped, how you shipped it, and what is left. We will also cover security, deployment readiness, and assemble the complete workflow you will take with you after this program ends."},
+  {"slide": "02 Week 4 recap", "notes": "Last week we checked in on the pipeline, looked at how the full issue-to-merge cycle was working, and learned about auto-generated versus hand-written artifacts. You were continuing work on your assigned issues from Week 3, plus the new issues filed from your vision plans. We also named the agentic design patterns you have been practicing. Let us see how all of that went."},
+  {"slide": "03 Section: What did you ship", "notes": "Part one. Before anything else today, let us look at what actually shipped. Not what you worked on. What merged. Pull up the PR list and issue board right now."},
+  {"slide": "04 The scoreboard", "notes": "Here is what I want to see. For each person: how many PRs are merged? How many are still open? How many issues have you closed versus how many are still assigned to you? Look at both your original assigned issues from Week 3 and any new issues you picked up. I am not looking for everything to be done. I am looking for honest accounting of where things stand. If something is stuck, say so. If something turned out to be bigger than expected, that is useful information."},
+  {"slide": "05 The big issues", "notes": "Let us go through your work. For the assigned issues, numbers 6 through 9: where does each one stand? Did the spec or diagnosis get written before coding? Did the approach change once you started implementation? For the newer issues from the vision plans: how did those go? Were they well-scoped? Did you follow the same pipeline, or did some of those get a lighter process? Walk us through what happened, not what was supposed to happen."},
+  {"slide": "06 Section: Show me your process", "notes": "Part two. This is the deeper probe. I have been watching your PRs, your issue comments, your specs, your reviews. Now I want to hear how the process actually felt from your side. Not what the slides told you to do. What you actually did."},
+  {"slide": "07 Walk me through a PR", "notes": "Each of you: pick one PR you are proud of. Not necessarily the biggest one. The one where you felt like the process worked. Walk the group through it. Start with the issue. What was the problem? Show us your spec or diagnosis. How did it compare to what you ended up building? Show us the planning step. Did you use the agent's planning tool? Was it helpful or did you end up deviating? Show the implementation. Any surprises? Tests you had to add that you did not expect? And the review: what did peer review catch? What did adversarial review catch? Did either catch something real that you would have shipped otherwise? This should take about three minutes per person. The point is not to present. It is to reflect in front of the group so everyone learns from each other's experience."},
+  {"slide": "08 Where did you skip steps", "notes": "Honest question. Over the past few weeks, where did you skip or shortcut the process? Maybe you coded before writing a spec because the fix seemed obvious. Maybe you skipped the adversarial review because you were behind. Maybe you merged without waiting for all three review layers. No judgment. Every team shortcuts under pressure. The question is: did it matter? When you skipped the spec, did you end up building the wrong thing? When you skipped adversarial review, did a bug slip through? Or was the shortcut fine and the step was not worth it for that case? This is how you calibrate the process to reality. Some steps earn their cost every time. Some are only worth it above a certain complexity threshold. Knowing the difference is engineering judgment."},
+  {"slide": "09 What surprised you", "notes": "Three questions. First: what took longer than you expected? Not what was hard. What was unexpectedly time-consuming. Understanding where your estimates were wrong is how you get better at estimating. Second: what was easier than expected? Sometimes the agent planning tool nails it and you ship in an hour what you budgeted three hours for. When does that happen and why? Third: what would you do differently if you started over? Not at the process level. At the specific-task level. Different approach, different order, different scope."},
+  {"slide": "10 The extra issues", "notes": "We added feature issues from your vision plans to the backlog in Week 3. Let us evaluate how that went. How many of those issues got picked up? How many shipped? Were they well-scoped or did they turn out to be bigger than the description suggested? Did filing your own issues change how you thought about the work? For the issues that did not get picked up: is that because they were lower priority, or because they were unclear, or because nobody had bandwidth? This tells us something about how to scope the next cohort's backlog."},
+  {"slide": "11 Section: Security and deployment", "notes": "Part three. Shifting gears to the technical content. Security review and deployment readiness. These are the kind of cross-cutting concerns that often get deferred until it is too late. We are going to look at them now, with five weeks of codebase experience behind you."},
+  {"slide": "12 Security scan", "notes": "Demo time. I am going to run an adversarial security review on the current FEAST backend. Not a toy example, the actual codebase you have been working on. Watch what it finds. Some of these you already know about: raw SQL patterns, hardcoded CORS origins, no input validation on POST endpoints, no authentication. Others might surprise you. For each finding, we will discuss: is this a real risk in FEAST's deployment context, or is it theoretical? A research tool on a university network has different threat model than a public-facing SaaS product. But that does not mean we ignore everything. The security hardening checklist in your assignment doc lists the concrete items."},
+  {"slide": "13 Deployment audit", "notes": "Quick group exercise. Revisit the deployment topology from Week 1. You have five weeks of experience now. Each student: check your three configuration levers right now. Where is your client.js baseURL pointing? What is in your .env for DB_HOST? What CORS origins are configured? Is everything pointing where you expect? Anyone accidentally hitting staging from their local setup? Then: what would need to change to deploy FEAST to a new location? New DB credentials, new CORS origins, new frontend URL, Docker config, DNS. Walk through the list as a team. This should be concrete, not abstract. A misconfigured deployment is a security issue."},
+  {"slide": "14 Review pipeline retro", "notes": "The three-layer review pipeline has been running for three weeks. Let us evaluate it. CI checks: what is it catching? Are there false positives or noisy checks we should tune? Should we add type checking or the test suite to CI? Peer review: what patterns do reviewers keep flagging? Are reviews happening promptly or are they a bottleneck? Is the feedback substantive or rubber-stamp? Adversarial LLM review: what has it caught that humans missed? What are the most common false positives? Is the rotation working? If we identify something to change, we change it now. This is not a retrospective for its own sake. It is a process improvement step."},
+  {"slide": "15 Section: The complete workflow", "notes": "Part four. Over five weeks you have practiced every piece of a disciplined agentic workflow: iterative code shaping in Week 2, specs before code in Week 3, phased planning in Weeks 3 and 4, review at multiple layers, decision documentation. This section assembles those pieces into a single repeatable process. This is what you take with you after the program ends."},
+  {"slide": "16 Spec Plan Execute Verify", "notes": "The core loop. Four steps that repeat for every phase of work. Spec: you write 2-3 sentences before touching the agent. What are you changing, why, and how will you know it worked. This is your engineering judgment. The agent does not decide what to build. Plan: ask the agent to create a phased plan based on your spec. Each phase must leave the codebase in a working, testable state. Review the plan before any code is written. Execute: implement one phase at a time. Do not batch phases. Verify: four checks after each phase. Run the full test suite. Review the diff line by line. Check for unnecessary complexity. Update the plan if what you learned changes the approach. Document when needed: write an ADR if a phase involved choosing between approaches. Repeat until all phases are verified, then do a final branch-level review and open the PR."},
+  {"slide": "17 Match workflow to task", "notes": "Not every task needs the full loop. A quick fix under 30 minutes gets a one-sentence spec, implementation, and verification. No phasing needed. A single feature taking 1-4 hours gets the full spec-plan-execute-verify loop with phases. Cross-cutting work gets the same loop plus multi-issue planning to sequence the work. Exploratory work with unknown scope gets an investigation phase first, then a spec based on what you learned. The judgment of which workflow fits which task is itself an engineering skill. When in doubt, default to phased execution. The overhead is small. The safety margin is large."},
+  {"slide": "18 Context file encoding", "notes": "Here is the connection between the workflow and your project context file. You can encode workflow rules in your CLAUDE.md or GEMINI.md to make the process automatic. A workflow section tells the agent to follow phased execution, run tests after each phase, and flag complexity. When you write these rules, you are programming the agent's behavior in natural language. Your instructions run inside the LLM's context window: flexible and easy to author, but interpreted rather than executed mechanically. This is why phased verification matters. You are the reliability layer. The context file is the specification. The agent is the executor. You are the verifier. See Guide 13 for the full reference and a printable checklist."},
+  {"slide": "19 Your track", "notes": "This week's assigned work. Security hardening: one student runs through the OWASP-style checklist. Fix what you can, file issues for the rest. Unit conversion consistency: one student audits all distance calculations for CRS and unit mismatches. PR cleanup: everyone. Merge open PRs from Weeks 2-4, resolve review feedback, fix CI, clean stale branches. This is integration and polish. The goal is to leave the codebase in a state where the next cohort can pick it up cleanly."},
+  {"slide": "20 Solo work", "notes": "Full autonomy. You have the complete toolkit. Pick the highest-impact thing you can finish this week and ship it. If nothing on the board excites you, scan the codebase for something that bugs you and file plus fix it. The assignment doc has a list of high-value targets if you need direction: API endpoint tests, missing validation, frontend error handling, the API base URL environment variable."},
+  {"slide": "21 Handoff prep", "notes": "Next week is the final session. You will demo what you shipped, do a full retrospective, and write a handoff document for the next cohort. To prepare: review the full issue list this week. Tag 2-3 issues as recommended for next cohort with a sentence about why and what context the next team would need. Start thinking about what you shipped, what you started but did not finish, and what you learned about working with AI tools. The handoff document is the team's final deliverable beyond the code itself."},
+  {"slide": "22 Recap", "notes": "Four things from today. Progress review: honest accounting of what shipped, what is stuck, and what you learned from the big issues. Process probe: where the process helped, where you shortcut it, and what that taught you. Security and deployment: concrete risks in the FEAST codebase and how to verify your configuration. The complete workflow: spec, plan, execute, verify. The loop you take with you. Next week: demos, retrospective, and handoff."}
+]
+</script>
+</head>
+
+<body>
+
+<deck-stage width="1920" height="1080">
+
+  <!-- ============================================================
+       01 -- TITLE
+       ============================================================ -->
+  <section class="title-slide" data-screen-label="01 Title">
+    <div class="pattern-bg"></div>
+    <div class="title-block" style="position: relative;">
+      <div class="red-bar" style="margin-bottom: 56px;"></div>
+      <h1>Review, Harden,<br/><span class="accent">Assemble.</span></h1>
+      <div class="meta">
+        <span>FEAST Academy</span>
+        <span class="pipe">|</span>
+        <span>Week 5</span>
+        <span class="pipe">|</span>
+        <span>Integration &amp; Polish</span>
+      </div>
+      <div class="deck-footer">
+        <span>FEAST Academy &middot; Week 5</span>
+        <span class="slide-version">v1.0</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       02 -- Week 4 recap
+       ============================================================ -->
+  <section data-screen-label="02 Week 4 recap">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Where we left off</div>
+      <h2 class="slide-title">Week 4: pipeline and progress.</h2>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+        <div class="card">
+          <span class="tag">pipeline</span>
+          <h3>Full-cycle check-in</h3>
+          <p>Reviewed the issue-to-merge pipeline. Where it flows, where it gets stuck.</p>
+        </div>
+        <div class="card">
+          <span class="tag slate">issues</span>
+          <h3>#6-#9 + new issues</h3>
+          <p>Continued assigned work plus student-filed issues from vision plans.</p>
+        </div>
+        <div class="card">
+          <span class="tag moss">feature</span>
+          <h3>Self-directed work</h3>
+          <p>Picking issues from the backlog. Full pipeline: spec, plan, build, review, merge.</p>
+        </div>
+        <div class="card">
+          <span class="tag wheat">artifacts</span>
+          <h3>Auto vs. hand-written</h3>
+          <p>ADR generation, roadmap vs. changelog, "the tool captures what, you capture why."</p>
+        </div>
+        <div class="card">
+          <span class="tag ink">planning</span>
+          <h3>Multi-issue planning</h3>
+          <p>Planning across related issues. Finding dependencies. Coordinating work.</p>
+        </div>
+        <div class="card">
+          <span class="tag">patterns</span>
+          <h3>Named design patterns</h3>
+          <p>Reflection, planning, human-in-the-loop, tool use, evaluation.</p>
+        </div>
+      </div>
+      <div class="deck-footer">
+        <span>Week 5 &middot; Recap</span>
+        <span><span class="dot">&bull;</span> Week 4 review</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       03 -- Section: What did you ship
+       ============================================================ -->
+  <section class="section-divider" data-screen-label="03 Section: What did you ship">
+    <div class="pattern-bg on-dark"></div>
+    <div style="position: relative;">
+      <div class="part-label">Part one</div>
+      <div class="part-title">What did<br/>you <span class="accent">ship?</span></div>
+      <div class="part-meta">Pull up the PR list. Let's count.</div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       04 -- The scoreboard
+       ============================================================ -->
+  <section data-screen-label="04 The scoreboard">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Progress review</div>
+      <h2 class="slide-title">Honest accounting.</h2>
+      <p class="body-text muted" style="margin-bottom: 20px; font-size: 26px;">For each person, pull up the numbers. Not what you worked on. What shipped.</p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="font-size: 26px;">Across the whole program</h3>
+          <ul style="font-size: 22px; line-height: 1.8; color: var(--fg-2); padding-left: 24px; margin: 12px 0 0;">
+            <li>PRs merged?</li>
+            <li>PRs still open?</li>
+            <li>Issues filed?</li>
+            <li>Issues closed?</li>
+            <li>Adversarial reviews completed?</li>
+            <li>ADRs or specs written?</li>
+          </ul>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="font-size: 26px;">Your issues specifically</h3>
+          <ul style="font-size: 22px; line-height: 1.8; color: var(--fg-2); padding-left: 24px; margin: 12px 0 0;">
+            <li>#6-#9 (assigned): status of each?</li>
+            <li>Vision plan issues: which shipped?</li>
+            <li>Did specs get written before coding?</li>
+            <li>What is blocking anything still open?</li>
+            <li>Anything turn out bigger than expected?</li>
+            <li>Anything you would scope differently?</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px; padding: 20px 28px; background: var(--cream); border-radius: 12px; max-width: 1500px;">
+        <p style="font-size: 22px; color: var(--fg-2); margin: 0; line-height: 1.5;"><strong style="color: var(--ink);">Not everything needs to be done.</strong> What matters is honest accounting. If something is stuck, say so. If it was bigger than expected, that is useful information.</p>
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 5 &middot; Progress</span>
+        <span><span class="dot">&bull;</span> Scoreboard</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       05 -- The big issues
+       ============================================================ -->
+  <section data-screen-label="05 The big issues">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Deep dive</div>
+      <h2 class="slide-title">Walk through your work.</h2>
+      <p class="body-text muted" style="margin-bottom: 24px; font-size: 26px;">For each issue you worked on, the student who owned it presents:</p>
+
+      <ul class="num-list">
+        <li>
+          <span class="num">1</span>
+          <div><div class="label">What approach did you take?</div>
+          <div class="desc">Show us the spec or diagnosis. What did you decide and why? Did the approach change once you started?</div></div>
+        </li>
+        <li>
+          <span class="num">2</span>
+          <div><div class="label">How did planning go?</div>
+          <div class="desc">Did the agent's plan match your spec? Where did you deviate? What would you scope differently?</div></div>
+        </li>
+        <li>
+          <span class="num">3</span>
+          <div><div class="label">What surprised you?</div>
+          <div class="desc">What was harder than expected? What was easier? What would you do differently if you started over?</div></div>
+        </li>
+        <li>
+          <span class="num">4</span>
+          <div><div class="label">What did review catch?</div>
+          <div class="desc">Did peer review or adversarial review find something you would have shipped otherwise?</div></div>
+        </li>
+      </ul>
+
+      <div class="deck-footer">
+        <span>Week 5 &middot; Progress</span>
+        <span><span class="dot">&bull;</span> Big issues</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       06 -- Section: Show me your process
+       ============================================================ -->
+  <section class="section-divider" data-screen-label="06 Section: Show me your process">
+    <div class="pattern-bg on-dark"></div>
+    <div style="position: relative;">
+      <div class="part-label">Part two</div>
+      <div class="part-title">Show me<br/>your <span class="accent">process.</span></div>
+      <div class="part-meta">Not what I told you to do. What you actually did.</div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       07 -- Walk me through a PR
+       ============================================================ -->
+  <section data-screen-label="07 Walk me through a PR">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">~3 min per person</div>
+      <h2 class="slide-title">Pick one PR you are proud of.</h2>
+      <p class="body-text" style="margin-bottom: 24px;">Not necessarily the biggest. The one where the process <strong>worked</strong>. Walk us through it.</p>
+
+      <div class="workflow-grid">
+        <div class="wf-step">
+          <div class="wf-num">1</div>
+          <h4>The issue</h4>
+          <p>What was the problem? How did you understand it?</p>
+        </div>
+        <div class="wf-step">
+          <div class="wf-num">2</div>
+          <h4>The spec</h4>
+          <p>Show your spec or diagnosis. How did it compare to what you built?</p>
+        </div>
+        <div class="wf-step">
+          <div class="wf-num">3</div>
+          <h4>The build</h4>
+          <p>Did you use agent planning? Any surprises? Tests you did not expect?</p>
+        </div>
+        <div class="wf-step">
+          <div class="wf-num">4</div>
+          <h4>The review</h4>
+          <p>What did peer and adversarial review catch? Anything real?</p>
+        </div>
+      </div>
+
+      <div class="beyond-callout" style="margin-top: 28px;">
+        <strong>Beyond this project:</strong> Presenting your work to peers is a core professional skill. Not to show off, but to reflect in front of the group so everyone learns from each other's experience.
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 5 &middot; Process</span>
+        <span><span class="dot">&bull;</span> PR walkthrough</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       08 -- Where did you skip steps
+       ============================================================ -->
+  <section data-screen-label="08 Where did you skip steps">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Honest question</div>
+      <h2 class="slide-title">Where did you shortcut?</h2>
+      <p class="body-text" style="margin-bottom: 28px;">Every team shortcuts under pressure. The question is: <strong>did it matter?</strong></p>
+
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+        <div class="probe-card hot">
+          <div class="probe-q">Coded before writing a spec?</div>
+          <div class="probe-why">Did you end up building the wrong thing? Or was the fix genuinely obvious enough that a spec would have been overhead?</div>
+        </div>
+        <div class="probe-card hot">
+          <div class="probe-q">Skipped adversarial review?</div>
+          <div class="probe-why">Did a bug slip through? Or was the change small enough that three layers was overkill?</div>
+        </div>
+        <div class="probe-card">
+          <div class="probe-q">Merged without all three layers?</div>
+          <div class="probe-why">Was it a time pressure decision? Would you do it again?</div>
+        </div>
+        <div class="probe-card">
+          <div class="probe-q">Accepted agent code without fully reading it?</div>
+          <div class="probe-why">Did it work? Did something subtle break later? How did you catch it?</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 28px; padding: 20px 28px; background: var(--cream); border-radius: 12px; max-width: 1500px;">
+        <p style="font-size: 22px; color: var(--fg-2); margin: 0; line-height: 1.5;"><strong style="color: var(--ink);">This is how you calibrate.</strong> Some steps earn their cost every time. Some only matter above a certain complexity. Knowing the difference is engineering judgment, not a checklist.</p>
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 5 &middot; Process</span>
+        <span><span class="dot">&bull;</span> Shortcuts</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       09 -- What surprised you
+       ============================================================ -->
+  <section data-screen-label="09 What surprised you">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Reflection</div>
+      <h2 class="slide-title">Three questions.</h2>
+
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 12px;">
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="font-size: 26px;">What took longer than expected?</h3>
+          <p style="font-size: 21px;">Not what was hard. What was <em>unexpectedly</em> time-consuming. Understanding where your estimates were wrong is how you get better at estimating.</p>
+        </div>
+        <div class="card" style="border-top: 4px solid #3F5E2A;">
+          <h3 style="font-size: 26px;">What was easier than expected?</h3>
+          <p style="font-size: 21px;">When did the agent planning tool nail it? When did a task you dreaded take 30 minutes? What made the difference?</p>
+        </div>
+        <div class="card" style="border-top: 4px solid #7A5F00;">
+          <h3 style="font-size: 26px;">What would you redo?</h3>
+          <p style="font-size: 21px;">Not at the process level. At the specific-task level. Different approach, different order, different scope.</p>
+        </div>
+      </div>
+
+      <div class="assign-callout" style="margin-top: 28px;">
+        <strong>Go around the room.</strong> One answer per question per person. Short and specific. "The CRS refactor took three times longer than I expected because..." is more useful than "it was hard."
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 5 &middot; Process</span>
+        <span><span class="dot">&bull;</span> Surprises</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       10 -- The extra issues
+       ============================================================ -->
+  <section data-screen-label="10 The extra issues">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Backlog evaluation</div>
+      <h2 class="slide-title">How did the vision plan issues go?</h2>
+      <p class="body-text" style="margin-bottom: 24px;">In Week 3 we added feature issues from your vision plans. Time to evaluate.</p>
+
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;">
+        <div class="card">
+          <h3 style="font-size: 24px;">What got picked up?</h3>
+          <ul style="font-size: 21px; line-height: 1.7; color: var(--fg-2); padding-left: 20px; margin: 12px 0 0;">
+            <li>How many vision plan issues were claimed?</li>
+            <li>How many shipped?</li>
+            <li>Were they well-scoped, or bigger than the description suggested?</li>
+            <li>Did filing your own issues change how you thought about the work?</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 style="font-size: 24px;">What did not get picked up?</h3>
+          <ul style="font-size: 21px; line-height: 1.7; color: var(--fg-2); padding-left: 20px; margin: 12px 0 0;">
+            <li>Lower priority, or unclear scope?</li>
+            <li>Nobody had bandwidth, or nobody was interested?</li>
+            <li>Should these carry over to the next cohort?</li>
+            <li>Do they need better descriptions before someone else can pick them up?</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px; padding: 20px 28px; background: var(--cream); border-radius: 12px; max-width: 1500px;">
+        <p style="font-size: 22px; color: var(--fg-2); margin: 0; line-height: 1.5;"><strong style="color: var(--ink);">This is backlog health.</strong> A good backlog has well-scoped issues that someone can pick up cold. A bad backlog has vague issues that only make sense to the person who wrote them.</p>
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 5 &middot; Process</span>
+        <span><span class="dot">&bull;</span> Extra issues</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       11 -- Section: Security and deployment
+       ============================================================ -->
+  <section class="section-divider" data-screen-label="11 Section: Security and deployment">
+    <div class="pattern-bg on-dark"></div>
+    <div style="position: relative;">
+      <div class="part-label">Part three</div>
+      <div class="part-title">Security and<br/><span class="accent">deployment.</span></div>
+      <div class="part-meta">Cross-cutting concerns, concrete risks</div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       12 -- Security scan
+       ============================================================ -->
+  <section data-screen-label="12 Security scan">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Live demo</div>
+      <h2 class="slide-title">Adversarial security review.</h2>
+      <p class="body-text" style="margin-bottom: 20px;">Run an adversarial security scan on the actual FEAST backend. Not a toy example.</p>
+
+      <div class="prompt-box">
+        <div class="prompt-label">Prompt</div>
+        Review this codebase for OWASP Top 10 security risks.<br/>
+        Be thorough. For each finding, explain the risk,<br/>
+        the attack vector, and whether it matters in a<br/>
+        university research deployment context.
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 24px;">
+        <div class="card">
+          <span class="tag">known</span>
+          <h3 style="font-size: 22px;">Things you already know</h3>
+          <p style="font-size: 19px;">Raw SQL patterns, hardcoded CORS, no input validation, zero auth.</p>
+        </div>
+        <div class="card">
+          <span class="tag wheat">discuss</span>
+          <h3 style="font-size: 22px;">Real risk vs. theoretical?</h3>
+          <p style="font-size: 19px;">Threat model matters. A research tool on a university network is not a public SaaS product.</p>
+        </div>
+        <div class="card">
+          <span class="tag moss">action</span>
+          <h3 style="font-size: 22px;">Fix or document</h3>
+          <p style="font-size: 19px;">Fix what you can this week. File issues with context for the rest.</p>
+        </div>
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 5 &middot; Security</span>
+        <span><span class="dot">&bull;</span> Scan</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       13 -- Deployment audit
+       ============================================================ -->
+  <section data-screen-label="13 Deployment audit">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Group exercise</div>
+      <h2 class="slide-title">Check your configuration. Right now.</h2>
+      <p class="body-text" style="margin-bottom: 24px;">Revisit the deployment topology from Week 1. Five weeks of experience later.</p>
+
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="font-size: 22px;">Your three levers</h3>
+          <ul style="font-size: 19px; line-height: 1.6; color: var(--fg-2); padding-left: 20px; margin: 12px 0 0;">
+            <li><span class="code-chip">client.js</span> baseURL</li>
+            <li><span class="code-chip">.env</span> DB_HOST</li>
+            <li>CORS origins</li>
+          </ul>
+          <p style="font-size: 18px; color: var(--fg-3); margin-top: 12px;">Are all three pointing where you expect?</p>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="font-size: 22px;">Trace the real values</h3>
+          <ul style="font-size: 19px; line-height: 1.6; color: var(--fg-2); padding-left: 20px; margin: 12px 0 0;">
+            <li>Where is staging running?</li>
+            <li>What backend does it talk to?</li>
+            <li>What database?</li>
+          </ul>
+          <p style="font-size: 18px; color: var(--fg-3); margin-top: 12px;">Trace actual values. Do not guess.</p>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="font-size: 22px;">New environment?</h3>
+          <ul style="font-size: 19px; line-height: 1.6; color: var(--fg-2); padding-left: 20px; margin: 12px 0 0;">
+            <li>New DB credentials</li>
+            <li>New CORS origins</li>
+            <li>New frontend URL</li>
+            <li>Docker config, DNS</li>
+          </ul>
+          <p style="font-size: 18px; color: var(--fg-3); margin-top: 12px;">What would need to change?</p>
+        </div>
+      </div>
+
+      <div class="assign-callout">
+        <strong>A misconfigured deployment is a security issue.</strong> This exercise makes the Week 1 mental model concrete with five weeks of hands-on experience.
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 5 &middot; Deployment</span>
+        <span><span class="dot">&bull;</span> Audit</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       14 -- Review pipeline retrospective
+       ============================================================ -->
+  <section data-screen-label="14 Review pipeline retro">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Process evaluation</div>
+      <h2 class="slide-title">Is the pipeline earning its cost?</h2>
+      <p class="body-text" style="margin-bottom: 24px;">The three-layer pipeline has been running for three weeks. Evaluate each layer.</p>
+
+      <div class="pipeline-row">
+        <div class="pipeline-box">
+          <div class="pipe-num">1</div>
+          <div class="pipe-label">CI checks</div>
+          <div class="pipe-desc">What is it catching? False positives? Should we add type checking or the test suite?</div>
+          <div class="pipe-when">Since Week 2</div>
+        </div>
+        <div class="pipeline-box">
+          <div class="pipe-num">2</div>
+          <div class="pipe-label">Peer review</div>
+          <div class="pipe-desc">Substantive or rubber-stamp? Happening promptly or a bottleneck? What patterns keep getting flagged?</div>
+          <div class="pipe-when">Since Week 2</div>
+        </div>
+        <div class="pipeline-box">
+          <div class="pipe-num">3</div>
+          <div class="pipe-label">LLM adversarial</div>
+          <div class="pipe-desc">Catching things humans miss? Most common false positives? Is the rotation working?</div>
+          <div class="pipe-when">Since Week 3</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 28px; padding: 20px 28px; background: var(--cream); border-radius: 12px; max-width: 1500px;">
+        <p style="font-size: 22px; color: var(--fg-2); margin: 0; line-height: 1.5;"><strong style="color: var(--ink);">If we identify something to change, we change it now.</strong> This is a process improvement step, not a retrospective for its own sake.</p>
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 5 &middot; Pipeline</span>
+        <span><span class="dot">&bull;</span> Retrospective</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       15 -- Section: The complete workflow
+       ============================================================ -->
+  <section class="section-divider" data-screen-label="15 Section: The complete workflow">
+    <div class="pattern-bg on-dark"></div>
+    <div style="position: relative;">
+      <div class="part-label">Part four</div>
+      <div class="part-title">The complete<br/><span class="accent">workflow.</span></div>
+      <div class="part-meta">Assembling everything into one loop</div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       16 -- Spec Plan Execute Verify
+       ============================================================ -->
+  <section data-screen-label="16 Spec Plan Execute Verify">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">The core loop</div>
+      <h2 class="slide-title">Spec. Plan. Execute. Verify.</h2>
+      <p class="body-text muted" style="margin-bottom: 20px; font-size: 24px;">Every piece of this, you have practiced. This is the assembled version.</p>
+
+      <div class="workflow-grid" style="grid-template-columns: repeat(5, 1fr); gap: 14px;">
+        <div class="wf-step">
+          <div class="wf-num">1</div>
+          <h4>Spec</h4>
+          <p>You write 2-3 sentences. What, why, how to verify. The agent does not decide what to build.</p>
+        </div>
+        <div class="wf-step">
+          <div class="wf-num">2</div>
+          <h4>Plan</h4>
+          <p>Agent creates a phased plan from your spec. Each phase leaves the code in a working state.</p>
+        </div>
+        <div class="wf-step">
+          <div class="wf-num">3</div>
+          <h4>Execute</h4>
+          <p>One phase at a time. Do not batch. Implement, then stop.</p>
+        </div>
+        <div class="wf-step">
+          <div class="wf-num">4</div>
+          <h4>Verify</h4>
+          <p>Run tests. Review the diff. Check for over-engineering. Update the plan.</p>
+        </div>
+        <div class="wf-step">
+          <div class="wf-num">5</div>
+          <h4>Document</h4>
+          <p>ADR if you chose between approaches. Not every phase needs one.</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 28px; padding: 20px 28px; background: var(--cream); border-radius: 12px; max-width: 1500px;">
+        <p style="font-size: 22px; color: var(--fg-2); margin: 0; line-height: 1.5;"><strong style="color: var(--ink);">The loop is adaptive.</strong> You update the plan after each phase. A plan that never changes means you are not paying attention. Verification is after <em>every</em> phase, not just at the end. See <a href="../../docs/guides/13-agentic-workflow-best-practices" style="color: var(--fg-2);">Guide 13</a> for the full reference.</p>
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 5 &middot; Workflow</span>
+        <span><span class="dot">&bull;</span> Core loop</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       17 -- Match workflow to task
+       ============================================================ -->
+  <section data-screen-label="17 Match workflow to task">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Workflow selection</div>
+      <h2 class="slide-title">Not every task needs the full loop.</h2>
+
+      <table class="compare-table">
+        <tr>
+          <th>Task scope</th>
+          <th>Workflow</th>
+        </tr>
+        <tr>
+          <td>Quick fix (&lt; 30 min)</td>
+          <td>Spec (1 sentence), implement, verify. No phasing needed.</td>
+        </tr>
+        <tr>
+          <td>Single feature (1-4 hours)</td>
+          <td>Full spec-plan-execute-verify loop with phases.</td>
+        </tr>
+        <tr>
+          <td>Cross-cutting (multi-issue)</td>
+          <td>Same loop, add multi-issue planning to sequence work.</td>
+        </tr>
+        <tr>
+          <td>Exploratory (unknown scope)</td>
+          <td>Investigation phase first (read code, form hypothesis), then spec.</td>
+        </tr>
+      </table>
+
+      <div style="margin-top: 32px; padding: 20px 28px; background: var(--cream); border-radius: 12px; max-width: 1500px;">
+        <p style="font-size: 22px; color: var(--fg-2); margin: 0; line-height: 1.5;"><strong style="color: var(--ink);">Choosing the right workflow is itself an engineering skill.</strong> When in doubt, default to phased execution. The overhead is small. The safety margin is large.</p>
+      </div>
+
+      <div class="beyond-callout" style="margin-top: 24px;">
+        <strong>Beyond this project:</strong> This loop works with any agentic tool, not just the one you used here. The principles (spec first, phased execution, verify after each phase, explain every line) are tool-agnostic.
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 5 &middot; Workflow</span>
+        <span><span class="dot">&bull;</span> Task matching</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       18 -- Context file encoding
+       ============================================================ -->
+  <section data-screen-label="18 Context file encoding">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Making it automatic</div>
+      <h2 class="slide-title">Encode the workflow in your context file.</h2>
+      <p class="body-text" style="margin-bottom: 24px;">A workflow section in your CLAUDE.md tells the agent to follow the loop automatically.</p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <div class="prompt-box" style="margin-top: 0; font-size: 19px; line-height: 1.7;">
+          <div class="prompt-label">Example: workflow section in CLAUDE.md</div>
+          <strong style="color: var(--badger-red);">## Workflow</strong><br/>
+          - Create a phased plan before writing code<br/>
+          - Each phase must leave the codebase in a<br/>
+          &nbsp;&nbsp;working, testable state<br/>
+          - Run the full test suite after each phase<br/>
+          - Flag any phase that adds more than 200 lines<br/>
+          - Do not proceed to the next phase until the<br/>
+          &nbsp;&nbsp;current one passes all tests
+        </div>
+        <div>
+          <div class="card" style="border-top: 4px solid var(--badger-red);">
+            <h3 style="font-size: 24px;">What this does</h3>
+            <ul style="font-size: 20px; line-height: 1.6; color: var(--fg-2); padding-left: 20px; margin: 12px 0 0;">
+              <li>Programs the agent's behavior in natural language</li>
+              <li>Runs inside the LLM's context window</li>
+              <li>Flexible and easy to author</li>
+              <li>Interpreted, not executed mechanically</li>
+            </ul>
+          </div>
+          <div class="card" style="margin-top: 16px;">
+            <h3 style="font-size: 24px;">What this means</h3>
+            <p style="font-size: 20px;">The context file is the spec. The agent is the executor. <strong>You are the verifier.</strong> Phased verification matters because you are the reliability layer.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 5 &middot; Workflow</span>
+        <span><span class="dot">&bull;</span> Context encoding</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       19 -- Your track this week
+       ============================================================ -->
+  <section data-screen-label="19 Your track">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Assigned work</div>
+      <h2 class="slide-title">Integration and polish.</h2>
+      <p class="body-text muted" style="margin-bottom: 20px; font-size: 24px;">Leave the codebase in a state where the next cohort can pick it up cleanly.</p>
+
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+        <div class="card">
+          <span class="tag">security</span>
+          <h3 style="font-size: 22px;">Security hardening</h3>
+          <p style="font-size: 19px;">OWASP-style checklist: input validation, CORS consolidation, SQL audit, rate limiting, env vars. Fix what you can, file issues for the rest.</p>
+          <p style="font-size: 17px; color: var(--fg-3); margin-top: 12px;">1 student</p>
+        </div>
+        <div class="card">
+          <span class="tag slate">consistency</span>
+          <h3 style="font-size: 22px;">#63: Unit conversions</h3>
+          <p style="font-size: 19px;">Audit all distance calculations. CRS mismatches, meters vs. miles, SEARCHRADIUS units. Write tests for known coordinates.</p>
+          <p style="font-size: 17px; color: var(--fg-3); margin-top: 12px;">1 student</p>
+        </div>
+        <div class="card">
+          <span class="tag moss">everyone</span>
+          <h3 style="font-size: 22px;">PR cleanup</h3>
+          <p style="font-size: 19px;">Merge open PRs from Weeks 2-4. Resolve review feedback. Fix CI. Clean stale branches.</p>
+          <p style="font-size: 17px; color: var(--fg-3); margin-top: 12px;">All students</p>
+        </div>
+      </div>
+
+      <div class="assign-callout">
+        <strong>Context file audit:</strong> Review your project context file and all ADRs you have written. Are they still accurate? Has any decision been superseded? Update or mark as superseded. Commit.
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 5 &middot; Assigned work</span>
+        <span><span class="dot">&bull;</span> Your track</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       20 -- Solo work
+       ============================================================ -->
+  <section data-screen-label="20 Solo work">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Full autonomy</div>
+      <h2 class="slide-title">Ship the highest-impact thing you can.</h2>
+      <p class="body-text" style="margin-bottom: 28px;">You have the complete toolkit. This week is indistinguishable from "being a developer on this project."</p>
+
+      <ul class="num-list">
+        <li>
+          <span class="num">1</span>
+          <div><div class="label">Look at the board</div>
+          <div class="desc">What is the highest-impact thing you can finish this week?</div></div>
+        </li>
+        <li>
+          <span class="num">2</span>
+          <div><div class="label">Nothing excites you?</div>
+          <div class="desc">Scan the codebase for something that bugs you. File it and fix it.</div></div>
+        </li>
+        <li>
+          <span class="num">3</span>
+          <div><div class="label">Ship it</div>
+          <div class="desc">Full protocol: spec, tests, adversarial self-review in a fresh session, PR.</div></div>
+        </li>
+      </ul>
+
+      <div style="margin-top: 28px; padding: 20px 28px; background: var(--cream); border-radius: 12px; max-width: 1500px;">
+        <p style="font-family: var(--font-display); font-weight: 700; font-size: 22px; color: var(--ink); margin: 0 0 8px;">High-value targets if you need direction:</p>
+        <p style="font-size: 20px; color: var(--fg-2); margin: 0; line-height: 1.6;">API endpoint tests (FastAPI TestClient) &middot; Missing POST validation &middot; Frontend error handling &middot; Frontend #10 (API URL env var) &middot; Loading states &middot; Consolidate backend entry points &middot; Benchmarking script for #51</p>
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 5 &middot; Solo work</span>
+        <span><span class="dot">&bull;</span> Full autonomy</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       21 -- Handoff prep
+       ============================================================ -->
+  <section data-screen-label="21 Handoff prep">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Looking ahead</div>
+      <h2 class="slide-title">Next week is the last session.</h2>
+      <p class="body-text" style="margin-bottom: 24px;">Demos, retrospective, and the handoff document. Prepare this week.</p>
+
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+        <div class="card">
+          <span class="tag">demo</span>
+          <h3 style="font-size: 22px;">Pick your demo</h3>
+          <p style="font-size: 19px;">Each person demos one thing they shipped. Not a presentation. Show the working feature or fix.</p>
+        </div>
+        <div class="card">
+          <span class="tag wheat">handoff</span>
+          <h3 style="font-size: 22px;">Tag issues for next cohort</h3>
+          <p style="font-size: 19px;">Review the full issue list. Tag 2-3 as "recommended for next cohort" with context on why and what the next team needs to know.</p>
+        </div>
+        <div class="card">
+          <span class="tag slate">reflect</span>
+          <h3 style="font-size: 22px;">Start thinking</h3>
+          <p style="font-size: 19px;">What worked? What did not? What would you tell the next cohort about working with AI tools?</p>
+        </div>
+      </div>
+
+      <div class="beyond-callout" style="margin-top: 28px;">
+        <strong>Beyond this project:</strong> The handoff document is communication to people you will never meet, arriving with no context. This is the highest form of professional writing: making your knowledge useful to strangers.
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 5 &middot; Looking ahead</span>
+        <span><span class="dot">&bull;</span> Week 6 prep</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       22 -- Recap
+       ============================================================ -->
+  <section style="background: var(--ink); color: var(--bone);" class="dark" data-screen-label="22 Recap">
+    <div class="pattern-bg on-dark"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide on-dark">Week 5 recap</div>
+      <h2 class="slide-title" style="color: var(--bone);">Four things from today.</h2>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+        <div style="border-top: 4px solid var(--badger-red); padding-top: 24px;">
+          <h3 style="font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--bone); margin: 0 0 12px;">Progress review</h3>
+          <p style="font-size: 19px; color: var(--mist); line-height: 1.45;">Honest accounting. What shipped, what is stuck, what you learned from the big issues.</p>
+        </div>
+        <div style="border-top: 4px solid var(--badger-red); padding-top: 24px;">
+          <h3 style="font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--bone); margin: 0 0 12px;">Process probe</h3>
+          <p style="font-size: 19px; color: var(--mist); line-height: 1.45;">Where the process helped, where you shortcut it, and what that taught you about calibration.</p>
+        </div>
+        <div style="border-top: 4px solid var(--badger-red); padding-top: 24px;">
+          <h3 style="font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--bone); margin: 0 0 12px;">Security + deployment</h3>
+          <p style="font-size: 19px; color: var(--mist); line-height: 1.45;">Concrete risks in the FEAST codebase. Verify your configuration. Fix or document.</p>
+        </div>
+        <div style="border-top: 4px solid var(--badger-red); padding-top: 24px;">
+          <h3 style="font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--bone); margin: 0 0 12px;">The complete workflow</h3>
+          <p style="font-size: 19px; color: var(--mist); line-height: 1.45;">Spec, plan, execute, verify. The loop you take with you. Encode it in your context file.</p>
+        </div>
+      </div>
+      <p style="margin-top: 36px; font-family: var(--font-display); font-size: 22px; color: var(--mist);">Next week: demos, retrospective, and the handoff document.</p>
+      <div class="deck-footer">
+        <span style="color: var(--mist);">FEAST Academy &middot; Week 5</span>
+        <span style="color: var(--mist);"><span class="dot">&bull;</span> End</span>
+      </div>
+    </div>
+  </section>
+
+</deck-stage>
+
+<!-- Tweaks panel -->
+<div id="tweaks-root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="tweaks-app.jsx"></script>
+
+<script src="deck-stage.js"></script>
+<script src="image-slot.js"></script>
+
+<!-- Speaker notes panel: press N to toggle -->
+<script src="notes-panel.js"></script>
+<!-- Presenter view sync: bridges BroadcastChannel to deck navigation -->
+<script src="presenter-sync.js"></script>
+</body>
+</html>

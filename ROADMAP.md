@@ -5,7 +5,7 @@ title: "Roadmap"
 
 # ROADMAP
 
-Last updated: 2026-05-29
+Last updated: 2026-06-05
 
 ## Current State
 
@@ -18,8 +18,12 @@ Last updated: 2026-05-29
 - Project management scaffold: CLAUDE.md, ROADMAP.md, DECISIONS.md, post-commit hook
 - Week 1 slide deck (58 sections: orientation, domain, architecture, agentic tools, setup, experience baseline, vision plan, plan comparison)
 - Week 2 slide deck (29 slides: experience review, vision plan comparison, git workflow, review pipeline, edge cases, iterative coding, ADRs, assigned work)
-- Week 3 slide deck (18 slides: CLAUDE.md proposal review, adversarial review, specs before code, structured planning, engineering identity, assigned issues)
+- Week 3 slide deck (19 slides: CLAUDE.md proposal review, PR template, adversarial review, specs before code, structured planning, engineering identity, assigned issues)
 - Week 3 assignment document with feature development track (`docs/assignments/week-3-assignment.md`)
+- Week 4 slide deck (21 slides: pipeline check-in, manual vs auto-generated artifacts, multi-issue planning, agentic design patterns, assigned issues)
+- Week 4 assignment document with full-pipeline instructions and multi-issue coordination (`docs/assignments/week-4-assignment.md`)
+- Week 5 slide deck (22 slides: progress review, process probe, security/deployment, complete agentic workflow, handoff prep)
+- Week 5 assignment document with security hardening checklist, unit conversion audit, and Week 6 preparation (`docs/assignments/week-5-assignment.md`)
 - Merged CLAUDE.md template from student proposals (`templates/CLAUDE-backend-merged.md`)
 - Feature issues created from student vision plans: backend #19-24, frontend #1-4
 - Week 1 assignment document (`docs/assignments/week-1-assignment.md`)
@@ -31,7 +35,7 @@ Last updated: 2026-05-29
 - GitHub Pages deployment via GitHub Actions
 
 **In progress:**
-- Slide decks for weeks 4-6
+- Slide deck for week 6 (may be discussion-driven, slides optional)
 
 **Not started:**
 - Consistency review across all written materials
@@ -96,8 +100,10 @@ Last updated: 2026-05-29
 - [x] Week 2 assignment document (`docs/assignments/week-2-assignment.md`)
 - [x] Week 3: Adversarial review (LLM rotation), specs before code, structured planning, assigned issues (`slides/week-3/`)
 - [x] Week 3 assignment document (`docs/assignments/week-3-assignment.md`)
-- [ ] Week 4: Manual vs. auto-generated artifacts, roadmap maintenance, ADR generation from diffs
-- [ ] Week 5: Security review, deployment readiness, review pipeline retrospective
+- [x] Week 4: Pipeline check-in, manual vs. auto-generated artifacts, multi-issue planning, agentic design patterns (`slides/week-4/`)
+- [x] Week 4 assignment document (`docs/assignments/week-4-assignment.md`)
+- [x] Week 5: Progress review, process probe, security/deployment, complete agentic workflow (`slides/week-5/`)
+- [x] Week 5 assignment document (`docs/assignments/week-5-assignment.md`)
 - [ ] Week 6: Retrospective and handoff (may be discussion-driven, slides optional)
 
 ### M3: Repo Scaffold [Complete]
