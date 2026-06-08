@@ -1,13 +1,20 @@
 ---
 layout: default
-title: "Vision Plan Synthesis"
+title: "Week 4 Assignment: Vision Plan Synthesis and Roadmap"
 ---
 
-# FEAST Vision Plan Synthesis
+# Week 4 Assignment: Vision Plan Synthesis and Roadmap
 
-**Purpose:** This document synthesizes the vision plans from all four team members into a proposed direction for FEAST development. Read it, then respond with your feedback. We will use your responses to draft a collective roadmap.
+**Due before:** Week 5 session
+**Team:** All students
+**Time estimate:** ~3-4 hours (reading, thinking, writing responses)
+**Questions?** Email me.
 
-**What I'm asking from you:** At the bottom of this document are specific questions. Answer them in a shared doc or issue comment before our next session. Your answers shape the roadmap.
+## Overview
+
+In Week 1, each of you wrote a vision plan for FEAST. This document synthesizes what you collectively observed into a proposed direction. Your assignment this week is to read it critically, respond to the questions, and draft milestone roadmaps for each track.
+
+This is not busywork. Your responses will become the team's actual roadmap. What you write here determines what we build.
 
 ---
 
@@ -115,19 +122,19 @@ Some ideas from the vision plans are valuable but too large or too uncertain for
 
 ---
 
-## Questions for you
+## Your assignment
 
-Answer these before our next session. Short answers are fine. Honest disagreement is better than polite agreement.
+Answer these questions before our next session. Short answers are fine. Honest disagreement is better than polite agreement.
 
-### On the proposed direction
+### Part 1: React to the proposed direction
 
 1. **Does the north star resonate?** "Usable by someone who wasn't in the room" -- does that capture the core problem, or is there a better way to frame it?
 
 2. **Are the three tracks right?** Should anything move between tracks? Is anything missing that you feel strongly about?
 
-3. **What's the most important single deliverable?** If we could only ship one thing, what should it be? (Forces prioritization.)
+3. **What's the most important single deliverable?** If we could only ship one thing, what should it be?
 
-### On your own work
+### Part 2: Claim your interest
 
 4. **Which track interests you most?** You'll have more energy and do better work on something you care about. Name your top choice and why.
 
@@ -135,7 +142,7 @@ Answer these before our next session. Short answers are fine. Honest disagreemen
 
 6. **What's realistic?** Given your experience so far with the codebase and the time remaining, what do you think the team can actually finish? Be honest about pace.
 
-### On the roadmap
+### Part 3: Draft the roadmap
 
 Each track needs its own milestones. A milestone is a point where the work so far is usable and testable on its own, even if the track isn't finished. Think of it as: "if we stopped here, what would a user or contributor actually have that they don't have today?"
 
@@ -165,9 +172,16 @@ Each track needs its own milestones. A milestone is a point where the work so fa
 
 ---
 
-## Next steps
+## Deliverables
 
-1. **You respond** to the questions above (shared doc or issue comment). For questions 7-12, sketch actual milestone lists, not just descriptions. "Milestone 1: ..., Milestone 2: ..., Done when: ..." is the format.
+- [ ] **Written responses to questions 1-6** (shared doc or issue comment)
+- [ ] **Draft milestone list for at least one track** (questions 7-12). Use the format: "Milestone 1: ..., Milestone 2: ..., Done when: ..."
+- [ ] **First milestone proposal** (question 13) -- the team's first collective target
+- [ ] **Continue work on your current issues** -- the pipeline doesn't pause while we plan
+
+## What happens next
+
+1. **You respond** to the questions above
 2. **We aggregate** your responses into a collective roadmap with milestones, dependencies, and ownership
 3. **We start building** against that roadmap with the full pipeline you've learned
 
