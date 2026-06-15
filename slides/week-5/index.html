@@ -439,10 +439,11 @@
 <script type="application/json" id="speaker-notes">
 [
   {"slide": "01 Title", "notes": "Week 5. One week left after this. Today is about taking stock: what you shipped, how you shipped it, and what is left. We will also cover security, deployment readiness, and assemble the complete workflow you will take with you after this program ends."},
+  {"slide": "01b Today's agenda", "notes": "Here is the plan for today. Five parts. First, we look at the sprint numbers: what shipped, what did not, and why. I have the data and I will show it to you. Second, process check-in: each of you walks through a PR and we talk about where the process helped and where you skipped steps. Third, we review your responses to the vision synthesis and start building a collective roadmap. Fourth, I assemble the complete workflow you have been practicing into a single repeatable loop. Fifth, we set up next sprint and prepare for the final session. This is a working session, not a lecture. Come ready to discuss."},
   {"slide": "02 Week 4 recap", "notes": "Last week we did two things. First, I shared the vision synthesis document that combined all of your vision plans into a proposed direction with three tracks: make the simulation understandable, make results exportable, and make the codebase contributor-friendly. You were asked to respond to that with feedback and draft milestone roadmaps. Second, we introduced the sprint structure. Anxious Aardvark was your first sprint: input validation bugs, error handling, small well-scoped fixes. Let us see how both of those went."},
   {"slide": "03 Section: What did you ship", "notes": "Part one. Before anything else today, let us look at Anxious Aardvark. Pull up the issue board and filter by sprint:anxious-aardvark. What is closed? What is still open? What is in progress?"},
-  {"slide": "04 The scoreboard", "notes": "Here is what I want to see. For each person: which Aardvark issue did you pick up? Did you ship it? Did you follow the full pipeline: spec, plan, build, test, review? For the overall program: how many PRs are merged total? How many issues closed? I am not looking for everything to be done. I am looking for honest accounting. If something is stuck, say so. These were supposed to be small, well-scoped issues. If they turned out to be bigger than expected, that is useful information for how we scope the next sprint."},
-  {"slide": "05 The big issues", "notes": "Let us walk through the Aardvark issues that shipped. For each one: was the fix what you expected? Did the spec help, or was the issue clear enough that a spec felt like overhead? What did the review layers catch? For issues still in progress: what is blocking them? Is it a technical problem, a coordination problem, or a time problem? For the validation issues specifically, numbers 31 through 36: these are all the same pattern, bad input returning 500 instead of 400. Did anyone find a way to fix them systematically rather than one at a time?"},
+  {"slide": "04 The scoreboard", "notes": "Let me show you the numbers. Anxious Aardvark had 9 issues. One is closed: BE #32, bad lat/lon validation, shipped by James. One out of nine. Four more have open PRs: #36 and #34 from James, #35 from Shrivas, #33 from Edric. That means three Aardvark issues were never claimed: BE #31 UUID validation, BE #18 env mismatch, and both frontend issues #5 and #6. Nobody touched the frontend. Beyond Aardvark, there are 17 open PRs total across both repos. That includes CLAUDE.md files, type hints, linting, and logging from Weeks 2 and 3 that have never been merged or closed. Some people are also working ahead on Bison and optimization issues, which is great initiative, but the earlier PRs are piling up. The merged PR, #47, went in with zero reviews against a four-step review process we agreed on: LLM adversarial, optional second LLM, human full review, human discussion review plus merge. I also looked at the project board. Two things stand out. First, there are no frontend issues on the board at all. None of the 6 frontend issues appear there. If the board is how you decide what to work on, the frontend is invisible. That explains why nobody picked up frontend Aardvark issues. Second, the board has no In Review column. Items go from In Progress straight to Done, so the review bottleneck is invisible in your workflow. Some items say Todo on the board but actually have open PRs, and some say In Progress but have zero reviews. The board is not reflecting reality, which means it is not helping you coordinate."},
+  {"slide": "05 The big issues", "notes": "Three things to discuss. First, the review gap. Most open PRs have zero reviews. PR #50 is the exception with two human reviews, but even that one has no LLM adversarial review posted. PR #47 merged with none. The four-step process only works if people actually review. If you are waiting on a review, have you asked for one? If you owe a review, why has it not happened? Second, the workload imbalance. James has four PRs open plus one merged. Shrivas has three PRs open and is already doing Bison work. Edric has one PR with no reviews. Abanish is on Bison work but skipped Aardvark. Hadeel has a CLAUDE.md PR but no sprint issues. That is not sustainable. One person doing four issues while two people do zero sprint issues is a team problem, not a personal one. Third, the frontend. Both frontend Aardvark issues are unclaimed. Those are real bugs that affect users. Why did nobody pick them up?"},
   {"slide": "06 Section: Show me your process", "notes": "Part two. This is the deeper probe. I have been watching your PRs, your issue comments, your specs, your reviews. Now I want to hear how the process actually felt from your side. Not what the slides told you to do. What you actually did."},
   {"slide": "07 Walk me through a PR", "notes": "Each of you: pick one PR you are proud of. Not necessarily the biggest one. The one where you felt like the process worked. Walk the group through it. Start with the issue. What was the problem? Show us your spec or diagnosis. How did it compare to what you ended up building? Show us the planning step. Did you use the agent's planning tool? Was it helpful or did you end up deviating? Show the implementation. Any surprises? Tests you had to add that you did not expect? And the review: what did peer review catch? What did adversarial review catch? Did either catch something real that you would have shipped otherwise? This should take about three minutes per person. The point is not to present. It is to reflect in front of the group so everyone learns from each other's experience."},
   {"slide": "08 Where did you skip steps", "notes": "Honest question. Over the past few weeks, where did you skip or shortcut the process? Maybe you coded before writing a spec because the fix seemed obvious. Maybe you skipped the adversarial review because you were behind. Maybe you merged without waiting for all three review layers. No judgment. Every team shortcuts under pressure. The question is: did it matter? When you skipped the spec, did you end up building the wrong thing? When you skipped adversarial review, did a bug slip through? Or was the shortcut fine and the step was not worth it for that case? This is how you calibrate the process to reality. Some steps earn their cost every time. Some are only worth it above a certain complexity threshold. Knowing the difference is engineering judgment."},
@@ -451,7 +452,7 @@
   {"slide": "11 Section: Security and deployment", "notes": "Part three. Shifting gears to the technical content. Security review and deployment readiness. These are the kind of cross-cutting concerns that often get deferred until it is too late. We are going to look at them now, with five weeks of codebase experience behind you."},
   {"slide": "12 Security scan", "notes": "Demo time. I am going to run an adversarial security review on the current FEAST backend. Not a toy example, the actual codebase you have been working on. Watch what it finds. Some of these you already know about: raw SQL patterns, hardcoded CORS origins, no input validation on POST endpoints, no authentication. Others might surprise you. For each finding, we will discuss: is this a real risk in FEAST's deployment context, or is it theoretical? A research tool on a university network has different threat model than a public-facing SaaS product. But that does not mean we ignore everything. The security hardening checklist in your assignment doc lists the concrete items."},
   {"slide": "13 Deployment audit", "notes": "Quick group exercise. Revisit the deployment topology from Week 1. You have five weeks of experience now. Each student: check your three configuration levers right now. Where is your client.js baseURL pointing? What is in your .env for DB_HOST? What CORS origins are configured? Is everything pointing where you expect? Anyone accidentally hitting staging from their local setup? Then: what would need to change to deploy FEAST to a new location? New DB credentials, new CORS origins, new frontend URL, Docker config, DNS. Walk through the list as a team. This should be concrete, not abstract. A misconfigured deployment is a security issue."},
-  {"slide": "14 Review pipeline retro", "notes": "The three-layer review pipeline has been running for three weeks. Let us evaluate it. CI checks: what is it catching? Are there false positives or noisy checks we should tune? Should we add type checking or the test suite to CI? Peer review: what patterns do reviewers keep flagging? Are reviews happening promptly or are they a bottleneck? Is the feedback substantive or rubber-stamp? Adversarial LLM review: what has it caught that humans missed? What are the most common false positives? Is the rotation working? If we identify something to change, we change it now. This is not a retrospective for its own sake. It is a process improvement step."},
+  {"slide": "14 Review pipeline retro", "notes": "This is the four-step review process I sent out by email and put in the assignment doc. LLM adversarial review first, optional second LLM pass, then human reviewer one does a full code review, and human reviewer two reads the conversation, confirms everything is addressed, and merges. The question is: has anyone actually done all four steps on a single PR? From what I can see, PR #50 is the closest with two human reviews, but I do not see adversarial LLM review comments posted on any PR. PR #47 merged with zero reviews of any kind. This process was communicated. It was not adopted. Why? Is it too many steps? Is the problem that you do not know who to ask? Is it that reviewing feels less productive than coding? These are real questions, not rhetorical ones. I also put a reviewer spinner tool on the course site so assigning reviewers is one click. If the problem was not knowing who to ask, that is solved. If the problem is something else, let us hear it and adjust."},
   {"slide": "15 Section: The complete workflow", "notes": "Part four. Over five weeks you have practiced every piece of a disciplined agentic workflow: iterative code shaping in Week 2, specs before code in Week 3, phased planning in Weeks 3 and 4, review at multiple layers, decision documentation. This section assembles those pieces into a single repeatable process. This is what you take with you after the program ends."},
   {"slide": "16 Spec Plan Execute Verify", "notes": "The core loop. Four steps that repeat for every phase of work. Spec: you write 2-3 sentences before touching the agent. What are you changing, why, and how will you know it worked. This is your engineering judgment. The agent does not decide what to build. Plan: ask the agent to create a phased plan based on your spec. Each phase must leave the codebase in a working, testable state. Review the plan before any code is written. Execute: implement one phase at a time. Do not batch phases. Verify: four checks after each phase. Run the full test suite. Review the diff line by line. Check for unnecessary complexity. Update the plan if what you learned changes the approach. Document when needed: write an ADR if a phase involved choosing between approaches. Repeat until all phases are verified, then do a final branch-level review and open the PR."},
   {"slide": "17 Match workflow to task", "notes": "Not every task needs the full loop. A quick fix under 30 minutes gets a one-sentence spec, implementation, and verification. No phasing needed. A single feature taking 1-4 hours gets the full spec-plan-execute-verify loop with phases. Cross-cutting work gets the same loop plus multi-issue planning to sequence the work. Exploratory work with unknown scope gets an investigation phase first, then a spec based on what you learned. The judgment of which workflow fits which task is itself an engineering skill. When in doubt, default to phased execution. The overhead is small. The safety margin is large."},
@@ -491,45 +492,72 @@
   </section>
 
   <!-- ============================================================
+       01b -- Today's agenda
+       ============================================================ -->
+  <section data-screen-label="01b Today's agenda">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Today's session</div>
+      <h2 class="slide-title">What we are covering.</h2>
+
+      <ul class="num-list" style="margin-top: 12px;">
+        <li>
+          <span class="num">1</span>
+          <div><div class="label">Sprint progress review</div>
+          <div class="desc">How did Anxious Aardvark go? The real numbers, the review gap, the project board.</div></div>
+        </li>
+        <li>
+          <span class="num">2</span>
+          <div><div class="label">Process check-in</div>
+          <div class="desc">Walk through a PR. Where did you shortcut? What surprised you?</div></div>
+        </li>
+        <li>
+          <span class="num">3</span>
+          <div><div class="label">Roadmap discussion</div>
+          <div class="desc">Review your vision synthesis responses. Start building a collective roadmap.</div></div>
+        </li>
+        <li>
+          <span class="num">4</span>
+          <div><div class="label">The complete workflow</div>
+          <div class="desc">Assemble everything into one loop: spec, plan, execute, verify. What you take with you.</div></div>
+        </li>
+        <li>
+          <span class="num">5</span>
+          <div><div class="label">Next sprint and next steps</div>
+          <div class="desc">Bold Bison, PR cleanup, and preparing for the final session.</div></div>
+        </li>
+      </ul>
+
+      <div class="deck-footer">
+        <span>Week 5 &middot; Agenda</span>
+        <span><span class="dot">&bull;</span> Overview</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
        02 -- Week 4 recap
        ============================================================ -->
   <section data-screen-label="02 Week 4 recap">
     <div class="pattern-bg"></div>
     <div style="position: relative;">
       <div class="eyebrow-slide">Where we left off</div>
-      <h2 class="slide-title">Week 4: vision and sprints.</h2>
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
-        <div class="card">
-          <span class="tag">vision</span>
-          <h3>Vision synthesis</h3>
-          <p>Combined your vision plans into three tracks: simulation understandable, results exportable, codebase contributor-friendly.</p>
+      <h2 class="slide-title">Last week you had two jobs.</h2>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 12px;">
+        <div class="card" style="border: 2px solid var(--badger-red); padding: 40px;">
+          <span class="tag">sprint</span>
+          <h3 style="font-size: 32px;">Ship Aardvark issues</h3>
+          <p style="font-size: 24px;">Pick an issue from <span class="code-chip">sprint:anxious-aardvark</span>, follow the full pipeline, merge it.</p>
         </div>
-        <div class="card">
+        <div class="card" style="border: 2px solid var(--badger-red); padding: 40px;">
           <span class="tag slate">roadmap</span>
-          <h3>Milestone drafting</h3>
-          <p>You proposed milestones for each track. Today we review and synthesize.</p>
-        </div>
-        <div class="card">
-          <span class="tag moss">sprints</span>
-          <h3>Sprint structure</h3>
-          <p>Four sprints: Anxious Aardvark, Bold Bison, Curious Capybara, Daring Dolphin.</p>
-        </div>
-        <div class="card" style="border: 2px solid var(--badger-red);">
-          <span class="tag">aardvark</span>
-          <h3>Anxious Aardvark</h3>
-          <p>First sprint: input validation bugs, error handling, environment fixes. 9 issues across both repos.</p>
-        </div>
-        <div class="card">
-          <span class="tag wheat">north star</span>
-          <h3>"Usable without explanation"</h3>
-          <p>Proposed target: make FEAST usable by someone who wasn't in the room when it was built.</p>
-        </div>
-        <div class="card">
-          <span class="tag ink">pipeline</span>
-          <h3>Full pipeline on real issues</h3>
-          <p>Spec, plan, build, test, review, merge. On issues with clear repro steps.</p>
+          <h3 style="font-size: 32px;">Respond to the vision synthesis</h3>
+          <p style="font-size: 24px;">React to the proposed direction. Draft milestones for at least one track.</p>
         </div>
       </div>
+
+      <p class="body-text muted" style="margin-top: 40px; font-size: 28px;">Let's see how it went.</p>
       <div class="deck-footer">
         <span>Week 5 &middot; Recap</span>
         <span><span class="dot">&bull;</span> Week 4 review</span>
@@ -556,36 +584,40 @@
     <div class="pattern-bg"></div>
     <div style="position: relative;">
       <div class="eyebrow-slide">Progress review</div>
-      <h2 class="slide-title">Honest accounting.</h2>
-      <p class="body-text muted" style="margin-bottom: 20px; font-size: 26px;">For each person, pull up the numbers. Not what you worked on. What shipped.</p>
+      <h2 class="slide-title">Anxious Aardvark: 1 of 9 shipped.</h2>
+      <p class="body-text muted" style="margin-bottom: 20px; font-size: 26px;">Here is where the sprint stands right now.</p>
 
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
         <div class="card" style="border-top: 4px solid var(--badger-red);">
-          <h3 style="font-size: 26px;">Anxious Aardvark status</h3>
-          <ul style="font-size: 22px; line-height: 1.8; color: var(--fg-2); padding-left: 24px; margin: 12px 0 0;">
-            <li>Which issue did you pick up?</li>
-            <li>Did you ship it?</li>
-            <li>Did you follow the full pipeline?</li>
-            <li>What is still open or in progress?</li>
-            <li>Were these "small" issues actually small?</li>
-            <li>What blocked you, if anything?</li>
-          </ul>
+          <h3 style="font-size: 24px;">Aardvark issues</h3>
+          <div style="font-size: 20px; line-height: 1.8; color: var(--fg-2);">
+            <span style="color: #3F5E2A;">&#10003;</span> BE #32 bad lat/lon validation (merged)<br/>
+            <span style="color: #E36209;">&#9679;</span> BE #36 description ignored (PR open, 2 reviews)<br/>
+            <span style="color: #E36209;">&#9679;</span> BE #35 step overflow (PR open, 0 reviews)<br/>
+            <span style="color: #E36209;">&#9679;</span> BE #34 bad store_id (PR open, 0 reviews)<br/>
+            <span style="color: #E36209;">&#9679;</span> BE #33 negative households (PR open, 0 reviews)<br/>
+            <span style="color: var(--badger-red);">&#10007;</span> BE #31 UUID validation (unclaimed)<br/>
+            <span style="color: var(--badger-red);">&#10007;</span> BE #18 env mismatch (unclaimed)<br/>
+            <span style="color: var(--badger-red);">&#10007;</span> FE #5 NaN store_id (unclaimed)<br/>
+            <span style="color: var(--badger-red);">&#10007;</span> FE #6 silent failures (unclaimed)
+          </div>
         </div>
         <div class="card" style="border-top: 4px solid var(--badger-red);">
-          <h3 style="font-size: 26px;">Overall program numbers</h3>
-          <ul style="font-size: 22px; line-height: 1.8; color: var(--fg-2); padding-left: 24px; margin: 12px 0 0;">
-            <li>Total PRs merged?</li>
-            <li>Total issues closed?</li>
-            <li>Specs or ADRs written?</li>
-            <li>Reviews completed?</li>
-            <li>Issues filed by you?</li>
-            <li>Vision synthesis responses submitted?</li>
-          </ul>
+          <h3 style="font-size: 24px;">The numbers</h3>
+          <div style="font-size: 20px; line-height: 1.8; color: var(--fg-2);">
+            <strong style="color: var(--ink);">1</strong> Aardvark issue closed of 9<br/>
+            <strong style="color: var(--ink);">4</strong> PRs open with 0 reviews<br/>
+            <strong style="color: var(--ink);">0</strong> frontend issues touched<br/>
+            <strong style="color: var(--ink);">17</strong> total open PRs across both repos<br/>
+            <strong style="color: var(--ink);">1</strong> PR merged with zero reviews<br/>
+            <strong style="color: var(--ink);">3</strong> Aardvark issues never claimed
+          </div>
+          <p style="font-size: 18px; color: var(--fg-3); margin-top: 16px;">PR #47 (the one that shipped) had no peer review and no adversarial review.</p>
         </div>
       </div>
 
       <div style="margin-top: 24px; padding: 20px 28px; background: var(--cream); border-radius: 12px; max-width: 1500px;">
-        <p style="font-size: 22px; color: var(--fg-2); margin: 0; line-height: 1.5;"><strong style="color: var(--ink);">Not everything needs to be done.</strong> What matters is honest accounting. If something is stuck, say so. If it was bigger than expected, that is useful information.</p>
+        <p style="font-size: 22px; color: var(--fg-2); margin: 0; line-height: 1.5;"><strong style="color: var(--ink);">This is not about blame.</strong> It is about seeing the pattern so we can fix it. Let's talk about what happened.</p>
       </div>
 
       <div class="deck-footer">
@@ -602,31 +634,31 @@
     <div class="pattern-bg"></div>
     <div style="position: relative;">
       <div class="eyebrow-slide">Deep dive</div>
-      <h2 class="slide-title">Walk through the Aardvark issues.</h2>
-      <p class="body-text muted" style="margin-bottom: 24px; font-size: 26px;">For each issue that shipped, the student who owned it presents:</p>
+      <h2 class="slide-title">Three things to discuss.</h2>
 
-      <ul class="num-list">
-        <li>
-          <span class="num">1</span>
-          <div><div class="label">Was the fix what you expected?</div>
-          <div class="desc">Did the spec help, or was the issue clear enough that a spec felt like overhead? Did you discover anything unexpected?</div></div>
-        </li>
-        <li>
-          <span class="num">2</span>
-          <div><div class="label">Did you find a pattern?</div>
-          <div class="desc">The validation issues (#31-36) are all the same shape: bad input returning 500. Did anyone fix them systematically?</div></div>
-        </li>
-        <li>
-          <span class="num">3</span>
-          <div><div class="label">What surprised you?</div>
-          <div class="desc">What was harder than expected? What was easier? What would you do differently if you started over?</div></div>
-        </li>
-        <li>
-          <span class="num">4</span>
-          <div><div class="label">What did review catch?</div>
-          <div class="desc">Did peer review or adversarial review find something you would have shipped otherwise?</div></div>
-        </li>
-      </ul>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 12px;">
+        <div class="probe-card hot">
+          <div class="probe-q">The review gap</div>
+          <div class="probe-why" style="margin-top: 12px;">Most PRs have zero reviews. #47 merged with none. The pipeline only works if people review. If you are waiting on a review, have you asked? If you owe one, why hasn't it happened?</div>
+        </div>
+        <div class="probe-card hot">
+          <div class="probe-q">The workload imbalance</div>
+          <div class="probe-why" style="margin-top: 12px;">One person has 4 open PRs plus 1 merged. Two people have zero sprint issues. That is not sustainable. How do we distribute the work more evenly?</div>
+        </div>
+        <div class="probe-card hot">
+          <div class="probe-q">The untouched frontend</div>
+          <div class="probe-why" style="margin-top: 12px;">Both frontend Aardvark issues are unclaimed. FE #5 and #6 are real bugs that affect users. Why did nobody pick them up? Is it comfort level? Interest? Something else?</div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+        <div style="padding: 16px 24px; background: var(--cream); border-radius: 12px;">
+          <p style="font-size: 20px; color: var(--fg-2); margin: 0; line-height: 1.5;"><strong style="color: var(--ink);">17 PRs open</strong> across both repos. CLAUDE.md files, type hints, linting from Weeks 2-3 never merged or closed. PR debt slows everyone.</p>
+        </div>
+        <div style="padding: 16px 24px; background: #FBE5E5; border-radius: 12px;">
+          <p style="font-size: 20px; color: #9B0000; margin: 0; line-height: 1.5;"><strong>The project board has zero frontend issues.</strong> If the board is how you pick work, the frontend is invisible. We need to fix the board today.</p>
+        </div>
+      </div>
 
       <div class="deck-footer">
         <span>Week 5 &middot; Progress</span>
@@ -928,32 +960,43 @@
     <div class="pattern-bg"></div>
     <div style="position: relative;">
       <div class="eyebrow-slide">Process evaluation</div>
-      <h2 class="slide-title">Is the pipeline earning its cost?</h2>
-      <p class="body-text" style="margin-bottom: 24px;">The three-layer pipeline has been running for three weeks. Evaluate each layer.</p>
+      <h2 class="slide-title">The review process we agreed on.</h2>
+      <p class="body-text muted" style="margin-bottom: 20px; font-size: 24px;">Four steps. Every PR. Not optional.</p>
 
-      <div class="pipeline-row">
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;">
         <div class="pipeline-box">
           <div class="pipe-num">1</div>
-          <div class="pipe-label">CI checks</div>
-          <div class="pipe-desc">What is it catching? False positives? Should we add type checking or the test suite?</div>
-          <div class="pipe-when">Since Week 2</div>
+          <div class="pipe-label">LLM review</div>
+          <div class="pipe-desc">Primary adversarial. Findings posted as inline PR comments, each marked Valid or False positive.</div>
+          <div class="pipe-when">Claude</div>
         </div>
         <div class="pipeline-box">
           <div class="pipe-num">2</div>
-          <div class="pipe-label">Peer review</div>
-          <div class="pipe-desc">Substantive or rubber-stamp? Happening promptly or a bottleneck? What patterns keep getting flagged?</div>
-          <div class="pipe-when">Since Week 2</div>
+          <div class="pipe-label">LLM review 2</div>
+          <div class="pipe-desc">Second model or fresh session for an independent perspective.</div>
+          <div class="pipe-when">Optional</div>
         </div>
         <div class="pipeline-box">
           <div class="pipe-num">3</div>
-          <div class="pipe-label">LLM adversarial</div>
-          <div class="pipe-desc">Catching things humans miss? Most common false positives? Is the rotation working?</div>
-          <div class="pipe-when">Since Week 3</div>
+          <div class="pipe-label">Human reviewer 1</div>
+          <div class="pipe-desc">Full code review: correctness, design, style. Not just "LGTM."</div>
+          <div class="pipe-when">Required</div>
+        </div>
+        <div class="pipeline-box">
+          <div class="pipe-num">4</div>
+          <div class="pipe-label">Human reviewer 2</div>
+          <div class="pipe-desc">Reads the PR conversation. Confirms all concerns addressed. Performs the merge.</div>
+          <div class="pipe-when">Merges + deletes branch</div>
         </div>
       </div>
 
-      <div style="margin-top: 28px; padding: 20px 28px; background: var(--cream); border-radius: 12px; max-width: 1500px;">
-        <p style="font-size: 22px; color: var(--fg-2); margin: 0; line-height: 1.5;"><strong style="color: var(--ink);">If we identify something to change, we change it now.</strong> This is a process improvement step, not a retrospective for its own sake.</p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 24px;">
+        <div style="padding: 16px 24px; background: #FBE5E5; border-radius: 12px;">
+          <p style="font-size: 20px; color: #9B0000; margin: 0; line-height: 1.5;"><strong>Reality check:</strong> Of 17 open PRs, most have zero reviews. PR #47 merged with no reviews at all. Has anyone completed all four steps on any PR?</p>
+        </div>
+        <div style="padding: 16px 24px; background: var(--cream); border-radius: 12px;">
+          <p style="font-size: 20px; color: var(--fg-2); margin: 0; line-height: 1.5;"><strong style="color: var(--ink);">Use the reviewer spinner</strong> if the rotation isn't happening organically. It's on the course site. No excuses for "I didn't know who to ask."</p>
+        </div>
       </div>
 
       <div class="deck-footer">
