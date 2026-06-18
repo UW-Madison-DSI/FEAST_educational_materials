@@ -1,0 +1,867 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>FEAST Week 6 — Trajectory, Milestones, and What's Next</title>
+<link rel="stylesheet" href="colors_and_type.css"/>
+<style>
+  :root {
+    --type-display: 120px;
+    --type-title: 64px;
+    --type-subtitle: 44px;
+    --type-body: 34px;
+    --type-small: 28px;
+    --type-eyebrow: 24px;
+    --pad-top: 96px;
+    --pad-bottom: 130px;
+    --pad-x: 100px;
+    --gap-title: 48px;
+    --gap-item: 28px;
+  }
+
+  body { background: #1a1816; margin: 0; }
+
+  deck-stage section {
+    background: var(--bone);
+    position: relative;
+    overflow: hidden;
+    padding: var(--pad-top) var(--pad-x) var(--pad-bottom);
+    display: flex;
+    flex-direction: column;
+    color: var(--ink);
+    font-family: var(--font-body);
+  }
+
+  .pattern-bg {
+    position: absolute; inset: 0;
+    opacity: 0.05;
+    background-image: radial-gradient(circle, var(--ink) 1.5px, transparent 1.5px);
+    background-size: 28px 28px;
+    pointer-events: none;
+  }
+  .pattern-bg.on-dark {
+    opacity: 0.08;
+    background-image: radial-gradient(circle, #fff 1.5px, transparent 1.5px);
+  }
+  .red-bar { width: 80px; height: 8px; background: var(--badger-red); border-radius: 4px; }
+
+  .eyebrow-slide {
+    font-family: var(--font-display);
+    font-size: var(--type-eyebrow);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--fg-2);
+  }
+  .eyebrow-slide.on-dark { color: var(--mist); }
+
+  .slide-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--type-title);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: 16px 0 var(--gap-title);
+    color: var(--ink);
+    max-width: 1500px;
+  }
+
+  .body-text {
+    font-size: var(--type-body);
+    line-height: 1.5;
+    color: var(--ink);
+    max-width: 1500px;
+  }
+  .body-text.muted { color: var(--fg-2); }
+
+  deck-stage section > div:not(.pattern-bg):not(.deck-footer) {
+    padding-bottom: 80px;
+  }
+  .deck-footer {
+    position: absolute;
+    bottom: 40px; left: var(--pad-x); right: var(--pad-x);
+    font-size: 16px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--font-mono);
+    color: var(--fg-3);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .deck-footer .dot { color: var(--badger-red); margin: 0 10px; }
+  section.dark .deck-footer { color: var(--mist); }
+
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+  }
+  .card .tag {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: #FBE5E5;
+    color: #9B0000;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .card .tag.slate { background: #E5ECEF; color: #2E4756; }
+  .card .tag.moss  { background: #E4EBDB; color: #3F5E2A; }
+  .card .tag.wheat { background: #F4E9C9; color: #7A5F00; }
+  .card .tag.ink   { background: #E5E2DC; color: #1C1A19; }
+
+  .card h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 30px;
+    margin: 18px 0 10px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .card p {
+    font-size: 22px;
+    line-height: 1.45;
+    color: var(--fg-2);
+    margin: 0;
+  }
+
+  .num-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 28px; }
+  .num-list li { display: grid; grid-template-columns: 80px 1fr; align-items: start; gap: 24px; }
+  .num-list .num {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 56px;
+    line-height: 1;
+    color: var(--badger-red);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+  .num-list .label {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .num-list .desc {
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--fg-2);
+    margin-top: 6px;
+  }
+
+  section.section-divider {
+    background: var(--ink);
+    color: var(--bone);
+    justify-content: center;
+  }
+  section.section-divider .part-label {
+    font-family: var(--font-display);
+    font-size: var(--type-eyebrow);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--mist);
+  }
+  section.section-divider .part-title {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 144px;
+    line-height: 0.96;
+    margin: 28px 0 0;
+    letter-spacing: -0.03em;
+    color: var(--bone);
+    max-width: 1600px;
+  }
+  section.section-divider .part-title .accent { color: var(--badger-red); }
+  section.section-divider .part-meta {
+    font-family: var(--font-mono);
+    font-size: 24px;
+    color: var(--mist);
+    margin-top: 56px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  section.title-slide { padding-top: 0; padding-bottom: 0; justify-content: center; }
+  section.title-slide .title-block { position: relative; }
+  section.title-slide h1 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 116px;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin: 0;
+    max-width: 1600px;
+    color: var(--ink);
+  }
+  section.title-slide .accent { color: var(--badger-red); }
+  section.title-slide .meta {
+    margin-top: 56px;
+    font-family: var(--font-display);
+    font-size: 24px;
+    color: var(--fg-2);
+    display: flex;
+    gap: 28px;
+    align-items: center;
+  }
+  section.title-slide .meta .pipe { color: var(--mist); }
+  .slide-version { font-family: var(--font-mono); font-size: 18px; opacity: 0.5; }
+
+  .code-chip {
+    font-family: var(--font-mono);
+    background: var(--cream);
+    border: 1px solid var(--border);
+    color: var(--ink);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.92em;
+  }
+
+  .assign-callout {
+    margin-top: 20px;
+    padding: 12px 20px;
+    background: #E4EBDB;
+    border-left: 4px solid #3F5E2A;
+    border-radius: 0 8px 8px 0;
+    font-size: 19px;
+    color: #3F5E2A;
+    line-height: 1.4;
+    max-width: 1500px;
+  }
+  .assign-callout strong { color: #2A4A1A; }
+
+  .beyond-callout {
+    margin-top: 28px;
+    padding: 16px 24px;
+    background: #F4E9C9;
+    border-left: 4px solid #7A5F00;
+    border-radius: 0 8px 8px 0;
+    font-size: 21px;
+    color: #5A4500;
+    line-height: 1.5;
+    max-width: 1500px;
+  }
+  .beyond-callout strong { color: #3D2E00; }
+
+  .compare-table {
+    width: 100%;
+    max-width: 1500px;
+    border-collapse: collapse;
+    font-size: 22px;
+    margin-top: 24px;
+  }
+  .compare-table th {
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-align: left;
+    padding: 14px 16px;
+    border-bottom: 2px solid var(--ink);
+    color: var(--ink);
+  }
+  .compare-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--fg-2);
+    line-height: 1.4;
+  }
+  .compare-table td:first-child {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+</style>
+
+<script type="application/json" id="speaker-notes">
+[
+  {"slide": "01 Title", "notes": "Final session of the structured program. Today is a working session, not a lecture. We have one goal: leave this room with a roadmap that has milestones, sprint assignments, and owners. Everything we do today builds toward that."},
+  {"slide": "01b Agenda", "notes": "Four parts. First, a quick look at where we are: what shipped, what is open, what the board looks like. Second, we revisit the vision synthesis and your feedback to confirm the direction. Third, the main event: we break each track into milestones and then break milestones into sprint-sized issue sets. Fourth, we assign the first milestone and talk about how work continues from here."},
+  {"slide": "02 Where we are", "notes": "Quick status. Since last week, four more PRs merged: #49 simulation step bounds, #40 worker pool reuse, #38 centralized logging, #13 type hints. That is real progress. But we still have 17 open PRs on the backend plus frontend. James has two frontend PRs open now for issues #5 and #6, which is great because those were unclaimed last week. Shrivas has a security hardening PR. The Aardvark sprint has 2 closed, several in progress, and a few still unclaimed. The point is not to review all of this in detail. The point is: we know how to ship code. Now we need to organize what we ship next."},
+  {"slide": "02b From vision to issues", "notes": "This is the process we are working through today. Five levels, each one more concrete than the last. At the top, the vision: a broad statement about where we are going. Then tracks: parallel workstreams that organize the effort. Then milestones: testable checkpoints where you can demonstrate progress. Then sprints: time-boxed batches of issues that a team can finish in a cycle. And finally issues: one person, one PR, the actual work. We already have the first two from the vision synthesis. Today we build the bottom three. By the end of this session, every person should have a specific issue with their name on it that traces all the way up to the vision."},
+  {"slide": "03 Section: Vision to roadmap", "notes": "Part two. The vision synthesis proposed three tracks and a north star. You were asked to react and draft milestones. Let us confirm the direction before we plan against it."},
+  {"slide": "04 The three tracks", "notes": "Reminder of the three tracks. Track A: make the simulation understandable. A new user can run FEAST and know what happened. Track B: make results exportable. Users can take data out of the tool. Track C: make the codebase contributor-friendly. A new developer can clone and contribute without asking someone. The north star across all three: make FEAST usable by someone who was not in the room when it was built. Does this still feel right? Any feedback that changes the direction? Speak now."},
+  {"slide": "05 Section: Milestones", "notes": "Part three. This is the main working section. We are going to take each track and break it into milestones. A milestone is not a feature list. It is a testable checkpoint: if we stopped here, what would a user or contributor actually have that they do not have today?"},
+  {"slide": "06 How to define a milestone", "notes": "Before we start drafting, here is what makes a good milestone. It is demonstrable: you can show it to someone. It is testable: you know when it is done. It is incremental: the work so far is useful even if the track is not finished. And it is sprint-sized: one to two sprints of work for the team, not a quarter-long epic. Bad milestone: make the UI better. Good milestone: household hover shows MFAI score, income, and store count on click. The first one is a wish. The second one is a deliverable."},
+  {"slide": "07 Track A milestones", "notes": "Let us draft Track A milestones together. The concrete targets from the vision synthesis were: step explanation modal, household detail on hover, score differentiation by color, store interaction improvement, remove polygons, link to ICICLE training catalog. Which of these is the first milestone? What comes after? What is the final milestone that means Track A is done? Let us write them on the board. I will prompt, you decide."},
+  {"slide": "08 Track B milestones", "notes": "Same exercise for Track B. The targets were: CSV export of household data, map screenshot or PDF, summary panel with aggregate stats, instance metadata display. CSV export is probably the simplest starting point since the data already exists in the API. But maybe the summary panel is higher impact. Which first? What order? Draft the sequence."},
+  {"slide": "09 Track C milestones", "notes": "Track C. The targets were: dead code removal, entry point consolidation, CRS standardization, performance profiling, architecture documentation. Some of this is already in progress: Abanish has the entry point PR, Shrivas has logging done and security in review. What is left? What order? And critically: what Track C work unblocks Track A or B? That should come first."},
+  {"slide": "10 Section: Sprints and issues", "notes": "Part four. We have milestones. Now we break them into sprints. Each sprint is a set of issues that a team of four can complete in roughly a week of part-time work. We already have the sprint naming convention: Anxious Aardvark is mostly done, Bold Bison is infrastructure. The next sprints should map to the milestones we just defined."},
+  {"slide": "11 From milestones to sprints", "notes": "Here is how this works. Each milestone becomes one or two sprints. Each sprint gets a name and a set of issues. Some issues already exist in the backlog. Some we need to create right now. For each milestone, ask: what issues already exist that belong here? What new issues do we need to file? Who is the right person for each one? Let us do this for the first milestone of each track. We can file the issues live during this session."},
+  {"slide": "12 Assign the first milestone", "notes": "We need to leave this room with clarity on what happens next. For each track: who owns the first milestone? Not who does all the work, but who is responsible for it getting done, coordinating across issues, and flagging when it is stuck. Each person should have at least one issue they are committed to shipping this week. Write your name next to it."},
+  {"slide": "13 How work continues", "notes": "The structured weekly sessions end today, but the work does not. Here is how we keep going. The sprint structure stays: filter by sprint label to see your current work. The review process stays: four steps, every PR. The project board needs to be the source of truth: keep it updated, add the frontend issues, add an In Review column. We will still meet, but the sessions shift from teaching to coordination: quick standups, unblocking, and sprint planning. The skills you built over six weeks, spec first, plan, execute, verify, review, those are yours now. Use them."},
+  {"slide": "14 Recap", "notes": "What we accomplished today. Confirmed the three-track direction from the vision synthesis. Defined milestones for each track: testable, demonstrable, incremental. Broke the first milestones into sprint-sized issue sets. Assigned owners and committed to specific issues. The roadmap is real now. Ship it."}
+]
+</script>
+</head>
+
+<body>
+
+<deck-stage width="1920" height="1080">
+
+  <!-- 01 — TITLE -->
+  <section class="title-slide" data-screen-label="01 Title">
+    <div class="pattern-bg"></div>
+    <div class="title-block" style="position: relative;">
+      <div class="red-bar" style="margin-bottom: 56px;"></div>
+      <h1>Trajectory,<br/>Milestones, and<br/>What's <span class="accent">Next.</span></h1>
+      <div class="meta">
+        <span>FEAST Academy</span>
+        <span class="pipe">|</span>
+        <span>Week 6</span>
+        <span class="pipe">|</span>
+        <span>Roadmap Working Session</span>
+      </div>
+      <div class="deck-footer">
+        <span>FEAST Academy &middot; Week 6</span>
+        <span class="slide-version">v1.0</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 01b — Agenda -->
+  <section data-screen-label="01b Agenda">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Today's session</div>
+      <h2 class="slide-title">A working session, not a lecture.</h2>
+
+      <ul class="num-list" style="margin-top: 12px;">
+        <li>
+          <span class="num">1</span>
+          <div><div class="label">Where we are</div>
+          <div class="desc">Quick status: what shipped, what is open, where the project stands.</div></div>
+        </li>
+        <li>
+          <span class="num">2</span>
+          <div><div class="label">Confirm the direction</div>
+          <div class="desc">Revisit the vision synthesis. Do the three tracks and north star still hold?</div></div>
+        </li>
+        <li>
+          <span class="num">3</span>
+          <div><div class="label">Define milestones</div>
+          <div class="desc">Break each track into testable, demonstrable checkpoints.</div></div>
+        </li>
+        <li>
+          <span class="num">4</span>
+          <div><div class="label">Map milestones to sprints</div>
+          <div class="desc">Break milestones into issue sets. Assign owners. File issues live.</div></div>
+        </li>
+      </ul>
+
+      <div style="margin-top: 28px; padding: 20px 28px; background: var(--cream); border-radius: 12px; max-width: 1500px;">
+        <p style="font-size: 24px; color: var(--fg-2); margin: 0; line-height: 1.5;"><strong style="color: var(--ink);">Goal:</strong> Leave this room with a roadmap that has milestones, sprint assignments, and owners.</p>
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 6 &middot; Agenda</span>
+        <span><span class="dot">&bull;</span> Overview</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 — Where we are -->
+  <section data-screen-label="02 Where we are">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Status check</div>
+      <h2 class="slide-title">What shipped since last week.</h2>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <div class="card" style="border-top: 4px solid #3F5E2A;">
+          <h3 style="font-size: 24px;">Recently merged</h3>
+          <div style="font-size: 20px; line-height: 1.8; color: var(--fg-2);">
+            <span style="color: #3F5E2A;">&#10003;</span> #49 Simulation step bounds (#35)<br/>
+            <span style="color: #3F5E2A;">&#10003;</span> #40 Worker pool reuse (#19)<br/>
+            <span style="color: #3F5E2A;">&#10003;</span> #38 Centralized logging (#9)<br/>
+            <span style="color: #3F5E2A;">&#10003;</span> #13 Type hints for API layer (#2)<br/>
+            <span style="color: #3F5E2A;">&#10003;</span> #47 Bad lat/lon validation (#32)
+          </div>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="font-size: 24px;">Still open</h3>
+          <div style="font-size: 20px; line-height: 1.8; color: var(--fg-2);">
+            <strong style="color: var(--ink);">17</strong> open PRs on the backend<br/>
+            <strong style="color: var(--ink);">3</strong> open PRs on the frontend<br/>
+            <strong style="color: var(--ink);">2</strong> new: security hardening + distance audit<br/>
+            <strong style="color: var(--ink);">2</strong> new: frontend #5 and #6 now claimed
+          </div>
+          <p style="font-size: 18px; color: var(--fg-3); margin-top: 12px;">Progress is real. Now we need to organize what comes next.</p>
+        </div>
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 6 &middot; Status</span>
+        <span><span class="dot">&bull;</span> Where we are</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02b — From vision to issues -->
+  <section data-screen-label="02b From vision to issues">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">The process</div>
+      <h2 class="slide-title">How broad ideas become shippable work.</h2>
+      <p class="body-text muted" style="margin-bottom: 28px; font-size: 26px;">Each step narrows scope and adds concreteness. Today we walk through all five.</p>
+
+      <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;">
+        <div style="background: var(--white); border: 2px solid var(--border); border-radius: 12px; padding: 24px 20px; text-align: center;">
+          <div style="font-family: var(--font-display); font-weight: 900; font-size: 36px; color: var(--badger-red); line-height: 1;">1</div>
+          <h4 style="font-family: var(--font-display); font-weight: 700; font-size: 24px; color: var(--ink); margin: 12px 0 8px;">Vision</h4>
+          <p style="font-size: 18px; color: var(--fg-2); line-height: 1.4; margin: 0;">"FEAST should be usable without explanation"</p>
+          <p style="font-size: 15px; color: var(--fg-3); margin-top: 10px;">Broad direction.<br/>Why we are doing this.</p>
+        </div>
+        <div style="background: var(--white); border: 2px solid var(--border); border-radius: 12px; padding: 24px 20px; text-align: center;">
+          <div style="font-family: var(--font-display); font-weight: 900; font-size: 36px; color: var(--badger-red); line-height: 1;">2</div>
+          <h4 style="font-family: var(--font-display); font-weight: 700; font-size: 24px; color: var(--ink); margin: 12px 0 8px;">Tracks</h4>
+          <p style="font-size: 18px; color: var(--fg-2); line-height: 1.4; margin: 0;">Understandable, Exportable, Contributor-friendly</p>
+          <p style="font-size: 15px; color: var(--fg-3); margin-top: 10px;">Parallel workstreams.<br/>What we are building.</p>
+        </div>
+        <div style="background: var(--white); border: 2px solid var(--border); border-radius: 12px; padding: 24px 20px; text-align: center;">
+          <div style="font-family: var(--font-display); font-weight: 900; font-size: 36px; color: var(--badger-red); line-height: 1;">3</div>
+          <h4 style="font-family: var(--font-display); font-weight: 700; font-size: 24px; color: var(--ink); margin: 12px 0 8px;">Milestones</h4>
+          <p style="font-size: 18px; color: var(--fg-2); line-height: 1.4; margin: 0;">"Household hover shows MFAI on click"</p>
+          <p style="font-size: 15px; color: var(--fg-3); margin-top: 10px;">Testable checkpoints.<br/>How we know it works.</p>
+        </div>
+        <div style="background: var(--white); border: 2px solid var(--border); border-radius: 12px; padding: 24px 20px; text-align: center;">
+          <div style="font-family: var(--font-display); font-weight: 900; font-size: 36px; color: var(--badger-red); line-height: 1;">4</div>
+          <h4 style="font-family: var(--font-display); font-weight: 700; font-size: 24px; color: var(--ink); margin: 12px 0 8px;">Sprints</h4>
+          <p style="font-size: 18px; color: var(--fg-2); line-height: 1.4; margin: 0;">Curious Capybara: household hover + score viz</p>
+          <p style="font-size: 15px; color: var(--fg-3); margin-top: 10px;">Time-boxed batches.<br/>What we ship this cycle.</p>
+        </div>
+        <div style="background: var(--white); border: 2px solid var(--badger-red); border-radius: 12px; padding: 24px 20px; text-align: center; box-shadow: 0 0 0 3px rgba(197, 5, 12, 0.12);">
+          <div style="font-family: var(--font-display); font-weight: 900; font-size: 36px; color: var(--badger-red); line-height: 1;">5</div>
+          <h4 style="font-family: var(--font-display); font-weight: 700; font-size: 24px; color: var(--ink); margin: 12px 0 8px;">Issues</h4>
+          <p style="font-size: 18px; color: var(--fg-2); line-height: 1.4; margin: 0;">FE #3: Add Leaflet tooltip with household stats</p>
+          <p style="font-size: 15px; color: var(--fg-3); margin-top: 10px;">One person, one PR.<br/>The actual work.</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 28px; padding: 20px 28px; background: var(--cream); border-radius: 12px; max-width: 1500px;">
+        <p style="font-size: 22px; color: var(--fg-2); margin: 0; line-height: 1.5;"><strong style="color: var(--ink);">We already have steps 1 and 2</strong> (the vision synthesis). Today we build steps 3, 4, and 5 together.</p>
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 6 &middot; Process</span>
+        <span><span class="dot">&bull;</span> Vision to issues</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 — Section: Vision to roadmap -->
+  <section class="section-divider" data-screen-label="03 Section: Vision to roadmap">
+    <div class="pattern-bg on-dark"></div>
+    <div style="position: relative;">
+      <div class="part-label">Confirm the direction</div>
+      <div class="part-title">Vision to<br/><span class="accent">roadmap.</span></div>
+      <div class="part-meta">Does the north star still hold?</div>
+    </div>
+  </section>
+
+  <!-- 04 — The three tracks -->
+  <section data-screen-label="04 The three tracks">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Vision synthesis</div>
+      <h2 class="slide-title">Make FEAST usable without explanation.</h2>
+      <p class="body-text muted" style="margin-bottom: 24px; font-size: 26px;">Three tracks. Does this still feel right?</p>
+
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <span class="tag">Track A</span>
+          <h3>Simulation understandable</h3>
+          <p>A new user can run FEAST and know what happened. Step modal, household hover, score visualization, store interaction.</p>
+        </div>
+        <div class="card" style="border-top: 4px solid #3F5E2A;">
+          <span class="tag moss">Track B</span>
+          <h3>Results exportable</h3>
+          <p>Users can take data out. CSV export, map screenshot, summary panel, instance metadata.</p>
+        </div>
+        <div class="card" style="border-top: 4px solid #1D76DB;">
+          <span class="tag slate">Track C</span>
+          <h3>Codebase contributor-friendly</h3>
+          <p>A new developer can clone and contribute. Dead code, entry points, CRS, profiling, docs.</p>
+        </div>
+      </div>
+
+      <div class="assign-callout" style="margin-top: 24px;">
+        <strong>Check:</strong> Any feedback that changes the direction? Tracks to add, remove, or reorder? Speak now before we plan against this.
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 6 &middot; Vision</span>
+        <span><span class="dot">&bull;</span> Three tracks</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 — Section: Milestones -->
+  <section class="section-divider" data-screen-label="05 Section: Milestones">
+    <div class="pattern-bg on-dark"></div>
+    <div style="position: relative;">
+      <div class="part-label">The main event</div>
+      <div class="part-title">Defining<br/><span class="accent">milestones.</span></div>
+      <div class="part-meta">Testable checkpoints, not feature wishlists</div>
+    </div>
+  </section>
+
+  <!-- 06 — How to define a milestone -->
+  <section data-screen-label="06 How to define a milestone">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Before we start</div>
+      <h2 class="slide-title">What makes a good milestone.</h2>
+
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 12px;">
+        <div class="card" style="padding: 24px;">
+          <h3 style="font-size: 24px;">Demonstrable</h3>
+          <p style="font-size: 20px;">You can show it to someone. "Look, when I hover over a household, this happens."</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <h3 style="font-size: 24px;">Testable</h3>
+          <p style="font-size: 20px;">You know when it is done. Clear acceptance criteria, not vibes.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <h3 style="font-size: 24px;">Incremental</h3>
+          <p style="font-size: 20px;">Useful even if the track isn't finished. Each milestone stands on its own.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <h3 style="font-size: 24px;">Sprint-sized</h3>
+          <p style="font-size: 20px;">1-2 sprints of work for the team. Not a quarter-long epic.</p>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 28px;">
+        <div style="padding: 20px 28px; background: #FBE5E5; border-radius: 12px;">
+          <p style="font-size: 22px; color: #9B0000; margin: 0; line-height: 1.5;"><strong>Bad milestone:</strong> "Make the UI better."</p>
+        </div>
+        <div style="padding: 20px 28px; background: #E4EBDB; border-radius: 12px;">
+          <p style="font-size: 22px; color: #3F5E2A; margin: 0; line-height: 1.5;"><strong>Good milestone:</strong> "Household hover shows MFAI score, income, and store count on click."</p>
+        </div>
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 6 &middot; Milestones</span>
+        <span><span class="dot">&bull;</span> Definition</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 — Track A milestones -->
+  <section data-screen-label="07 Track A milestones">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Live exercise</div>
+      <h2 class="slide-title">Track A: Simulation understandable.</h2>
+      <p class="body-text muted" style="margin-bottom: 20px; font-size: 24px;">Targets from the vision synthesis. Order them into milestones.</p>
+
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+        <div class="card" style="padding: 24px;">
+          <span class="tag">target</span>
+          <h3 style="font-size: 22px;">Step explanation modal</h3>
+          <p style="font-size: 18px;">Plain-language description of what a step simulates.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <span class="tag">target</span>
+          <h3 style="font-size: 22px;">Household detail on hover</h3>
+          <p style="font-size: 18px;">MFAI, income, vehicles, store count. Data already exists.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <span class="tag">target</span>
+          <h3 style="font-size: 22px;">Score differentiation</h3>
+          <p style="font-size: 18px;">Color-code households by MFAI. Show the distribution visually.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <span class="tag">target</span>
+          <h3 style="font-size: 22px;">Store interaction</h3>
+          <p style="font-size: 18px;">Preview impact zone. Before/after score changes.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <span class="tag">target</span>
+          <h3 style="font-size: 22px;">Remove polygons</h3>
+          <p style="font-size: 18px;">Standard markers instead of hexagons/triangles.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <span class="tag">target</span>
+          <h3 style="font-size: 22px;">ICICLE link</h3>
+          <p style="font-size: 18px;">Help menu connects to training catalog.</p>
+        </div>
+      </div>
+
+      <div class="assign-callout" style="margin-top: 20px;">
+        <strong>Discuss:</strong> Which is milestone 1? What comes after? What is the final milestone that means Track A is done?
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 6 &middot; Milestones</span>
+        <span><span class="dot">&bull;</span> Track A</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 — Track B milestones -->
+  <section data-screen-label="08 Track B milestones">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Live exercise</div>
+      <h2 class="slide-title">Track B: Results exportable.</h2>
+      <p class="body-text muted" style="margin-bottom: 20px; font-size: 24px;">Targets from the vision synthesis. Order them into milestones.</p>
+
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;">
+        <div class="card" style="padding: 24px;">
+          <span class="tag moss">target</span>
+          <h3 style="font-size: 22px;">CSV export</h3>
+          <p style="font-size: 18px;">Download household data as CSV. Data already in the API.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <span class="tag moss">target</span>
+          <h3 style="font-size: 22px;">Map screenshot</h3>
+          <p style="font-size: 18px;">One-click export of map view with legend and stats.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <span class="tag moss">target</span>
+          <h3 style="font-size: 22px;">Summary panel</h3>
+          <p style="font-size: 18px;">Aggregate stats: mean MFAI, distributions, thresholds.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <span class="tag moss">target</span>
+          <h3 style="font-size: 22px;">Instance metadata</h3>
+          <p style="font-size: 18px;">Geography, store set, steps run, date created.</p>
+        </div>
+      </div>
+
+      <div class="assign-callout" style="margin-top: 20px;">
+        <strong>Discuss:</strong> CSV first, or summary panel first? Does export depend on Track A data? What is the minimal useful export?
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 6 &middot; Milestones</span>
+        <span><span class="dot">&bull;</span> Track B</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 — Track C milestones -->
+  <section data-screen-label="09 Track C milestones">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Live exercise</div>
+      <h2 class="slide-title">Track C: Codebase contributor-friendly.</h2>
+      <p class="body-text muted" style="margin-bottom: 20px; font-size: 24px;">Some of this is already in progress. What is left?</p>
+
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+        <div class="card" style="padding: 24px;">
+          <span class="tag slate">in progress</span>
+          <h3 style="font-size: 22px;">Entry points</h3>
+          <p style="font-size: 18px;">PR #41 open. Consolidating three entry points to one.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <span class="tag slate" style="background: #E4EBDB; color: #3F5E2A;">done</span>
+          <h3 style="font-size: 22px;">Logging</h3>
+          <p style="font-size: 18px;">PR #38 merged. Centralized config in place.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <span class="tag slate">in progress</span>
+          <h3 style="font-size: 22px;">Security hardening</h3>
+          <p style="font-size: 18px;">PR #57 open. CORS + env audit.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <span class="tag slate">target</span>
+          <h3 style="font-size: 22px;">Dead code removal</h3>
+          <p style="font-size: 18px;">Audit and remove unused files and functions.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <span class="tag slate">target</span>
+          <h3 style="font-size: 22px;">CRS standardization</h3>
+          <p style="font-size: 18px;">Everything in 4326. Convert to 3857 only for distance math.</p>
+        </div>
+        <div class="card" style="padding: 24px;">
+          <span class="tag slate">target</span>
+          <h3 style="font-size: 22px;">Performance profiling</h3>
+          <p style="font-size: 18px;">Benchmark step time. Data-driven optimization.</p>
+        </div>
+      </div>
+
+      <div class="assign-callout" style="margin-top: 20px;">
+        <strong>Discuss:</strong> What Track C work unblocks Tracks A and B? That should come first. What order for the rest?
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 6 &middot; Milestones</span>
+        <span><span class="dot">&bull;</span> Track C</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 — Section: Sprints and issues -->
+  <section class="section-divider" data-screen-label="10 Section: Sprints and issues">
+    <div class="pattern-bg on-dark"></div>
+    <div style="position: relative;">
+      <div class="part-label">From milestones to action</div>
+      <div class="part-title">Sprints and<br/><span class="accent">issues.</span></div>
+      <div class="part-meta">Break it down. Assign it. Ship it.</div>
+    </div>
+  </section>
+
+  <!-- 11 — From milestones to sprints -->
+  <section data-screen-label="11 From milestones to sprints">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">The breakdown</div>
+      <h2 class="slide-title">Milestone to sprint to issue.</h2>
+
+      <ul class="num-list" style="margin-top: 12px;">
+        <li>
+          <span class="num">1</span>
+          <div><div class="label">Pick the first milestone for each track</div>
+          <div class="desc">The one we just agreed on. The smallest testable checkpoint.</div></div>
+        </li>
+        <li>
+          <span class="num">2</span>
+          <div><div class="label">List the issues it needs</div>
+          <div class="desc">Some already exist in the backlog. Some we file right now.</div></div>
+        </li>
+        <li>
+          <span class="num">3</span>
+          <div><div class="label">Assign a sprint label</div>
+          <div class="desc">Curious Capybara is next in the queue. Or we name a new one if Capybara doesn't fit.</div></div>
+        </li>
+        <li>
+          <span class="num">4</span>
+          <div><div class="label">Assign owners</div>
+          <div class="desc">Each issue gets a name. Each milestone gets a lead who keeps it moving.</div></div>
+        </li>
+      </ul>
+
+      <div class="assign-callout" style="margin-top: 24px;">
+        <strong>Let's do this live.</strong> Open the issue boards for both repos. We file issues, label them, and assign them before we leave.
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 6 &middot; Sprints</span>
+        <span><span class="dot">&bull;</span> Breakdown</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 — Assign the first milestone -->
+  <section data-screen-label="12 Assign the first milestone">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Commitment</div>
+      <h2 class="slide-title">What are you shipping this week?</h2>
+      <p class="body-text" style="margin-bottom: 28px;">Each person commits to at least one issue. Write your name next to it.</p>
+
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;">
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="font-size: 24px;">Milestone lead</h3>
+          <p style="font-size: 20px;">Not who does all the work. Who is responsible for it getting done, coordinating across issues, and flagging when it is stuck.</p>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="font-size: 24px;">Issue owner</h3>
+          <p style="font-size: 20px;">You claimed it, you ship it. Full pipeline: spec, plan, build, test, review, merge. Same process as always.</p>
+        </div>
+      </div>
+
+      <div class="beyond-callout" style="margin-top: 28px;">
+        <strong>Beyond this project:</strong> Roadmaps that do not have names next to items do not get done. Shared responsibility is no responsibility. The lead is not doing more work. They are making sure the work happens.
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 6 &middot; Sprints</span>
+        <span><span class="dot">&bull;</span> Commitment</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 — How work continues -->
+  <section data-screen-label="13 How work continues">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">After today</div>
+      <h2 class="slide-title">The structure stays. The sessions shift.</h2>
+
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 12px;">
+        <div class="card">
+          <h3 style="font-size: 24px;">What stays the same</h3>
+          <ul style="font-size: 20px; line-height: 1.7; color: var(--fg-2); padding-left: 20px; margin: 12px 0 0;">
+            <li>Sprint structure with labels</li>
+            <li>Four-step review process on every PR</li>
+            <li>Project board as source of truth</li>
+            <li>Spec, plan, execute, verify workflow</li>
+            <li>The "explain every line" rule</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 style="font-size: 24px;">What changes</h3>
+          <ul style="font-size: 20px; line-height: 1.7; color: var(--fg-2); padding-left: 20px; margin: 12px 0 0;">
+            <li>Sessions shift from teaching to coordination</li>
+            <li>Quick standups, unblocking, sprint planning</li>
+            <li>You drive the roadmap, not the slides</li>
+            <li>Milestone leads own their track's progress</li>
+            <li>PR cleanup is a continuous expectation</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="margin-top: 28px; padding: 20px 28px; background: var(--cream); border-radius: 12px; max-width: 1500px;">
+        <p style="font-size: 22px; color: var(--fg-2); margin: 0; line-height: 1.5;"><strong style="color: var(--ink);">Fix the board today:</strong> Add all frontend issues. Add an "In Review" column. This is the tool that replaces the slides.</p>
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 6 &middot; What's next</span>
+        <span><span class="dot">&bull;</span> Continuity</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 — Recap -->
+  <section style="background: var(--ink); color: var(--bone);" class="dark" data-screen-label="14 Recap">
+    <div class="pattern-bg on-dark"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide on-dark">Week 6 recap</div>
+      <h2 class="slide-title" style="color: var(--bone);">What we built today.</h2>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+        <div style="border-top: 4px solid var(--badger-red); padding-top: 24px;">
+          <h3 style="font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--bone); margin: 0 0 12px;">Direction confirmed</h3>
+          <p style="font-size: 19px; color: var(--mist); line-height: 1.45;">Three tracks, one north star. The team agrees on where we are going.</p>
+        </div>
+        <div style="border-top: 4px solid var(--badger-red); padding-top: 24px;">
+          <h3 style="font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--bone); margin: 0 0 12px;">Milestones defined</h3>
+          <p style="font-size: 19px; color: var(--mist); line-height: 1.45;">Testable, demonstrable, incremental checkpoints for each track.</p>
+        </div>
+        <div style="border-top: 4px solid var(--badger-red); padding-top: 24px;">
+          <h3 style="font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--bone); margin: 0 0 12px;">Sprints mapped</h3>
+          <p style="font-size: 19px; color: var(--mist); line-height: 1.45;">Milestones broken into issue sets with sprint labels and owners.</p>
+        </div>
+        <div style="border-top: 4px solid var(--badger-red); padding-top: 24px;">
+          <h3 style="font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--bone); margin: 0 0 12px;">Work assigned</h3>
+          <p style="font-size: 19px; color: var(--mist); line-height: 1.45;">Names next to issues. Milestone leads identified. Ship it.</p>
+        </div>
+      </div>
+      <div class="deck-footer">
+        <span style="color: var(--mist);">FEAST Academy &middot; Week 6</span>
+        <span style="color: var(--mist);"><span class="dot">&bull;</span> End</span>
+      </div>
+    </div>
+  </section>
+
+</deck-stage>
+
+<div id="tweaks-root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="tweaks-app.jsx"></script>
+
+<script src="deck-stage.js"></script>
+<script src="image-slot.js"></script>
+<script src="notes-panel.js"></script>
+<script src="presenter-sync.js"></script>
+</body>
+</html>

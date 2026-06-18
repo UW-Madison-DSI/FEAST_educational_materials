@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Presenter View — FEAST Week 3</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #1a1816;
+    color: #E8E4DC;
+    font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+    height: 100vh;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  /* Top bar */
+  .top-bar {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+  }
+  .top-bar h1 {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(232, 228, 220, 0.5);
+  }
+  .top-bar .slide-counter {
+    font-size: 20px;
+    font-weight: 700;
+    color: #E8E4DC;
+    font-variant-numeric: tabular-nums;
+  }
+  .top-bar .timer {
+    font-size: 16px;
+    font-variant-numeric: tabular-nums;
+    color: rgba(232, 228, 220, 0.6);
+  }
+  .top-bar .controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .top-bar button {
+    appearance: none;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.06);
+    color: #E8E4DC;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .top-bar button:hover { background: rgba(255,255,255,0.12); }
+
+  /* Left column: current + next preview */
+  .slides-col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 0;
+  }
+  .slide-frame {
+    position: relative;
+    background: #111;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid rgba(255,255,255,0.08);
+  }
+  .slide-frame.current {
+    flex: 3;
+    border-color: rgba(197, 5, 12, 0.5);
+  }
+  .slide-frame.next {
+    flex: 2;
+    opacity: 0.7;
+  }
+  .slide-frame iframe {
+    width: 1920px;
+    height: 1080px;
+    border: 0;
+    transform-origin: top left;
+    pointer-events: none;
+  }
+  .slide-label {
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(232, 228, 220, 0.5);
+    background: rgba(0,0,0,0.6);
+    padding: 3px 8px;
+    border-radius: 4px;
+    z-index: 2;
+  }
+
+  /* Right column: notes */
+  .notes-col {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .notes-header {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(197, 5, 12, 0.8);
+    margin-bottom: 12px;
+    flex-shrink: 0;
+  }
+  .notes-body {
+    flex: 1;
+    overflow-y: auto;
+    font-size: 18px;
+    line-height: 1.65;
+    color: #E8E4DC;
+    padding-right: 12px;
+    white-space: pre-wrap;
+  }
+  .notes-body::-webkit-scrollbar { width: 6px; }
+  .notes-body::-webkit-scrollbar-track { background: transparent; }
+  .notes-body::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.15);
+    border-radius: 3px;
+  }
+
+  /* Nav hint */
+  .nav-hint {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 12px;
+    color: rgba(232, 228, 220, 0.3);
+    padding: 4px 0;
+  }
+  .nav-hint kbd {
+    display: inline-block;
+    padding: 1px 6px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 3px;
+    font-family: inherit;
+    font-size: 11px;
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <h1>Presenter View</h1>
+  <div class="controls">
+    <span class="slide-counter" id="counter">1 / ?</span>
+    <span class="timer" id="timer">00:00</span>
+    <button id="btn-open">Open Audience Window</button>
+    <button id="btn-reset-timer">Reset Timer</button>
+  </div>
+</div>
+
+<div class="slides-col">
+  <div class="slide-frame current" id="current-frame">
+    <span class="slide-label">Current</span>
+  </div>
+  <div class="slide-frame next" id="next-frame">
+    <span class="slide-label">Next</span>
+  </div>
+</div>
+
+<div class="notes-col">
+  <div class="notes-header" id="notes-header">Speaker Notes</div>
+  <div class="notes-body" id="notes-body"></div>
+</div>
+
+<script>
+(function() {
+  // ── Configuration ──
+  var DECK_URL = 'index.html';
+  var CHANNEL_NAME = 'feast-deck-sync';
+
+  // ── State ──
+  var currentIndex = 0;
+  var totalSlides = 0;
+  var notesData = [];
+  var audienceWin = null;
+  var channel = new BroadcastChannel(CHANNEL_NAME);
+  var timerStart = Date.now();
+
+  // ── DOM refs ──
+  var counter = document.getElementById('counter');
+  var timer = document.getElementById('timer');
+  var notesHeader = document.getElementById('notes-header');
+  var notesBody = document.getElementById('notes-body');
+  var currentFrame = document.getElementById('current-frame');
+  var nextFrame = document.getElementById('next-frame');
+  var btnOpen = document.getElementById('btn-open');
+  var btnResetTimer = document.getElementById('btn-reset-timer');
+
+  // ── Load notes from the deck's HTML ──
+  function loadNotes(callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', DECK_URL, true);
+    xhr.onload = function() {
+      var match = xhr.responseText.match(/<script[^>]*id="speaker-notes"[^>]*>([\s\S]*?)<\/script>/);
+      if (match) {
+        try { notesData = JSON.parse(match[1]); } catch(e) {}
+      }
+      // Also count slides
+      var sections = xhr.responseText.match(/<section[\s>]/g);
+      totalSlides = sections ? sections.length : 0;
+      if (callback) callback();
+    };
+    xhr.send();
+  }
+
+  // ── Slide thumbnails via iframes ──
+  // Preview iframes load with ?preview=1 so presenter-sync.js ignores
+  // them (otherwise they'd respond to BroadcastChannel goTo messages
+  // meant for the audience window).
+  var PREVIEW_URL = DECK_URL + '?preview=1';
+  var currentIframe = document.createElement('iframe');
+  var nextIframe = document.createElement('iframe');
+  var currentReady = false;
+  var nextReady = false;
+
+  function setupIframe(iframe, container) {
+    iframe.style.position = 'absolute';
+    iframe.style.top = '0';
+    iframe.style.left = '0';
+    container.appendChild(iframe);
+  }
+
+  function scaleIframes() {
+    [{ iframe: currentIframe, container: currentFrame },
+     { iframe: nextIframe, container: nextFrame }].forEach(function(pair) {
+      var w = pair.container.clientWidth;
+      var h = pair.container.clientHeight;
+      var scale = Math.min(w / 1920, h / 1080);
+      pair.iframe.style.transform = 'scale(' + scale + ')';
+      pair.iframe.style.width = '1920px';
+      pair.iframe.style.height = '1080px';
+    });
+  }
+
+  setupIframe(currentIframe, currentFrame);
+  setupIframe(nextIframe, nextFrame);
+
+  // Navigate an iframe's deck-stage to a given slide index
+  function iframeGoTo(iframe, index) {
+    try {
+      var deck = iframe.contentWindow.document.querySelector('deck-stage');
+      if (deck && deck.goTo) { deck.goTo(index); return; }
+    } catch(e) {}
+  }
+
+  currentIframe.addEventListener('load', function() {
+    currentReady = true;
+    iframeGoTo(currentIframe, currentIndex);
+  });
+  nextIframe.addEventListener('load', function() {
+    nextReady = true;
+    var ni = currentIndex + 1;
+    if (ni < totalSlides) iframeGoTo(nextIframe, ni);
+  });
+
+  // Load iframes once; subsequent navigation uses goTo()
+  currentIframe.src = PREVIEW_URL + '#1';
+  nextIframe.src = PREVIEW_URL + '#2';
+
+  function loadPreviewSlide(index) {
+    if (currentReady) {
+      iframeGoTo(currentIframe, index);
+    }
+    var nextIdx = index + 1;
+    if (nextIdx < totalSlides) {
+      if (nextReady) iframeGoTo(nextIframe, nextIdx);
+      nextFrame.style.display = '';
+      nextFrame.querySelector('.slide-label').textContent = 'Next';
+    } else {
+      nextFrame.style.display = 'none';
+    }
+  }
+
+  // ── Update display ──
+  function update(index) {
+    currentIndex = index;
+    counter.textContent = (index + 1) + ' / ' + totalSlides;
+
+    // Notes
+    var entry = notesData[index];
+    if (entry) {
+      notesBody.textContent = typeof entry === 'string' ? entry : (entry.notes || '');
+      notesHeader.textContent = entry.slide ? 'Speaker Notes — ' + entry.slide : 'Speaker Notes';
+    } else {
+      notesBody.textContent = '';
+      notesHeader.textContent = 'Speaker Notes';
+    }
+
+    // Scroll notes to top
+    notesBody.scrollTop = 0;
+
+    // Update preview iframes
+    loadPreviewSlide(index);
+  }
+
+  // ── Navigation ──
+  function goTo(index) {
+    if (index < 0) index = 0;
+    if (index >= totalSlides) index = totalSlides - 1;
+    update(index);
+    // Tell audience window
+    channel.postMessage({ type: 'goTo', index: index });
+  }
+
+  // ── Audience window ──
+  btnOpen.addEventListener('click', function() {
+    audienceWin = window.open(DECK_URL + '#' + (currentIndex + 1), 'feast-audience',
+      'width=1280,height=720,menubar=no,toolbar=no,location=no,status=no');
+    btnOpen.textContent = 'Reopen Audience Window';
+  });
+
+  // ── Timer ──
+  btnResetTimer.addEventListener('click', function() {
+    timerStart = Date.now();
+  });
+
+  setInterval(function() {
+    var elapsed = Math.floor((Date.now() - timerStart) / 1000);
+    var m = Math.floor(elapsed / 60);
+    var s = elapsed % 60;
+    timer.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+  }, 1000);
+
+  // ── Listen for slide changes from audience window ──
+  channel.onmessage = function(e) {
+    if (e.data && e.data.type === 'slideChanged') {
+      update(e.data.index);
+    }
+  };
+
+  // ── Keyboard nav (presenter drives from this window) ──
+  window.addEventListener('keydown', function(e) {
+    if (e.target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+      goTo(currentIndex + 1); e.preventDefault();
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      goTo(currentIndex - 1); e.preventDefault();
+    } else if (e.key === 'Home') {
+      goTo(0); e.preventDefault();
+    } else if (e.key === 'End') {
+      goTo(totalSlides - 1); e.preventDefault();
+    }
+  });
+
+  // ── Resize handling ──
+  window.addEventListener('resize', scaleIframes);
+  // Initial scale after layout
+  requestAnimationFrame(function() {
+    requestAnimationFrame(scaleIframes);
+  });
+
+  // ── Init ──
+  loadNotes(function() {
+    update(0);
+    scaleIframes();
+  });
+})();
+</script>
+</body>
+</html>
