@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>FEAST Roadmap Builder</title>
+<link rel="stylesheet" href="../assets/css/design-system.css"/>
+<style>
+  :root {
+    --red-light: #FBE5E5;
+    --moss-light: #E4EBDB;
+    --blue-light: #E5ECEF;
+    --wheat-light: #F4E9C9;
+  }
+
+  body {
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .rb-header {
+    background: var(--ink);
+    color: var(--bone);
+    padding: var(--space-5) var(--space-6);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .rb-header h1 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: var(--fs-24);
+    letter-spacing: var(--tracking-tight);
+  }
+  .rb-header h1 span { color: var(--badger-red); }
+  .rb-header-actions { display: flex; gap: var(--space-3); }
+
+  .rb-btn {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: var(--fs-14);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-md);
+    border: none;
+    cursor: pointer;
+    transition: all var(--dur-base) var(--ease-out);
+  }
+  .rb-btn-primary {
+    background: var(--badger-red);
+    color: var(--white);
+  }
+  .rb-btn-primary:hover { background: var(--crimson); }
+  .rb-btn-secondary {
+    background: rgba(255,255,255,0.1);
+    color: var(--bone);
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .rb-btn-secondary:hover { background: rgba(255,255,255,0.2); }
+  .rb-btn-ghost {
+    background: transparent;
+    color: var(--fg-2);
+    border: 1px solid var(--border);
+  }
+  .rb-btn-ghost:hover { background: var(--cream); }
+  .rb-btn-sm { padding: var(--space-1) var(--space-3); font-size: var(--fs-14); }
+
+  /* Vision bar */
+  .rb-vision {
+    background: var(--cream);
+    padding: var(--space-4) var(--space-6);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .rb-vision-label {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--fs-12);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-eyebrow);
+    color: var(--badger-red);
+    white-space: nowrap;
+  }
+  .rb-vision-text {
+    font-family: var(--font-display);
+    font-size: var(--fs-18);
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  /* Tracks container */
+  .rb-tracks {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-5);
+    padding: var(--space-5) var(--space-6);
+    align-items: stretch;
+  }
+
+  /* Track column */
+  .rb-track {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+  }
+  .rb-track-header {
+    padding: var(--space-5) var(--space-5) var(--space-4);
+    border-bottom: 1px solid var(--border);
+  }
+  .rb-track-tag {
+    display: inline-block;
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--fs-12);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-eyebrow);
+    margin-bottom: var(--space-2);
+  }
+  .rb-track[data-track="a"] .rb-track-tag { background: var(--red-light); color: var(--crimson); }
+  .rb-track[data-track="b"] .rb-track-tag { background: var(--moss-light); color: var(--moss); }
+  .rb-track[data-track="c"] .rb-track-tag { background: var(--blue-light); color: var(--slate); }
+
+  .rb-track-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--fs-20);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+  }
+  .rb-track-desc {
+    font-size: var(--fs-14);
+    color: var(--fg-2);
+    margin-top: var(--space-1);
+    line-height: var(--lh-normal);
+  }
+
+  .rb-track-body {
+    padding: var(--space-4) var(--space-5);
+    min-height: 200px;
+    flex: 1;
+  }
+
+  /* Milestone */
+  .rb-milestone {
+    background: var(--bone);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    margin-bottom: var(--space-3);
+    border: 1px solid var(--border);
+  }
+  .rb-milestone-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: var(--space-2);
+  }
+  .rb-milestone-num {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: var(--fs-12);
+    color: var(--fg-3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .rb-milestone-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--fs-16);
+    color: var(--ink);
+    width: 100%;
+    border: none;
+    background: transparent;
+    outline: none;
+    padding: 2px 0;
+  }
+  .rb-milestone-title:focus {
+    background: var(--white);
+    border-radius: var(--radius-sm);
+    padding: 2px 6px;
+    margin: -2px -6px;
+  }
+  .rb-milestone-title::placeholder { color: var(--fg-3); }
+
+  .rb-delete-btn {
+    background: none;
+    border: none;
+    color: var(--fg-3);
+    cursor: pointer;
+    font-size: var(--fs-16);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    line-height: 1;
+    flex-shrink: 0;
+    transition: all var(--dur-fast) var(--ease-out);
+  }
+  .rb-delete-btn:hover { background: var(--red-light); color: var(--badger-red); }
+
+  /* Sprint tag */
+  .rb-sprint-row {
+    margin-top: var(--space-2);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .rb-sprint-input {
+    font-family: var(--font-mono);
+    font-size: var(--fs-12);
+    padding: 3px var(--space-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--white);
+    color: var(--ink);
+    width: 160px;
+    outline: none;
+  }
+  .rb-sprint-input:focus { border-color: var(--badger-red); }
+  .rb-sprint-input::placeholder { color: var(--fg-3); }
+  .rb-sprint-label {
+    font-size: var(--fs-12);
+    color: var(--fg-3);
+    font-weight: 600;
+  }
+
+  /* Issue */
+  .rb-issues { margin-top: var(--space-3); }
+  .rb-issue {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: var(--space-2);
+    align-items: center;
+    padding: var(--space-2) 0;
+    border-top: 1px solid var(--border);
+  }
+  .rb-issue:first-child { border-top: none; }
+  .rb-issue-title {
+    font-size: var(--fs-14);
+    font-family: var(--font-body);
+    border: none;
+    background: transparent;
+    color: var(--ink);
+    outline: none;
+    padding: 2px 0;
+    width: 100%;
+  }
+  .rb-issue-title:focus { background: var(--white); border-radius: var(--radius-sm); padding: 2px 6px; margin: -2px -6px; }
+  .rb-issue-title::placeholder { color: var(--fg-3); }
+
+  .rb-issue-owner {
+    font-family: var(--font-mono);
+    font-size: var(--fs-12);
+    padding: 2px var(--space-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--white);
+    color: var(--fg-2);
+    width: 90px;
+    outline: none;
+    text-align: center;
+  }
+  .rb-issue-owner:focus { border-color: var(--badger-red); }
+  .rb-issue-owner::placeholder { color: var(--fg-3); }
+
+  .rb-add-btn {
+    display: block;
+    width: 100%;
+    padding: var(--space-2);
+    margin-top: var(--space-2);
+    background: transparent;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-md);
+    color: var(--fg-3);
+    font-family: var(--font-body);
+    font-size: var(--fs-14);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--dur-base) var(--ease-out);
+  }
+  .rb-add-btn:hover {
+    border-color: var(--badger-red);
+    color: var(--badger-red);
+    background: var(--red-light);
+  }
+
+  /* Export modal */
+  .rb-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+  }
+  .rb-modal-overlay.active { display: flex; }
+  .rb-modal {
+    background: var(--white);
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+    width: 700px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+  }
+  .rb-modal h2 {
+    font-family: var(--font-display);
+    font-size: var(--fs-24);
+    font-weight: 700;
+    margin-bottom: var(--space-4);
+  }
+  .rb-modal textarea {
+    width: 100%;
+    height: 400px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-14);
+    line-height: var(--lh-relaxed);
+    padding: var(--space-4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bone);
+    color: var(--ink);
+    resize: vertical;
+  }
+  .rb-modal-actions {
+    margin-top: var(--space-4);
+    display: flex;
+    gap: var(--space-3);
+    justify-content: flex-end;
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .rb-tracks { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="rb-header">
+  <h1>FEAST <span>Roadmap</span> Builder</h1>
+  <div class="rb-header-actions">
+    <button class="rb-btn rb-btn-secondary" onclick="clearAll()">Clear all</button>
+    <button class="rb-btn rb-btn-secondary" onclick="saveLocal()">Save draft</button>
+    <button class="rb-btn rb-btn-primary" onclick="exportMarkdown()">Export markdown</button>
+  </div>
+</div>
+
+<div class="rb-vision">
+  <span class="rb-vision-label">North star</span>
+  <span class="rb-vision-text">Make FEAST usable by someone who wasn't in the room when it was built.</span>
+</div>
+
+<div class="rb-tracks">
+  <div class="rb-track" data-track="a">
+    <div class="rb-track-header">
+      <div class="rb-track-tag">Track A</div>
+      <div class="rb-track-title">Simulation understandable</div>
+      <div class="rb-track-desc">A new user can run FEAST and know what happened.</div>
+    </div>
+    <div class="rb-track-body" id="track-a-body">
+      <button class="rb-add-btn" onclick="addMilestone('a')">+ Add milestone</button>
+    </div>
+  </div>
+
+  <div class="rb-track" data-track="b">
+    <div class="rb-track-header">
+      <div class="rb-track-tag">Track B</div>
+      <div class="rb-track-title">Results exportable</div>
+      <div class="rb-track-desc">Users can take data out of the tool.</div>
+    </div>
+    <div class="rb-track-body" id="track-b-body">
+      <button class="rb-add-btn" onclick="addMilestone('b')">+ Add milestone</button>
+    </div>
+  </div>
+
+  <div class="rb-track" data-track="c">
+    <div class="rb-track-header">
+      <div class="rb-track-tag">Track C</div>
+      <div class="rb-track-title">Codebase contributor-friendly</div>
+      <div class="rb-track-desc">A new developer can clone and contribute.</div>
+    </div>
+    <div class="rb-track-body" id="track-c-body">
+      <button class="rb-add-btn" onclick="addMilestone('c')">+ Add milestone</button>
+    </div>
+  </div>
+</div>
+
+<div class="rb-modal-overlay" id="export-modal">
+  <div class="rb-modal">
+    <h2>Roadmap export</h2>
+    <textarea id="export-text" readonly></textarea>
+    <div class="rb-modal-actions">
+      <button class="rb-btn rb-btn-ghost" onclick="closeModal()">Close</button>
+      <button class="rb-btn rb-btn-primary" onclick="copyExport()">Copy to clipboard</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const trackNames = {
+  a: 'Track A: Simulation understandable',
+  b: 'Track B: Results exportable',
+  c: 'Track C: Codebase contributor-friendly'
+};
+
+let milestoneCount = { a: 0, b: 0, c: 0 };
+
+function addMilestone(track) {
+  milestoneCount[track]++;
+  const num = milestoneCount[track];
+  const id = `ms-${track}-${num}`;
+  const body = document.getElementById(`track-${track}-body`);
+  const addBtn = body.querySelector('.rb-add-btn');
+
+  const ms = document.createElement('div');
+  ms.className = 'rb-milestone';
+  ms.id = id;
+  ms.innerHTML = `
+    <div class="rb-milestone-header">
+      <div style="flex: 1;">
+        <div class="rb-milestone-num">Milestone ${num}</div>
+        <input class="rb-milestone-title" type="text" placeholder="Describe this milestone..." data-field="title"/>
+      </div>
+      <button class="rb-delete-btn" onclick="removeMilestone('${id}')" title="Remove milestone">&times;</button>
+    </div>
+    <div class="rb-sprint-row">
+      <span class="rb-sprint-label">Sprint:</span>
+      <input class="rb-sprint-input" type="text" placeholder="e.g. curious-capybara" data-field="sprint"/>
+    </div>
+    <div class="rb-issues" id="${id}-issues"></div>
+    <button class="rb-add-btn" onclick="addIssue('${id}')">+ Add issue</button>
+  `;
+
+  body.insertBefore(ms, addBtn);
+
+  const titleInput = ms.querySelector('.rb-milestone-title');
+  titleInput.focus();
+}
+
+function removeMilestone(id) {
+  const el = document.getElementById(id);
+  if (el && confirm('Remove this milestone and all its issues?')) {
+    el.remove();
+  }
+}
+
+function addIssue(milestoneId) {
+  const container = document.getElementById(`${milestoneId}-issues`);
+  const issue = document.createElement('div');
+  issue.className = 'rb-issue';
+  issue.innerHTML = `
+    <input class="rb-issue-title" type="text" placeholder="Issue description..." data-field="issue-title"/>
+    <input class="rb-issue-owner" type="text" placeholder="Owner" data-field="issue-owner"/>
+    <button class="rb-delete-btn" onclick="this.parentElement.remove()" title="Remove issue">&times;</button>
+  `;
+  container.appendChild(issue);
+  issue.querySelector('.rb-issue-title').focus();
+}
+
+function gatherData() {
+  const data = {};
+  ['a', 'b', 'c'].forEach(track => {
+    const milestones = [];
+    const body = document.getElementById(`track-${track}-body`);
+    body.querySelectorAll('.rb-milestone').forEach(ms => {
+      const title = ms.querySelector('[data-field="title"]').value.trim();
+      const sprint = ms.querySelector('[data-field="sprint"]').value.trim();
+      const issues = [];
+      ms.querySelectorAll('.rb-issue').forEach(iss => {
+        const issTitle = iss.querySelector('[data-field="issue-title"]').value.trim();
+        const issOwner = iss.querySelector('[data-field="issue-owner"]').value.trim();
+        if (issTitle) issues.push({ title: issTitle, owner: issOwner });
+      });
+      if (title || issues.length > 0) {
+        milestones.push({ title: title || '(untitled)', sprint, issues });
+      }
+    });
+    data[track] = milestones;
+  });
+  return data;
+}
+
+function toMarkdown(data) {
+  let md = '# FEAST Development Roadmap\n\n';
+  md += '**North star:** Make FEAST usable by someone who wasn\'t in the room when it was built.\n\n';
+  md += '---\n\n';
+
+  ['a', 'b', 'c'].forEach(track => {
+    md += `## ${trackNames[track]}\n\n`;
+    const milestones = data[track];
+    if (milestones.length === 0) {
+      md += '*(no milestones defined yet)*\n\n';
+      return;
+    }
+    milestones.forEach((ms, i) => {
+      md += `### Milestone ${i + 1}: ${ms.title}\n`;
+      if (ms.sprint) md += `**Sprint:** \`${ms.sprint}\`\n`;
+      md += '\n';
+      if (ms.issues.length > 0) {
+        ms.issues.forEach(iss => {
+          const owner = iss.owner ? ` *(${iss.owner})*` : '';
+          md += `- [ ] ${iss.title}${owner}\n`;
+        });
+      } else {
+        md += '*(no issues yet)*\n';
+      }
+      md += '\n';
+    });
+  });
+
+  return md;
+}
+
+function exportMarkdown() {
+  const data = gatherData();
+  const md = toMarkdown(data);
+  document.getElementById('export-text').value = md;
+  document.getElementById('export-modal').classList.add('active');
+}
+
+function copyExport() {
+  const textarea = document.getElementById('export-text');
+  textarea.select();
+  navigator.clipboard.writeText(textarea.value).then(() => {
+    const btn = document.querySelector('#export-modal .rb-btn-primary');
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = 'Copy to clipboard'; }, 2000);
+  });
+}
+
+function closeModal() {
+  document.getElementById('export-modal').classList.remove('active');
+}
+
+function saveLocal() {
+  const data = gatherData();
+  localStorage.setItem('feast-roadmap', JSON.stringify(data));
+  const btn = document.querySelector('.rb-header-actions .rb-btn-secondary:nth-child(2)');
+  btn.textContent = 'Saved!';
+  setTimeout(() => { btn.textContent = 'Save draft'; }, 2000);
+}
+
+function loadLocal() {
+  const raw = localStorage.getItem('feast-roadmap');
+  if (!raw) return;
+  try {
+    const data = JSON.parse(raw);
+    ['a', 'b', 'c'].forEach(track => {
+      (data[track] || []).forEach(ms => {
+        addMilestone(track);
+        const body = document.getElementById(`track-${track}-body`);
+        const lastMs = body.querySelectorAll('.rb-milestone');
+        const msEl = lastMs[lastMs.length - 1];
+        msEl.querySelector('[data-field="title"]').value = ms.title === '(untitled)' ? '' : ms.title;
+        msEl.querySelector('[data-field="sprint"]').value = ms.sprint || '';
+        (ms.issues || []).forEach(iss => {
+          addIssue(msEl.id);
+          const issues = msEl.querySelectorAll('.rb-issue');
+          const lastIss = issues[issues.length - 1];
+          lastIss.querySelector('[data-field="issue-title"]').value = iss.title;
+          lastIss.querySelector('[data-field="issue-owner"]').value = iss.owner || '';
+        });
+      });
+    });
+  } catch (e) {}
+}
+
+function clearAll() {
+  if (!confirm('Clear all milestones and issues? This cannot be undone.')) return;
+  ['a', 'b', 'c'].forEach(track => {
+    const body = document.getElementById(`track-${track}-body`);
+    body.querySelectorAll('.rb-milestone').forEach(ms => ms.remove());
+    milestoneCount[track] = 0;
+  });
+  localStorage.removeItem('feast-roadmap');
+}
+
+document.addEventListener('DOMContentLoaded', loadLocal);
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
+</script>
+</body>
+</html>
