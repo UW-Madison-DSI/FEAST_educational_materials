@@ -25,14 +25,14 @@ Pull all student Week 1 PRs and filed issues from the cohort org.
 
 ```bash
 # List all open/merged PRs with Week 1 deliverables
-gh pr list --repo [COHORT-ORG]/Food-Access-Model --state all --json number,title,author,files
+gh pr list --repo [COHORT-ORG]/FEAST-backend --state all --json number,title,author,files
 
 # List all filed issues with area labels
-gh issue list --repo [COHORT-ORG]/Food-Access-Model --json number,title,labels,author
+gh issue list --repo [COHORT-ORG]/FEAST-backend --json number,title,labels,author
 
 # Download each student's vision plan (adjust paths as needed)
-for pr in $(gh pr list --repo [COHORT-ORG]/Food-Access-Model --state all --json number -q '.[].number'); do
-  gh pr diff --repo [COHORT-ORG]/Food-Access-Model $pr | grep -A 999 "vision-plan" | head -200
+for pr in $(gh pr list --repo [COHORT-ORG]/FEAST-backend --state all --json number -q '.[].number'); do
+  gh pr diff --repo [COHORT-ORG]/FEAST-backend $pr | grep -A 999 "vision-plan" | head -200
 done
 ```
 

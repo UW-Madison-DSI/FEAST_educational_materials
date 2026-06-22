@@ -78,7 +78,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: fass-frontend/fass-react
+        working-directory: FEAST-frontend/fass-react
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

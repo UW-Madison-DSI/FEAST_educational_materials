@@ -151,7 +151,7 @@ Draw this on a whiteboard or shared screen:
                                           - Store polygon generation
 ```
 
-**Frontend** (`ICICLE-ai/FASS-Frontend`, `fass-react/` directory, branch `Brown-County-Frontend`):
+**Frontend** (`FoodAccessSimulator/FEAST-frontend`, `fass-react/` directory, branch `Brown-County-Frontend`):
 - **Live instance:** https://fassfrontstage.pods.icicleai.tapis.io/ (Tapis/ICICLE staging). Students should open this before setup to see the working product.
 - React 19 app built with Vite
 - Leaflet map displays households (colored by food access score: green=high, red=low) and stores (supermarket hexagons, convenience store triangles)
@@ -162,7 +162,7 @@ Draw this on a whiteboard or shared screen:
 - Deployed via Docker (multi-stage: Node build, Nginx serve) behind nginx
 - Key dependencies: React 19, Leaflet, react-leaflet, Axios, Bootstrap, Tailwind, proj4 (coordinate projection)
 
-**Backend** (`Food-Access-Model/`, branch `minimum_viable_product`):
+**Backend** (`FEAST-backend/`, branch `minimum_viable_product`):
 - FastAPI serves the REST API (`/api/` prefix)
 - **Two entry points exist** (a source of confusion for students):
   - `food_access_model/main.py` is the primary entry (used by `run_local.py`). CORS allows `localhost:5173`.
@@ -337,11 +337,11 @@ Prerequisites:
 - uv installed (pip install uv)
 
 Step 1: Clone the repos (from the cohort org, not upstream)
-   git clone https://github.com/[COHORT-ORG]/Food-Access-Model.git
-   git clone https://github.com/[COHORT-ORG]/FASS-Frontend.git
+   git clone https://github.com/[COHORT-ORG]/FEAST-backend.git
+   git clone https://github.com/[COHORT-ORG]/FEAST-frontend.git
 
 Step 2: Backend setup
-   cd Food-Access-Model
+   cd FEAST-backend
    git checkout minimum_viable_product    # active development branch
    cp .env.example .env                   # then edit with your DB credentials
    uv sync                                # install Python dependencies
@@ -362,12 +362,12 @@ Step 3: Set up agentic coding tools
 
    Option A (preferred): Claude Code
    npm install -g @anthropic-ai/claude-code
-   cd Food-Access-Model
+   cd FEAST-backend
    claude     # verify it launches, ask a test question, then exit
 
    Option B (free, no signup required): Gemini CLI
    npm install -g @anthropic-ai/gemini-cli   # or: see https://github.com/google-gemini/gemini-cli
-   cd Food-Access-Model
+   cd FEAST-backend
    gemini     # verify it launches, ask a test question, then exit
 
    Option C (baseline): GitHub Copilot in VS Code (free via GitHub
@@ -397,7 +397,7 @@ Step 4: Run the backend
    Health check: curl http://localhost:8000/api/health
 
 Step 5: Frontend setup
-   cd FASS-Frontend/fass-react
+   cd FEAST-frontend/fass-react
    git checkout Brown-County-Frontend     # active development branch
    npm install
 

@@ -5,8 +5,8 @@
 FEAST_edu is the instructional materials repository for the FEAST (Food Equity Access Simulation Technology) student developer onboarding program. It contains the 6-week curriculum, scaffolded guides, presentation slides, templates, and reference materials that instructors use to run LLM-assisted development cohorts.
 
 This repo contains no application code. The FEAST application itself lives in two separate repos:
-- Backend: `ICICLE-ai/Food-Access-Model` (FastAPI + Mesa ABM + PostgreSQL)
-- Frontend: `fass-frontend` (React + Leaflet + Vite)
+- Backend: `FoodAccessSimulator/FEAST-backend` (FastAPI + Mesa ABM + PostgreSQL)
+- Frontend: `FoodAccessSimulator/FEAST-frontend` (React + Leaflet + Vite)
 
 Templates in `templates/` are designed to be copied into those repos when setting up a new cohort.
 

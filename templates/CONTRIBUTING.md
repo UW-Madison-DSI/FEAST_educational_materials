@@ -13,8 +13,8 @@
 ### Backend Setup
 
 ```bash
-git clone https://github.com/[COHORT-ORG]/Food-Access-Model.git
-cd Food-Access-Model
+git clone https://github.com/[COHORT-ORG]/FEAST-backend.git
+cd FEAST-backend
 git checkout minimum_viable_product
 cp .env.example .env   # edit with your DB credentials
 uv sync
@@ -42,7 +42,7 @@ curl http://localhost:8080/api/simulation-instances
 ### Frontend Setup
 
 ```bash
-cd fass-frontend/fass-react
+cd FEAST-frontend/fass-react
 npm install
 ```
 

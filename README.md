@@ -14,8 +14,8 @@ Instructional materials for the [FEAST](https://fassfrontstage.pods.icicleai.tap
 This repo contains everything an instructor needs to run a cohort of student developers through the FEAST onboarding program: a master curriculum, scaffolded guides, presentation slides, repo templates, and reference materials. It contains no application code.
 
 The FEAST application lives in two separate repos:
-- **Backend:** [ICICLE-ai/Food-Access-Model](https://github.com/ICICLE-ai/Food-Access-Model) (FastAPI + Mesa ABM + PostgreSQL)
-- **Frontend:** fass-frontend (React + Leaflet + Vite)
+- **Backend:** [FoodAccessSimulator/FEAST-backend](https://github.com/FoodAccessSimulator/FEAST-backend) (FastAPI + Mesa ABM + PostgreSQL)
+- **Frontend:** [FoodAccessSimulator/FEAST-frontend](https://github.com/FoodAccessSimulator/FEAST-frontend) (React + Leaflet + Vite)
 - **Reference deployment:** [feast-test.services.dsi.wisc.edu](https://feast-test.services.dsi.wisc.edu/)
 
 Before starting a cohort, fork both repos into a cohort-specific GitHub organization (e.g., `FASS-2026-Summer`). Students clone from the cohort org, giving the team a clean issue tracker and write access. Clone URLs in the curriculum use `[COHORT-ORG]` as a placeholder.

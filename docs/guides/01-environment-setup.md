@@ -99,14 +99,14 @@ After pushing, you'll open a pull request on GitHub. We'll cover PRs in detail d
 ### 1. Clone the repos
 
 ```bash
-git clone https://github.com/[COHORT-ORG]/Food-Access-Model.git
-git clone https://github.com/[COHORT-ORG]/FASS-Frontend.git
+git clone https://github.com/[COHORT-ORG]/FEAST-backend.git
+git clone https://github.com/[COHORT-ORG]/FEAST-frontend.git
 ```
 
 ### 2. Backend setup
 
 ```bash
-cd Food-Access-Model
+cd FEAST-backend
 git checkout minimum_viable_product    # active development branch
 cp .env.example .env                   # then edit with your DB credentials
 uv sync                                # install Python dependencies
@@ -143,7 +143,7 @@ You should get a JSON response (possibly an empty list if no data yet).
 ### 4. Frontend setup
 
 ```bash
-cd FASS-Frontend/fass-react
+cd FEAST-frontend/fass-react
 git checkout Brown-County-Frontend
 npm install
 ```
