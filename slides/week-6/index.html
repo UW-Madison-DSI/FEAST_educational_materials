@@ -280,7 +280,7 @@
 [
   {"slide": "01 Title", "notes": "Final session of the structured program. Today is a working session, not a lecture. We have one goal: leave this room with a roadmap that has milestones, sprint assignments, and owners. Everything we do today builds toward that."},
   {"slide": "01b Agenda", "notes": "Four parts. First, a quick look at where we are: what shipped, what is open, what the board looks like. Second, we revisit the vision synthesis and your feedback to confirm the direction. Third, the main event: we break each track into milestones and then break milestones into sprint-sized issue sets. Fourth, we assign the first milestone and talk about how work continues from here."},
-  {"slide": "02 Where we are", "notes": "Quick status. Since last week, four more PRs merged: #49 simulation step bounds, #40 worker pool reuse, #38 centralized logging, #13 type hints. That is real progress. But we still have 17 open PRs on the backend plus frontend. James has two frontend PRs open now for issues #5 and #6, which is great because those were unclaimed last week. Shrivas has a security hardening PR. The Aardvark sprint has 2 closed, several in progress, and a few still unclaimed. The point is not to review all of this in detail. The point is: we know how to ship code. Now we need to organize what we ship next."},
+  {"slide": "02 Where we are", "notes": "Quick status. Since last week, four more PRs merged: #49 simulation step bounds, #40 worker pool reuse, #38 centralized logging, #13 type hints. That is real progress. But we still have 15 open PRs on the backend plus frontend. James has two frontend PRs open now for issues #5 and #6, which is great because those were unclaimed last week. Shrivas has a security hardening PR. The Aardvark sprint has 2 closed, several in progress, and a few still unclaimed. The point is not to review all of this in detail. The point is: we know how to ship code. Now we need to organize what we ship next."},
   {"slide": "02b From vision to issues", "notes": "This is the process we are working through today. Five levels, each one more concrete than the last. At the top, the vision: a broad statement about where we are going. Then tracks: parallel workstreams that organize the effort. Then milestones: testable checkpoints where you can demonstrate progress. Then sprints: time-boxed batches of issues that a team can finish in a cycle. And finally issues: one person, one PR, the actual work. We already have the first two from the vision synthesis. Today we build the bottom three. By the end of this session, every person should have a specific issue with their name on it that traces all the way up to the vision."},
   {"slide": "03 Section: Vision to roadmap", "notes": "Part two. The vision synthesis proposed three tracks and a north star. You were asked to react and draft milestones. Let us confirm the direction before we plan against it."},
   {"slide": "04 The three tracks", "notes": "Reminder of the three tracks. Track A: make the simulation understandable. A new user can run FEAST and know what happened. Track B: make results exportable. Users can take data out of the tool. Track C: make the codebase contributor-friendly. A new developer can clone and contribute without asking someone. The north star across all three: make FEAST usable by someone who was not in the room when it was built. Does this still feel right? Any feedback that changes the direction? Speak now."},
@@ -291,6 +291,8 @@
   {"slide": "09 Track C milestones", "notes": "Track C. The targets were: dead code removal, entry point consolidation, CRS standardization, performance profiling, architecture documentation. Some of this is already in progress: Abanish has the entry point PR, Shrivas has logging done and security in review. What is left? What order? And critically: what Track C work unblocks Track A or B? That should come first."},
   {"slide": "10 Section: Sprints and issues", "notes": "Part four. We have milestones. Now we break them into sprints. Each sprint is a set of issues that a team of four can complete in roughly a week of part-time work. We already have the sprint naming convention: Anxious Aardvark is mostly done, Bold Bison is infrastructure. The next sprints should map to the milestones we just defined."},
   {"slide": "11 From milestones to sprints", "notes": "Here is how this works. Each milestone becomes one or two sprints. Each sprint gets a name and a set of issues. Some issues already exist in the backlog. Some we need to create right now. For each milestone, ask: what issues already exist that belong here? What new issues do we need to file? Who is the right person for each one? Let us do this for the first milestone of each track. We can file the issues live during this session."},
+  {"slide": "11b One board, both repos", "notes": "A point that trips up a lot of teams: our work is split across two repos, backend and frontend, but a sprint is not. The household hover milestone needs a frontend issue for the tooltip and a backend issue for the data. If you track each repo on its own board, nobody ever sees the whole sprint. The fix is an org-level project board. It is created on the organization, not inside a single repo, so it can pull issues and PRs from both FEAST-backend and FEAST-frontend into one view. We already have one at github.com/orgs/FoodAccessSimulator/projects/1 with 36 items on it. The very first housekeeping item: it is still called untitled, so give it a real name today."},
+  {"slide": "11c Run the sprint from the board", "notes": "Once issues from both repos are on the board, the fields do the organizing. The Repository field tags every item with its source repo, so you can group the board by repo and see backend and frontend next to each other. The Milestone field and sprint labels let you filter down to just the current sprint, Curious Capybara, across both repos at once. Status is your columns: Todo, In progress, and Done today, but notice there is still no In Review, which is exactly the gap we flagged last week. Review is happening but it is invisible on the board. Add an In Review column, but just one. Do not make a column per reviewer. The four-step review, LLM adversarial then human one then human two, belongs on the PR as a checklist, with the two humans set in the Reviewers field. If you want the review stage visible on the board itself, add a single custom Review stage field rather than overloading the status columns. And use Assignees and Size so you can actually see when one person has five items and two people have zero. Then let us do it live: add every frontend issue, add the In Review column, and assign this sprint across both repos before we move on to ownership."},
   {"slide": "12 Assign the first milestone", "notes": "We need to leave this room with clarity on what happens next. For each track: who owns the first milestone? Not who does all the work, but who is responsible for it getting done, coordinating across issues, and flagging when it is stuck. Each person should have at least one issue they are committed to shipping this week. Write your name next to it."},
   {"slide": "13 How work continues", "notes": "The structured weekly sessions end today, but the work does not. Here is how we keep going. The sprint structure stays: filter by sprint label to see your current work. The review process stays: four steps, every PR. The project board needs to be the source of truth: keep it updated, add the frontend issues, add an In Review column. We will still meet, but the sessions shift from teaching to coordination: quick standups, unblocking, and sprint planning. The skills you built over six weeks, spec first, plan, execute, verify, review, those are yours now. Use them."},
   {"slide": "14 Recap", "notes": "What we accomplished today. Confirmed the three-track direction from the vision synthesis. Defined milestones for each track: testable, demonstrable, incremental. Broke the first milestones into sprint-sized issue sets. Assigned owners and committed to specific issues. The roadmap is real now. Ship it."}
@@ -384,7 +386,7 @@
         <div class="card" style="border-top: 4px solid var(--badger-red);">
           <h3 style="font-size: 24px;">Still open</h3>
           <div style="font-size: 20px; line-height: 1.8; color: var(--fg-2);">
-            <strong style="color: var(--ink);">17</strong> open PRs on the backend<br/>
+            <strong style="color: var(--ink);">15</strong> open PRs on the backend<br/>
             <strong style="color: var(--ink);">3</strong> open PRs on the frontend<br/>
             <strong style="color: var(--ink);">2</strong> new: security hardening + distance audit<br/>
             <strong style="color: var(--ink);">2</strong> new: frontend #5 and #6 now claimed
@@ -744,6 +746,78 @@
       <div class="deck-footer">
         <span>Week 6 &middot; Sprints</span>
         <span><span class="dot">&bull;</span> Breakdown</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11b — One board, both repos -->
+  <section data-screen-label="11b One board, both repos">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">The coordination tool</div>
+      <h2 class="slide-title">One board. Both repos.</h2>
+      <p class="body-text muted" style="margin-bottom: 24px; font-size: 26px;">A sprint rarely lives in one repo. "Household hover" needs a frontend issue <em>and</em> a backend issue. You need to see both in one place.</p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <div class="card" style="border-top: 4px solid var(--fg-3);">
+          <h3 style="font-size: 24px;">Repo-level board</h3>
+          <p style="font-size: 20px; color: var(--fg-2);">Lives inside one repo and only sees that repo's issues and PRs. Two repos means two boards and no shared view of a sprint.</p>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="font-size: 24px;">Org-level project</h3>
+          <p style="font-size: 20px; color: var(--fg-2);">Lives on the org. Pulls issues and PRs from <strong>FEAST-backend and FEAST-frontend</strong> into one board. One sprint, one view, both repos.</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 28px; padding: 20px 28px; background: var(--cream); border-radius: 12px; max-width: 1500px;">
+        <p style="font-size: 22px; color: var(--fg-2); margin: 0; line-height: 1.5;">We already have one: <strong style="color: var(--ink);">github.com/orgs/FoodAccessSimulator/projects/1</strong>, 36 items today. First fix: give it a real name.</p>
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 6 &middot; Sprints</span>
+        <span><span class="dot">&bull;</span> One board</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11c — Run the sprint from the board -->
+  <section data-screen-label="11c Run the sprint from the board">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">The mechanics</div>
+      <h2 class="slide-title">Run the sprint from the board.</h2>
+      <p class="body-text muted" style="margin-bottom: 24px; font-size: 26px;">Add issues from both repos, then let the fields do the organizing.</p>
+
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="font-size: 24px;">Repository field</h3>
+          <p style="font-size: 20px; color: var(--fg-2);">Every item shows which repo it came from. Group or filter by it to see backend and frontend side by side in one sprint.</p>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="font-size: 24px;">Milestone &amp; sprint label</h3>
+          <p style="font-size: 20px; color: var(--fg-2);">Filter to one sprint (Curious Capybara) and the board shows just that work, regardless of which repo it lives in.</p>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="font-size: 24px;">Status</h3>
+          <p style="font-size: 20px; color: var(--fg-2);">Todo to In progress to <strong>In Review</strong> to Done. One In Review column for the whole pipeline, not a column per reviewer.</p>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="font-size: 24px;">Assignees &amp; Size</h3>
+          <p style="font-size: 20px; color: var(--fg-2);">Every item gets a name and a rough size. That is how you spot a workload imbalance before someone is buried.</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px; padding: 20px 28px; background: var(--cream); border-radius: 12px; max-width: 1500px;">
+        <p style="font-size: 22px; color: var(--fg-2); margin: 0; line-height: 1.5;"><strong style="color: var(--ink);">The four-step review lives on the PR, not the columns.</strong> LLM adversarial, human reviewer 1, human reviewer 2: track them as a checklist on each PR, with the two humans set in the <strong>Reviewers</strong> field. Want the stage visible on the board? Add one <strong>Review stage</strong> field, not four Status columns.</p>
+      </div>
+
+      <div class="assign-callout" style="margin-top: 20px;">
+        <strong>Live, right now:</strong> Add every frontend issue to the board, add the In Review column, and assign the current sprint across both repos.
+      </div>
+
+      <div class="deck-footer">
+        <span>Week 6 &middot; Sprints</span>
+        <span><span class="dot">&bull;</span> Board mechanics</span>
       </div>
     </div>
   </section>
