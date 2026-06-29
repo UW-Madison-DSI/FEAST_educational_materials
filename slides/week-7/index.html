@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>FEAST Roadmap Review: Five Tracks</title>
+<link rel="stylesheet" href="colors_and_type.css"/>
+<style>
+  :root {
+    --type-display: 120px;
+    --type-title: 64px;
+    --type-subtitle: 44px;
+    --type-body: 34px;
+    --type-small: 28px;
+    --type-eyebrow: 24px;
+    --pad-top: 96px;
+    --pad-bottom: 130px;
+    --pad-x: 100px;
+    --gap-title: 48px;
+    --gap-item: 28px;
+  }
+
+  body { background: #1a1816; margin: 0; }
+
+  deck-stage section {
+    background: var(--bone);
+    position: relative;
+    overflow: hidden;
+    padding: var(--pad-top) var(--pad-x) var(--pad-bottom);
+    display: flex;
+    flex-direction: column;
+    color: var(--ink);
+    font-family: var(--font-body);
+  }
+
+  .pattern-bg {
+    position: absolute; inset: 0;
+    opacity: 0.05;
+    background-image: radial-gradient(circle, var(--ink) 1.5px, transparent 1.5px);
+    background-size: 28px 28px;
+    pointer-events: none;
+  }
+  .pattern-bg.on-dark {
+    opacity: 0.08;
+    background-image: radial-gradient(circle, #fff 1.5px, transparent 1.5px);
+  }
+  .red-bar { width: 80px; height: 8px; background: var(--badger-red); border-radius: 4px; }
+
+  .eyebrow-slide {
+    font-family: var(--font-display);
+    font-size: var(--type-eyebrow);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--fg-2);
+  }
+  .eyebrow-slide.on-dark { color: var(--mist); }
+
+  .slide-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--type-title);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: 16px 0 var(--gap-title);
+    color: var(--ink);
+    max-width: 1500px;
+  }
+
+  .body-text {
+    font-size: var(--type-body);
+    line-height: 1.5;
+    color: var(--ink);
+    max-width: 1500px;
+  }
+  .body-text.muted { color: var(--fg-2); }
+
+  deck-stage section > div:not(.pattern-bg):not(.deck-footer) {
+    padding-bottom: 80px;
+  }
+  .deck-footer {
+    position: absolute;
+    bottom: 40px; left: var(--pad-x); right: var(--pad-x);
+    font-size: 16px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--font-mono);
+    color: var(--fg-3);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .deck-footer .dot { color: var(--badger-red); margin: 0 10px; }
+  section.dark .deck-footer { color: var(--mist); }
+
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+  }
+  .card .tag {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: #FBE5E5;
+    color: #9B0000;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .card .tag.slate { background: #E5ECEF; color: #2E4756; }
+  .card .tag.moss  { background: #E4EBDB; color: #3F5E2A; }
+  .card .tag.wheat { background: #F4E9C9; color: #7A5F00; }
+  .card .tag.ink   { background: #E5E2DC; color: #1C1A19; }
+
+  .card h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 30px;
+    margin: 18px 0 10px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .card p {
+    font-size: 22px;
+    line-height: 1.45;
+    color: var(--fg-2);
+    margin: 0;
+  }
+
+  .num-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 28px; }
+  .num-list li { display: grid; grid-template-columns: 80px 1fr; align-items: start; gap: 24px; }
+  .num-list .num {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 56px;
+    line-height: 1;
+    color: var(--badger-red);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+  .num-list .label {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .num-list .desc {
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--fg-2);
+    margin-top: 6px;
+  }
+
+  section.section-divider {
+    background: var(--ink);
+    color: var(--bone);
+    justify-content: center;
+  }
+  section.section-divider .part-label {
+    font-family: var(--font-display);
+    font-size: var(--type-eyebrow);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--mist);
+  }
+  section.section-divider .part-title {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 144px;
+    line-height: 0.96;
+    margin: 28px 0 0;
+    letter-spacing: -0.03em;
+    color: var(--bone);
+    max-width: 1600px;
+  }
+  section.section-divider .part-title .accent { color: var(--badger-red); }
+  section.section-divider .part-meta {
+    font-family: var(--font-mono);
+    font-size: 24px;
+    color: var(--mist);
+    margin-top: 56px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  section.title-slide { padding-top: 0; padding-bottom: 0; justify-content: center; }
+  section.title-slide .title-block { position: relative; }
+  section.title-slide h1 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 116px;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin: 0;
+    max-width: 1600px;
+    color: var(--ink);
+  }
+  section.title-slide .accent { color: var(--badger-red); }
+  section.title-slide .meta {
+    margin-top: 56px;
+    font-family: var(--font-display);
+    font-size: 24px;
+    color: var(--fg-2);
+    display: flex;
+    gap: 28px;
+    align-items: center;
+  }
+  section.title-slide .meta .pipe { color: var(--mist); }
+  .slide-version { font-family: var(--font-mono); font-size: 18px; opacity: 0.5; }
+
+  .code-chip {
+    font-family: var(--font-mono);
+    background: var(--cream);
+    border: 1px solid var(--border);
+    color: var(--ink);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.92em;
+  }
+
+  .assign-callout {
+    margin-top: 20px;
+    padding: 12px 20px;
+    background: #E4EBDB;
+    border-left: 4px solid #3F5E2A;
+    border-radius: 0 8px 8px 0;
+    font-size: 19px;
+    color: #3F5E2A;
+    line-height: 1.4;
+    max-width: 1500px;
+  }
+  .assign-callout strong { color: #2A4A1A; }
+
+  .beyond-callout {
+    margin-top: 28px;
+    padding: 16px 24px;
+    background: #F4E9C9;
+    border-left: 4px solid #7A5F00;
+    border-radius: 0 8px 8px 0;
+    font-size: 21px;
+    color: #5A4500;
+    line-height: 1.5;
+    max-width: 1500px;
+  }
+  .beyond-callout strong { color: #3D2E00; }
+
+  .compare-table {
+    width: 100%;
+    max-width: 1500px;
+    border-collapse: collapse;
+    font-size: 22px;
+    margin-top: 24px;
+  }
+  .compare-table th {
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-align: left;
+    padding: 14px 16px;
+    border-bottom: 2px solid var(--ink);
+    color: var(--ink);
+  }
+  .compare-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--fg-2);
+    line-height: 1.4;
+  }
+  .compare-table td:first-child {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+</style>
+
+<script type="application/json" id="speaker-notes">
+[
+  {
+    "slide": "01 Title",
+    "notes": "Quick framing. This is your roadmap, not mine. Since we last met you refined the direction into five tracks and started drafting milestones and issues underneath them. Today is a review: each track walks us through what they built, and we apply the same lens to all of it. I am facilitating, not presenting. The goal is to leave with milestones that are sharp enough to turn into issues, and a shared sense of what has to happen first."
+  },
+  {
+    "slide": "01b Where we are",
+    "notes": "Quick reality check before we plan anything new. We have 22 open PRs right now, 18 on the backend and 4 on the frontend, and that is up from 18 a week ago. Nothing has merged in either repo since June 16. So the queue is growing and the throughput is zero. The good news is most of this is stuck, not blocked. Three backend PRs are already approved and could merge today: #50, #46, and #12. About a dozen more have no review at all, and three have changes requested that the authors need to act on. On the other side, we filed zero new issues this week, and the last frontend issue was back in May, so the backlog does not yet reflect the five tracks we refined. The pattern is the same one we flagged in week five: lots of planning, not much flow. The ask before we add new milestones today: clear what is already done, merge the three approved ones and pick up the unreviewed ones, and then spend the working time turning today's milestones into issues so the backlog catches up to the plan."
+  },
+  {
+    "slide": "02 The five tracks",
+    "notes": "Here is the shared map so we all place our work the same way. The north star has not changed: make FEAST usable by someone who was not in the room when it was built. Underneath it, five tracks. A: make the simulation understandable, which is now audience-first, and note the language shift from step to scenario. B: general UX, the engaging and consistent interface with wizard-driven flows, this is new and replaces the old results-exportable track. C: contributor-friendly codebase, where the PR template and linked-issue enforcement just shipped. D: backend functionality, mostly performance, fast steps and fast initialization. E: the underlying model, distance, store types, demographics, causality. As each track presents, point to where you sit on this map and what you depend on."
+  },
+  {
+    "slide": "03 How we judge a milestone",
+    "notes": "One thing to be clear about: right now we are judging milestones, not reviewing pull requests. The PR backlog from the opening slide is a separate problem. Here we are sizing up the milestones and issues you drafted. We apply the same two tests to every one, so it is even-handed and not whoever-argues-loudest. First, the milestone bar: is it demonstrable, testable, incremental, and sprint-sized? If a proposed milestone is really a wish like make the UI better, we reshape it here into something you can show and finish. Second, the trace test: every issue should trace up to a milestone, to a track, to the north star. If an issue does not trace, either it is missing a milestone above it or it does not belong in this roadmap yet. As you present, I will ask these out loud. Not to gatekeep, but so the issues you file afterward are real."
+  },
+  {
+    "slide": "04 Cross-cutting questions",
+    "notes": "These are the open threads that cut across tracks, and they will not resolve inside a single track presentation, so let us hold them here. One, scenario not step: we said multi-step time is meaningless and a scenario is a single change from the base store distribution. If that is real, it reshapes Track A and Track B framing, so let us confirm it as a team. Two, audience: Track A is partly blocked until we know who we are explaining this to. Alfonso is getting the stakeholder list and bios. Three, emergency preparedness: we flagged this needs more discussion before it becomes milestones, so it stays in the parking lot for now. Four, sequencing: what goes first? B's wizards need A's scenario concept, and B's progress bars need D's faster steps. Name the dependencies so nobody builds on something that is not there yet."
+  },
+  {
+    "slide": "05 Break out: build the issues",
+    "notes": "This is the working part. Everything up to now was setup; now you build. Split into your track groups, milestone lead keeping things moving. For each milestone you are keeping, list the issues it needs by asking what has to be true for that milestone to be demonstrable. Write each issue so it stands on its own: a clear title, which repo it lives in, a rough size, and a one-line check for when it is done. Then file them on the board using the issue template, and set Repository, Milestone, and an owner so the work is visible across both repos. Take about thirty minutes, then we regroup and each track walks its issue list. The bar for leaving today: every milestone we keep has at least its first issue filed, sized, and assigned. And remember the linked-issue rule from last session, when you open the PR for one of these, it has to close the issue you just filed."
+  }
+]
+</script>
+</head>
+
+<body>
+
+<deck-stage width="1920" height="1080">
+
+  <!-- 01 — TITLE -->
+  <section class="title-slide" data-screen-label="01 Title">
+    <div class="pattern-bg"></div>
+    <div class="title-block" style="position: relative;">
+      <div class="red-bar" style="margin-bottom: 56px;"></div>
+      <h1>Your roadmap,<br/><span class="accent">reviewed.</span></h1>
+      <div class="meta">
+        <span>FEAST Academy</span>
+        <span class="pipe">|</span>
+        <span>Roadmap Review</span>
+        <span class="pipe">|</span>
+        <span>Five Tracks</span>
+      </div>
+      <div class="deck-footer">
+        <span>FEAST Academy &middot; Roadmap Review</span>
+        <span class="slide-version">v1.0</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 01b — Where we are -->
+  <section data-screen-label="01b Where we are">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Status check</div>
+      <h2 class="slide-title">Before we plan: the pipeline is backing up.</h2>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="font-size: 24px;">Piling up</h3>
+          <div style="font-size: 21px; line-height: 1.7; color: var(--fg-2);">
+            <strong style="color: var(--ink);">22</strong> open PRs (18 backend, 4 frontend)<br/>
+            Up from 18 a week ago<br/>
+            <strong style="color: var(--ink);">0</strong> merged since June 16
+          </div>
+        </div>
+        <div class="card" style="border-top: 4px solid #3F5E2A;">
+          <h3 style="font-size: 24px;">Stuck, not blocked</h3>
+          <div style="font-size: 21px; line-height: 1.7; color: var(--fg-2);">
+            <strong style="color: var(--ink);">3</strong> approved and ready to merge (#50, #46, #12)<br/>
+            <strong style="color: var(--ink);">~12</strong> backend PRs with no review yet<br/>
+            <strong style="color: var(--ink);">3</strong> with changes requested
+          </div>
+        </div>
+      </div>
+
+      <div class="beyond-callout" style="margin-top: 28px;">
+        <strong>Lots of planning, little flow: 0 new issues filed this week, nothing merged since June 16.</strong> The backlog does not yet reflect the five tracks. Before planning more, clear what is done (the three approved PRs can merge today) and turn today's milestones into issues.
+      </div>
+
+      <div class="deck-footer">
+        <span>Roadmap Review &middot; Status</span>
+        <span><span class="dot">&bull;</span> Where we are</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 — The five tracks -->
+  <section data-screen-label="02 The five tracks">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">The shared map</div>
+      <h2 class="slide-title">Five tracks, one north star.</h2>
+
+      <div style="margin: 4px 0 24px; padding: 18px 28px; background: var(--ink); border-radius: 12px; max-width: 1620px;">
+        <p style="font-size: 24px; color: var(--bone); margin: 0; line-height: 1.4;"><strong>North star:</strong> make FEAST usable by someone who was not in the room when it was built.</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px;">
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <span class="tag">Track A</span>
+          <h3 style="font-size: 22px;">Simulation understandable</h3>
+          <p style="font-size: 17px; color: var(--fg-2); line-height: 1.4;">Audience-first language. Scenario, not step. Less jargon.</p>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <span class="tag">Track B</span>
+          <h3 style="font-size: 22px;">General UX</h3>
+          <p style="font-size: 17px; color: var(--fg-2); line-height: 1.4;">Engaging, consistent, wizard-driven flows. Brand + Claude Design.</p>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <span class="tag">Track C</span>
+          <h3 style="font-size: 22px;">Contributor-friendly</h3>
+          <p style="font-size: 17px; color: var(--fg-2); line-height: 1.4;">Templates, linked-issue enforcement, tests. (Templates shipped.)</p>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <span class="tag">Track D</span>
+          <h3 style="font-size: 22px;">Backend functionality</h3>
+          <p style="font-size: 17px; color: var(--fg-2); line-height: 1.4;">Steps and initialization complete in web-response time.</p>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <span class="tag">Track E</span>
+          <h3 style="font-size: 22px;">Underlying model</h3>
+          <p style="font-size: 17px; color: var(--fg-2); line-height: 1.4;">Distance, store types, demographics, causality.</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px; padding: 18px 28px; background: var(--cream); border-radius: 12px; max-width: 1620px;">
+        <p style="font-size: 21px; color: var(--fg-2); margin: 0; line-height: 1.5;">As you present, place your work on this map and name what it depends on.</p>
+      </div>
+
+      <div class="deck-footer">
+        <span>Roadmap Review &middot; Map</span>
+        <span><span class="dot">&bull;</span> Five tracks</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 — How we judge a milestone -->
+  <section data-screen-label="03 How we judge a milestone">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Judging the milestones</div>
+      <h2 class="slide-title">The same lens on every milestone.</h2>
+      <p class="body-text muted" style="margin-bottom: 24px; font-size: 26px;">We are sizing up the milestones and issues you drafted, not reviewing code.</p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="font-size: 24px;">Is the milestone real?</h3>
+          <ul style="font-size: 20px; line-height: 1.7; color: var(--fg-2); padding-left: 20px; margin: 12px 0 0;">
+            <li><strong>Demonstrable</strong>: you can show it</li>
+            <li><strong>Testable</strong>: you know when it is done</li>
+            <li><strong>Incremental</strong>: useful even if the track is not finished</li>
+            <li><strong>Sprint-sized</strong>: one or two sprints, not a quarter</li>
+          </ul>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="font-size: 24px;">Does it trace up?</h3>
+          <p style="font-size: 21px; color: var(--fg-2); line-height: 1.5; margin: 12px 0 0;">Every issue should connect:</p>
+          <p style="font-size: 23px; color: var(--ink); line-height: 1.6; margin: 10px 0 0; font-family: var(--font-display); font-weight: 700;">issue &rarr; milestone &rarr; track &rarr; north star</p>
+          <p style="font-size: 19px; color: var(--fg-3); line-height: 1.45; margin: 12px 0 0;">If it does not trace, it is missing a milestone above it, or it does not belong in the roadmap yet.</p>
+        </div>
+      </div>
+
+      <div class="beyond-callout" style="margin-top: 24px;">
+        <strong>"Make the UI better" is a wish.</strong> "Adding a store shows a progress bar, then a one-line summary of what changed" is a milestone. We reshape wishes into deliverables right here.
+      </div>
+
+      <div class="deck-footer">
+        <span>Roadmap Review &middot; Lens</span>
+        <span><span class="dot">&bull;</span> Judging milestones</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 — Cross-cutting questions -->
+  <section data-screen-label="04 Cross-cutting questions">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Parking lot</div>
+      <h2 class="slide-title">Questions that cut across tracks.</h2>
+      <p class="body-text muted" style="margin-bottom: 24px; font-size: 26px;">These will not resolve inside one track. Hold them here.</p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="font-size: 23px;">Scenario, not step</h3>
+          <p style="font-size: 19px; color: var(--fg-2); line-height: 1.45;">If multi-step time is meaningless and a scenario is a single change from the base store distribution, that reshapes Tracks A and B. Confirm it as a team.</p>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="font-size: 23px;">Who is the audience?</h3>
+          <p style="font-size: 19px; color: var(--fg-2); line-height: 1.45;">Track A is partly blocked until we know who we explain to. Alfonso is getting the stakeholder list and bios.</p>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="font-size: 23px;">Emergency preparedness</h3>
+          <p style="font-size: 19px; color: var(--fg-2); line-height: 1.45;">Flagged as needing more discussion before it becomes milestones. Stays parked for now.</p>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--badger-red);">
+          <h3 style="font-size: 23px;">What goes first?</h3>
+          <p style="font-size: 19px; color: var(--fg-2); line-height: 1.45;">B's wizards need A's scenario concept. B's progress bars need D's faster steps. Name the dependencies before filing issues.</p>
+        </div>
+      </div>
+
+      <div class="deck-footer">
+        <span>Roadmap Review &middot; Parking lot</span>
+        <span><span class="dot">&bull;</span> Cross-cutting</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 — Break out: build the issues -->
+  <section data-screen-label="05 Break out: build the issues">
+    <div class="pattern-bg"></div>
+    <div style="position: relative;">
+      <div class="eyebrow-slide">Working time</div>
+      <h2 class="slide-title">Break your milestones into issues.</h2>
+
+      <ul class="num-list" style="margin-top: 12px;">
+        <li>
+          <span class="num">1</span>
+          <div><div class="label">Split into track groups</div>
+          <div class="desc">Each track takes its own milestones. The milestone lead keeps the group moving.</div></div>
+        </li>
+        <li>
+          <span class="num">2</span>
+          <div><div class="label">For each milestone, list the issues it needs</div>
+          <div class="desc">What has to be true for the milestone to be demonstrable? Each piece is one issue.</div></div>
+        </li>
+        <li>
+          <span class="num">3</span>
+          <div><div class="label">Write each issue so it stands alone</div>
+          <div class="desc">Title, repo (backend or frontend), rough size (XS to XL), and a one-line acceptance check.</div></div>
+        </li>
+        <li>
+          <span class="num">4</span>
+          <div><div class="label">File them on the board</div>
+          <div class="desc">Use the issue template, then set Repository, Milestone, and an owner on the org project.</div></div>
+        </li>
+      </ul>
+
+      <div class="assign-callout" style="margin-top: 24px;">
+        <strong>~30 minutes in track groups, then we regroup.</strong> The bar for leaving today: every milestone we keep has at least its first issue filed, sized, and assigned.
+      </div>
+
+      <div class="deck-footer">
+        <span>Roadmap Review &middot; Build</span>
+        <span><span class="dot">&bull;</span> Milestones to issues</span>
+      </div>
+    </div>
+  </section>
+
+</deck-stage>
+
+<div id="tweaks-root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="tweaks-app.jsx"></script>
+
+<script src="deck-stage.js"></script>
+<script src="image-slot.js"></script>
+<script src="notes-panel.js"></script>
+<script src="presenter-sync.js"></script>
+</body>
+</html>

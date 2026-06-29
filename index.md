@@ -28,6 +28,26 @@ title: Home
     <p class="card-title">Week 2 Slides</p>
     <p class="card-desc">Review pipeline, git workflow for teams, edge case brainstorming, iterative coding, and ADRs.</p>
   </a>
+  <a href="slides/week-3/">
+    <p class="card-title">Week 3 Slides</p>
+    <p class="card-desc">Writing specs, the review pipeline in practice, and engineering discipline.</p>
+  </a>
+  <a href="slides/week-4/">
+    <p class="card-title">Week 4 Slides</p>
+    <p class="card-desc">Artifacts, planning, and running the full spec-to-merge pipeline.</p>
+  </a>
+  <a href="slides/week-5/">
+    <p class="card-title">Week 5 Slides</p>
+    <p class="card-desc">Review gaps, security hardening, and assembling the pieces before handoff.</p>
+  </a>
+  <a href="slides/week-6/">
+    <p class="card-title">Week 6 Slides</p>
+    <p class="card-desc">Turning the vision into milestones, sprints, and assigned issues across both repos.</p>
+  </a>
+  <a href="slides/week-7/">
+    <p class="card-title">Roadmap Review Slides</p>
+    <p class="card-desc">Reviewing the five-track refinements: judging milestones and breaking them into issues.</p>
+  </a>
   <a href="references/">
     <p class="card-title">References</p>
     <p class="card-desc">Research and resources behind the pedagogical design.</p>
