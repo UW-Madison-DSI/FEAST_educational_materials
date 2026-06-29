@@ -73,14 +73,14 @@ Open http://localhost:5173.
 3. **Create a branch**: `git checkout -b feature/issue-NUMBER-short-desc`
 4. **Write a plan** in the issue comments before coding (for non-trivial changes)
 5. **Implement** with tests
-6. **Open a PR** using the PR template
-7. **Review**: Every PR needs one peer review + one adversarial LLM review (starting week 3)
-8. **Merge** to `dev` after approval
+6. **Open a PR** using the PR template. Link the issue with `Closes #NNN` (a `require-linked-issue` check enforces this)
+7. **Review** (four steps): (1) LLM adversarial review posted as a comment, (2) optional second LLM pass, (3) human reviewer 1 does a full code review against the issue, (4) human reviewer 2 confirms all comments are addressed and merges
+8. **Merge** to `dev` after the pipeline is complete
 
 ## PR Guidelines
 
 - Max ~200 lines of changed code (non-test). Smaller is better.
-- Must link to the issue it addresses
+- Must link to the issue it addresses with `Closes #NNN` (enforced by the `require-linked-issue` check)
 - Must include: summary, test plan, tradeoffs considered
 - Use the PR template
 

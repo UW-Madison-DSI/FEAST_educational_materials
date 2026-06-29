@@ -1,0 +1,50 @@
+# Fails a PR that does not close an issue.
+# Copy to: <repo>/.github/workflows/require-linked-issue.yml
+# Then make "Require linked issue" a required status check in branch
+# protection for dev (and staging/main) so the gate actually blocks merge.
+name: Require linked issue
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  linked-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const number = context.payload.pull_request.number;
+            // closingIssuesReferences counts issues linked via a "Closes #N"
+            // keyword OR the Development sidebar. Drafts are skipped.
+            if (context.payload.pull_request.draft) {
+              core.info('Draft PR, skipping linked-issue check.');
+              return;
+            }
+            const query = `
+              query($owner: String!, $repo: String!, $number: Int!) {
+                repository(owner: $owner, name: $repo) {
+                  pullRequest(number: $number) {
+                    closingIssuesReferences(first: 10) {
+                      totalCount
+                      nodes { number }
+                    }
+                  }
+                }
+              }`;
+            const res = await github.graphql(query, { owner, repo, number });
+            const linked = res.repository.pullRequest.closingIssuesReferences;
+            if (linked.totalCount === 0) {
+              core.setFailed(
+                'This PR is not linked to an issue. Add "Closes #<issue>" to the ' +
+                'description, or link an issue in the Development sidebar.'
+              );
+            } else {
+              core.info('Linked issues: ' + linked.nodes.map(n => '#' + n.number).join(', '));
+            }
