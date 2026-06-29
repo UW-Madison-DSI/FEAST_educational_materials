@@ -45,8 +45,8 @@ title: Home
     <p class="card-desc">Turning the vision into milestones, sprints, and assigned issues across both repos.</p>
   </a>
   <a href="slides/week-7/">
-    <p class="card-title">Roadmap Review Slides</p>
-    <p class="card-desc">Reviewing the five-track refinements: judging milestones and breaking them into issues.</p>
+    <p class="card-title">Week 7 Slides</p>
+    <p class="card-desc">Roadmap review: judging the five-track milestone refinements and breaking them into issues.</p>
   </a>
   <a href="references/">
     <p class="card-title">References</p>
